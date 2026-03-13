@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3, type: 3}
+  m_Name: MapConfig
+  m_EditorClassIdentifier: 
+  chunkWidth: 20
+  groundHeight: 5
+  aheadChunkCount: 3
+  behindChunkCount: 2
+  grassLeft: {fileID: 11400000, guid: 78ccc8c8125dafb42a219302477feafd, type: 2}
+  grassMiddle: {fileID: 11400000, guid: d3cf88b3bfcec5d41a3c2aca975c1e8f, type: 2}
+  grassRight: {fileID: 11400000, guid: 37b6d339407709e48b6c985b146ba809, type: 2}
+  dirtTile: {fileID: 11400000, guid: b89a1042808d6014497526ec19bd7b7f, type: 2}
+  obstacleTiles:
+  - {fileID: 11400000, guid: cc23b4c4f5f2c7849ac5161102d10fe7, type: 2}
+  - {fileID: 11400000, guid: 5c1aeb9d3f21f434588b0d1e6c6e3bd9, type: 2}
+  - {fileID: 11400000, guid: 31e28ed86a5cd6e4c9214f745703f855, type: 2}
+  obstacleSpawnChance: 0.3
+  minObstacleGap: 3
+  maxObstacleGap: 8
+  obstacleLayerY: 5
