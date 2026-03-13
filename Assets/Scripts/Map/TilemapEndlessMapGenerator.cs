@@ -29,8 +29,11 @@ namespace SquareFireline.Map
         public float scrollSpeed = -2f;
 
         [Header("初始位置设置")]
-        [Tooltip("地图起始 Chunk 索引（负值让玩家靠左）")]
-        public int startChunkIndex = -2;
+        [Tooltip("角色所在的 Chunk 索引（从 0 开始计数，建议设为 1 让角色靠左）")]
+        public int playerChunkIndex = 1;
+
+        [Tooltip("初始地图偏移（用于调整玩家视觉位置，负值向左）")]
+        public float initialMapOffset = -12f;
 
         // 地图整体偏移（累计滚动距离）
         private float _mapOffset = 0f;
@@ -43,22 +46,22 @@ namespace SquareFireline.Map
         private int lastObstacleWorldX = -999;
         private int currentObstacleGap = 3;
 
-        // 空隙配置
-        [System.Serializable]
-        public class GapConfig
-        {
-            public int minGapWidth = 1;
-            public int maxGapWidth = 3;
-            public float gapChance = 0.1f;
-            [Range(0, 10)]
-            public int minGapStart = 5; // 至少生成 5 个 Chunk 后才开始出现空隙
-        }
+        // 空隙配置（暂时禁用）
+        // [System.Serializable]
+        // public class GapConfig
+        // {
+        //     public int minGapWidth = 1;
+        //     public int maxGapWidth = 3;
+        //     public float gapChance = 0.1f;
+        //     [Range(0, 10)]
+        //     public int minGapStart = 5;
+        // }
 
-        public GapConfig gapConfig = new GapConfig();
+        // public GapConfig gapConfig = new GapConfig();
 
-        // 当前空隙范围（世界坐标）
-        private int gapStartWorldX = -1;
-        private int gapEndWorldX = -1;
+        // 当前空隙范围（暂时禁用）
+        // private int gapStartWorldX = -1;
+        // private int gapEndWorldX = -1;
 
         private void Awake()
         {
@@ -85,10 +88,10 @@ namespace SquareFireline.Map
             // 更新地图偏移（地图向左移动）
             _mapOffset += scrollSpeed * Time.deltaTime;
 
-            // 检查是否需要生成新的 Chunk（右侧）
+            // 检查并生成新的 Chunk（右侧）
             CheckAndGenerateChunks();
 
-            // 检查是否需要清理 Chunk（左侧）
+            // 检查是否需要清理 Chunk（左侧）- 清理后立即生成新的补充
             CheckAndClearChunks();
 
             // 应用地图偏移
@@ -100,14 +103,15 @@ namespace SquareFireline.Map
         /// </summary>
         private void CheckAndGenerateChunks()
         {
-            // 计算当前最右侧需要生成到的 Chunk 索引
-            // 玩家在 x=0，需要保证右侧有足够的 Chunk
-            int targetMaxChunk = Mathf.CeilToInt(-_mapOffset / config.chunkWidth) + config.aheadChunkCount;
+            // 保持固定的 Chunk 总数为 4 个
+            int targetTotalChunks = 4;
+            int currentChunkCount = maxGeneratedChunk - minGeneratedChunk;
+            int chunksToGenerate = targetTotalChunks - currentChunkCount;
 
-            while (maxGeneratedChunk < targetMaxChunk)
+            // 在右侧生成新的 Chunk
+            for (int i = 0; i < chunksToGenerate; i++)
             {
-                GenerateChunk(maxGeneratedChunk);
-                maxGeneratedChunk++;
+                GenerateChunkAtEnd();
             }
         }
 
@@ -117,7 +121,6 @@ namespace SquareFireline.Map
         private void CheckAndClearChunks()
         {
             // 计算需要清理到的 Chunk 索引
-            // 视野左边再往后的 Chunk 可以清理
             int targetMinChunk = Mathf.FloorToInt(-_mapOffset / config.chunkWidth) - config.behindChunkCount;
 
             while (minGeneratedChunk < targetMinChunk)
@@ -125,6 +128,33 @@ namespace SquareFireline.Map
                 ClearChunk(minGeneratedChunk);
                 minGeneratedChunk++;
             }
+        }
+
+        /// <summary>
+        /// 在末尾生成一个 Chunk（基于已生成 Chunk 的末尾位置）
+        /// </summary>
+        private void GenerateChunkAtEnd()
+        {
+            // 计算起始 X 位置：基于 minGeneratedChunk 的起始位置 + 偏移
+            int startX = minGeneratedChunk * config.chunkWidth + (maxGeneratedChunk - minGeneratedChunk) * config.chunkWidth;
+
+            Debug.Log($"[TilemapMapGenerator] 生成 Chunk #{maxGeneratedChunk} @ X={startX}");
+
+            for (int x = 0; x < config.chunkWidth; x++)
+            {
+                int worldX = startX + x;
+
+                // 生成地面列
+                GenerateGroundColumn(worldX, x);
+
+                // 尝试生成障碍物
+                if (ShouldSpawnObstacle(worldX))
+                {
+                    SpawnObstacle(worldX);
+                }
+            }
+
+            maxGeneratedChunk++;
         }
 
         /// <summary>
@@ -151,86 +181,32 @@ namespace SquareFireline.Map
             Debug.Log($"[TilemapMapGenerator] Tile 检查 - grassLeft: {(config.grassLeft != null ? "OK" : "NULL")}, grassMiddle: {(config.grassMiddle != null ? "OK" : "NULL")}, grassRight: {(config.grassRight != null ? "OK" : "NULL")}");
             Debug.Log($"[TilemapMapGenerator] Tile 检查 - dirtTile: {(config.dirtTile != null ? "OK" : "NULL")}");
             Debug.Log($"[TilemapMapGenerator] groundTilemap: {(groundTilemap != null ? "OK" : "NULL")}");
-            Debug.Log($"[TilemapMapGenerator] 起始 Chunk 索引：{startChunkIndex}");
+            Debug.Log($"[TilemapMapGenerator] 起始 Chunk 索引：{playerChunkIndex}");
 
-            // 生成初始 Chunk（从 startChunkIndex 开始）
-            int initialChunkCount = config.aheadChunkCount + config.behindChunkCount + 2;
-            for (int i = startChunkIndex; i < startChunkIndex + initialChunkCount; i++)
+            // 设置初始 minGeneratedChunk
+            minGeneratedChunk = 0;
+            maxGeneratedChunk = 0;
+
+            // 设置初始地图偏移，让左侧填满
+            _mapOffset = initialMapOffset;
+
+            // 生成初始 4 个 Chunk
+            int initialChunkCount = 4;
+            for (int i = 0; i < initialChunkCount; i++)
             {
-                GenerateChunk(i);
-                maxGeneratedChunk++;
+                GenerateChunkAtEnd();
             }
-            minGeneratedChunk = startChunkIndex;
+
+            // 应用初始偏移
+            ApplyMapOffset();
         }
 
         /// <summary>
-        /// 生成一个 Chunk
-        /// </summary>
-        private void GenerateChunk(int chunkIndex)
-        {
-            int startX = chunkIndex * config.chunkWidth;
-
-            // 检查是否需要生成空隙
-            bool shouldGenerateGap = ShouldGenerateGap(chunkIndex);
-
-            for (int x = 0; x < config.chunkWidth; x++)
-            {
-                int worldX = startX + x;
-
-                // 如果当前位置在空隙范围内，跳过生成
-                if (shouldGenerateGap && worldX >= gapStartWorldX && worldX < gapEndWorldX)
-                {
-                    ClearColumn(worldX);
-                    continue;
-                }
-
-                // 生成地面列
-                GenerateGroundColumn(worldX, x);
-
-                // 尝试生成障碍物
-                if (ShouldSpawnObstacle(worldX))
-                {
-                    SpawnObstacle(worldX);
-                }
-            }
-
-            Debug.Log($"[TilemapMapGenerator] 生成 Chunk #{chunkIndex} @ X={startX}");
-        }
-
-        /// <summary>
-        /// 判断是否需要生成空隙
+        /// 判断是否需要生成空隙（暂时禁用，始终返回 false）
         /// </summary>
         private bool ShouldGenerateGap(int chunkIndex)
         {
-            // 起始区域不生成空隙
-            if (chunkIndex < gapConfig.minGapStart)
-            {
-                gapStartWorldX = -1;
-                gapEndWorldX = -1;
-                return false;
-            }
-
-            // 如果当前 Chunk 包含空隙的延续部分，返回 true
-            if (gapEndWorldX > chunkIndex * config.chunkWidth)
-            {
-                return true;
-            }
-
-            // 概率判定是否生成新空隙
-            if (Random.value > gapConfig.gapChance)
-            {
-                gapStartWorldX = -1;
-                gapEndWorldX = -1;
-                return false;
-            }
-
-            // 生成新空隙
-            int gapWidth = Random.Range(gapConfig.minGapWidth, gapConfig.maxGapWidth + 1);
-            gapStartWorldX = chunkIndex * config.chunkWidth + Random.Range(2, config.chunkWidth - gapWidth - 2);
-            gapEndWorldX = gapStartWorldX + gapWidth;
-
-            Debug.Log($"[TilemapMapGenerator] 生成空隙：{gapStartWorldX} ~ {gapEndWorldX} (宽度：{gapWidth})");
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -410,7 +386,8 @@ namespace SquareFireline.Map
         /// </summary>
         private void ClearChunk(int chunkIndex)
         {
-            int startX = chunkIndex * config.chunkWidth;
+            // 计算相对于 minGeneratedChunk 的起始位置
+            int startX = minGeneratedChunk * config.chunkWidth + (chunkIndex - minGeneratedChunk) * config.chunkWidth;
 
             for (int x = 0; x < config.chunkWidth; x++)
             {
@@ -434,8 +411,8 @@ namespace SquareFireline.Map
             minGeneratedChunk = 0;
             maxGeneratedChunk = 0;
             lastObstacleWorldX = -999;
-            gapStartWorldX = -1;
-            gapEndWorldX = -1;
+            // gapStartWorldX = -1;
+            // gapEndWorldX = -1;
         }
 
 #if UNITY_EDITOR
