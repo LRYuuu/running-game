@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 425148053}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -364,12 +364,8 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 9c7101038c1077945902b15c7f65109c, type: 2}
   playerTransform: {fileID: 1165569038}
   scrollSpeed: -2
-  startChunkIndex: -2
-  gapConfig:
-    minGapWidth: 1
-    maxGapWidth: 3
-    gapChance: 0.1
-    minGapStart: 5
+  playerChunkIndex: 1
+  initialMapOffset: -12
 --- !u!4 &632783030
 Transform:
   m_ObjectHideFlags: 0
@@ -3967,7 +3963,7 @@ Transform:
   m_GameObject: {fileID: 1165569034}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
