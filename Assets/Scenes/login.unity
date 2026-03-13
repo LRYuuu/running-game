@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 425148053}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -363,6 +363,8 @@ MonoBehaviour:
   obstacleTilemap: {fileID: 1382262310}
   config: {fileID: 11400000, guid: 9c7101038c1077945902b15c7f65109c, type: 2}
   playerTransform: {fileID: 1165569038}
+  scrollSpeed: -2
+  startChunkIndex: -2
   gapConfig:
     minGapWidth: 1
     maxGapWidth: 3
@@ -3867,10 +3869,10 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
@@ -3945,7 +3947,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 395334215, guid: 183d994ecfed5b843b0789a204d92601, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -3953,7 +3955,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1165569038
@@ -3965,7 +3967,7 @@ Transform:
   m_GameObject: {fileID: 1165569034}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3983,7 +3985,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a46efd8af0d87c4db7ed43ae7029f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoMoveSpeed: 3
   jumpForce: 8
   groundCheckOffset: {x: 0, y: -0.5}
   groundCheckSize: {x: 0.8, y: 0.1}

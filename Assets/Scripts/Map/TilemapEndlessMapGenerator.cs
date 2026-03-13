@@ -28,6 +28,10 @@ namespace SquareFireline.Map
         [Tooltip("地图滚动速度（负值表示向左）")]
         public float scrollSpeed = -2f;
 
+        [Header("初始位置设置")]
+        [Tooltip("地图起始 Chunk 索引（负值让玩家靠左）")]
+        public int startChunkIndex = -2;
+
         // 地图整体偏移（累计滚动距离）
         private float _mapOffset = 0f;
 
@@ -147,14 +151,16 @@ namespace SquareFireline.Map
             Debug.Log($"[TilemapMapGenerator] Tile 检查 - grassLeft: {(config.grassLeft != null ? "OK" : "NULL")}, grassMiddle: {(config.grassMiddle != null ? "OK" : "NULL")}, grassRight: {(config.grassRight != null ? "OK" : "NULL")}");
             Debug.Log($"[TilemapMapGenerator] Tile 检查 - dirtTile: {(config.dirtTile != null ? "OK" : "NULL")}");
             Debug.Log($"[TilemapMapGenerator] groundTilemap: {(groundTilemap != null ? "OK" : "NULL")}");
+            Debug.Log($"[TilemapMapGenerator] 起始 Chunk 索引：{startChunkIndex}");
 
-            // 生成初始 Chunk（从 0 到 aheadChunkCount + behindChunkCount + 1）
+            // 生成初始 Chunk（从 startChunkIndex 开始）
             int initialChunkCount = config.aheadChunkCount + config.behindChunkCount + 2;
-            for (int i = 0; i < initialChunkCount; i++)
+            for (int i = startChunkIndex; i < startChunkIndex + initialChunkCount; i++)
             {
                 GenerateChunk(i);
                 maxGeneratedChunk++;
             }
+            minGeneratedChunk = startChunkIndex;
         }
 
         /// <summary>
