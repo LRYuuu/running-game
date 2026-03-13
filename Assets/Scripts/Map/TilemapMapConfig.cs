@@ -54,5 +54,33 @@ namespace SquareFireline.Map
 
         [Tooltip("障碍物在 Y 轴上的生成层（通常为 groundHeight）")]
         public int obstacleLayerY = 5;
+
+        [Header("地形起伏")]
+        [Tooltip("启用起伏地形")]
+        public bool enableTerrainVariation = false;
+
+        [Tooltip("基准高度")]
+        public int baseHeight = 5;
+
+        [Tooltip("最小高度")]
+        public int minHeight = 2;
+
+        [Tooltip("最大高度")]
+        public int maxHeight = 8;
+
+        [Tooltip("高度变化幅度")]
+        public int heightVariation = 3;
+
+        [Tooltip("噪声频率")]
+        public float noiseFrequency = 0.15f;
+
+        [Tooltip("噪声强度")]
+        public float noiseStrength = 1.0f;
+
+        [Tooltip("随机种子")]
+        public int seed = 12345;
+
+        [Tooltip("前 N 个 Chunk 保持平坦")]
+        public int flatChunkCount = 3;
     }
 }
