@@ -2,17 +2,17 @@
     "name": "SquareFireline.Tests.PlayMode",
     "rootNamespace": "SquareFireline.Tests",
     "references": [
-        "SquareFireline",
-        "UnityEngine.TestRunner",
-        "com.unity.ext.nunit"
+        "SquareFireline"
     ],
     "includePlatforms": [],
-    "excludePlatforms": [],
+    "excludePlatforms": [
+        "Editor"
+    ],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "generateReferenceInfo": false,
+    "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
 }

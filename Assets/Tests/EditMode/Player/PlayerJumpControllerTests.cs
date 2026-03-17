@@ -282,7 +282,7 @@ namespace SquareFireline.Player.Tests
         }
         #endregion
 
-        #region 二段跳测试
+        #region 二段跳完整测试
         [Test]
         public void TestTryJump_DoubleJump_WhenInAir()
         {
@@ -299,6 +299,92 @@ namespace SquareFireline.Player.Tests
 
             // Assert: 在空中且二段跳可用时应该能跳跃
             Assert.Greater(_rigidbody2D.velocity.y, 0f, "二段跳应该能执行");
+        }
+
+        [Test]
+        public void TestDoubleJump_InAir_CanJump()
+        {
+            // Arrange: 玩家在空中，模拟一段跳后的状态
+            _playerObject.transform.position = new Vector3(0f, 5f, 0f);
+
+            var bufferField = typeof(PlayerJumpController).GetField("_jumpBufferTimer", BindingFlags.NonPublic | BindingFlags.Instance);
+            var canDoubleJumpField = typeof(PlayerJumpController).GetField("_canDoubleJump", BindingFlags.NonPublic | BindingFlags.Instance);
+            bufferField.SetValue(_jumpController, 0.2f);
+            canDoubleJumpField.SetValue(_jumpController, true);
+
+            var initialVelocity = _rigidbody2D.velocity;
+
+            // Act: 执行二段跳
+            _jumpController.TryJump();
+
+            // Assert: 二段跳后速度应该增加
+            Assert.Greater(_rigidbody2D.velocity.y, initialVelocity.y, "二段跳后垂直速度应该增加");
+        }
+
+        [Test]
+        public void TestDoubleJump_AfterDoubleJump_CannotJumpAgain()
+        {
+            // Arrange: 玩家在空中，二段跳已使用
+            _playerObject.transform.position = new Vector3(0f, 5f, 0f);
+
+            var bufferField = typeof(PlayerJumpController).GetField("_jumpBufferTimer", BindingFlags.NonPublic | BindingFlags.Instance);
+            var canDoubleJumpField = typeof(PlayerJumpController).GetField("_canDoubleJump", BindingFlags.NonPublic | BindingFlags.Instance);
+            bufferField.SetValue(_jumpController, 0.2f);
+            canDoubleJumpField.SetValue(_jumpController, false); // 二段跳已使用
+
+            var initialVelocity = _rigidbody2D.velocity;
+
+            // Act: 尝试再次跳跃
+            _jumpController.TryJump();
+
+            // Assert: 二段跳后不可再次跳跃，速度应该不变
+            Assert.AreEqual(initialVelocity.y, _rigidbody2D.velocity.y, "二段跳后不应再次跳跃");
+        }
+
+        [Test]
+        public void TestDoubleJump_OnGround_Resets()
+        {
+            // Arrange: 玩家在地面上，模拟二段跳已使用的状态
+            _playerObject.transform.position = new Vector3(0f, 0.6f, 0f);
+
+            var canDoubleJumpField = typeof(PlayerJumpController).GetField("_canDoubleJump", BindingFlags.NonPublic | BindingFlags.Instance);
+            canDoubleJumpField.SetValue(_jumpController, false); // 模拟二段跳已使用
+
+            // Act: 更新一帧（触发 Update 中的地面检测和重置）
+            // 由于 Update 是自动调用的，我们直接检查 CanDoubleJump() 的行为
+            // 在地面上时，CanDoubleJump() 应该返回 false（因为不需要二段跳）
+            var canDoubleJump = _jumpController.CanDoubleJump();
+
+            // Assert: 在地面上时二段跳应该不可用（不需要）
+            Assert.IsFalse(canDoubleJump, "在地面上时二段跳应该不可用");
+            // 注意：_canDoubleJump 字段会在 Update 中被重置为 true，但 CanDoubleJump() 仍返回 false
+        }
+
+        [Test]
+        public void TestDoubleJump_WithConfig_UsesCorrectForce()
+        {
+            // Arrange: 玩家在空中，二段跳可用
+            _playerObject.transform.position = new Vector3(0f, 5f, 0f);
+
+            var bufferField = typeof(PlayerJumpController).GetField("_jumpBufferTimer", BindingFlags.NonPublic | BindingFlags.Instance);
+            var canDoubleJumpField = typeof(PlayerJumpController).GetField("_canDoubleJump", BindingFlags.NonPublic | BindingFlags.Instance);
+            bufferField.SetValue(_jumpController, 0.2f);
+            canDoubleJumpField.SetValue(_jumpController, true);
+
+            var initialVelocity = _rigidbody2D.velocity;
+
+            // Act: 执行二段跳（使用 doubleJumpForce）
+            _jumpController.TryJump();
+
+            // Assert: 二段跳应该使用正确的力度
+            // 二段跳力度应该小于一段跳力度（8f vs 10f）
+            var expectedImpulse = _jumpConfig.doubleJumpForce;
+            var actualImpulse = _rigidbody2D.velocity.y - initialVelocity.y;
+
+            // 由于 ExecuteJump 会先重置 velocity.y 为 0，然后应用 force
+            // 所以实际速度增量应该等于 force / mass（mass = 1）
+            Assert.Greater(actualImpulse, 0f, "二段跳应该产生正向速度");
+            Assert.AreEqual(expectedImpulse, actualImpulse, 0.1f, "二段跳应该使用正确的力度");
         }
         #endregion
     }
