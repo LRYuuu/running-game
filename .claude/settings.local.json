@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "mcp__UnityMCP__manage_editor",
+      "mcp__UnityMCP__manage_asset",
+      "mcp__UnityMCP__manage_scriptable_object",
+      "mcp__UnityMCP__read_console",
+      "mcp__UnityMCP__find_gameobjects",
+      "mcp__UnityMCP__manage_gameobject",
+      "WebFetch(domain:scene)",
+      "mcp__UnityMCP__manage_components",
+      "mcp__UnityMCP__manage_scene",
+      "mcp__UnityMCP__run_tests",
+      "mcp__UnityMCP__get_test_job",
+      "mcp__UnityMCP__manage_packages",
+      "mcp__UnityMCP__refresh_unity",
+      "Bash(cd:*)",
+      "Read(//c/Program Files/Unity/Hub/Editor//**)",
+      "Read(//c/Program Files/Unity/Hub/Editor/**)",
+      "Bash(\"/c/Program Files/Unity/Hub/Editor/2022.3.62f3c1/Editor/Unity.exe\" -batchmode -nographics -runTests -testPlatform EditMode -testResults \"C:/shiyou-workspace/Square Fireline/test-results-editmode.xml\" -logFile \"C:/shiyou-workspace/Square Fireline/test-log-editmode.txt\" -projectPath \"C:/shiyou-workspace/Square Fireline\")",
+      "mcp__UnityMCP__validate_script",
+      "Bash(find:*)",
+      "Bash(tasklist:*)",
+      "mcp__UnityMCP__debug_request_context",
+      "Bash(sleep:*)",
+      "Bash(curl:*)",
+      "mcp__UnityMCP__set_active_instance",
+      "Bash(taskkill:*)",
+      "Bash(powershell -Command \"Stop-Process -Id 51088 -Force\" 2>&1 || echo \"Cannot kill process\")",
+      "Bash(ps:*)"
+    ]
+  }
+}
