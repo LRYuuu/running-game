@@ -11,7 +11,7 @@ namespace SquareFireline.Player
         #region 私有字段
 
         private Animator _animator;
-        private PlayerController _playerController;
+        private GroundDetector _groundDetector;
         private Rigidbody2D _rb;
 
         // 动画参数哈希
@@ -31,7 +31,7 @@ namespace SquareFireline.Player
         private void Awake()
         {
             _animator = GetComponent<Animator>();
-            _playerController = GetComponent<PlayerController>();
+            _groundDetector = GetComponent<GroundDetector>();
             _rb = GetComponent<Rigidbody2D>();
 
             if (_animator == null)
@@ -42,10 +42,10 @@ namespace SquareFireline.Player
 
         private void Update()
         {
-            if (_animator == null || _playerController == null) return;
+            if (_animator == null || _groundDetector == null) return;
 
             // 地面状态
-            bool isGrounded = _playerController.IsGrounded();
+            bool isGrounded = _groundDetector.IsGrounded();
             _animator.SetBool(IsGroundedHash, isGrounded);
 
             // 垂直速度
