@@ -25,7 +25,8 @@ namespace SquareFireline.Player
         private Rigidbody2D _rigidbody2D;
         private float _jumpBufferTimer;
         private float _coyoteTimeTimer;
-        private bool _canDoubleJump;
+        private int _jumpCount;
+        private bool _isGroundedLastFrame;
         #endregion
 
         #region Unity 生命周期
@@ -52,6 +53,12 @@ namespace SquareFireline.Player
                 Debug.Log($"[PlayerJumpController] Awake: Successfully got Rigidbody2D for {gameObject.name}");
             }
 
+            // 冻结旋转，防止玩家在空中旋转
+            if (_rigidbody2D != null)
+            {
+                _rigidbody2D.freezeRotation = true;
+            }
+
             // 如果未显式分配，尝试获取子组件
             if (_groundDetector == null)
             {
@@ -67,11 +74,16 @@ namespace SquareFireline.Player
             // 初始化状态
             _jumpBufferTimer = 0f;
             _coyoteTimeTimer = 0f;
-            _canDoubleJump = true;
+            _jumpCount = 0;
+            _isGroundedLastFrame = false;
         }
 
         private void Update()
         {
+            // 更新地面状态
+            bool wasGrounded = _isGroundedLastFrame;
+            _isGroundedLastFrame = IsGrounded();
+
             // 更新计时器
             if (_jumpBufferTimer > 0f)
             {
@@ -83,14 +95,10 @@ namespace SquareFireline.Player
                 _coyoteTimeTimer -= Time.deltaTime;
             }
 
-            // 重置二段跳（当玩家在地面时）
-            if (IsGrounded())
+            // 重置跳跃计数（当玩家刚落地时）
+            if (_isGroundedLastFrame && !wasGrounded)
             {
-                if (!_canDoubleJump && _enableDebugLog)
-                {
-                    Debug.Log($"[PlayerJumpController] Update: Landed, resetting _canDoubleJump to TRUE");
-                }
-                _canDoubleJump = true;
+                _jumpCount = 0;
                 _coyoteTimeTimer = _jumpConfig.coyoteTime;
             }
 
@@ -98,10 +106,6 @@ namespace SquareFireline.Player
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.K))
             {
                 _jumpBufferTimer = _jumpConfig.jumpBufferTime;
-                if (_enableDebugLog)
-                {
-                    Debug.Log($"[PlayerJumpController] Update: Jump input detected, buffer={_jumpBufferTimer}");
-                }
                 TryJump();
             }
         }
@@ -135,38 +139,28 @@ namespace SquareFireline.Player
         public void TryJump()
         {
             if (_jumpBufferTimer <= 0f)
+            {
                 return;
+            }
 
-            // 一段跳条件：在地面上或有土狼时间
-            if (IsGrounded() || _coyoteTimeTimer > 0f)
+            bool grounded = IsGrounded();
+
+            // 一段跳条件：在地面上
+            if (grounded)
             {
                 ExecuteJump(_jumpConfig.jumpForce);
                 _jumpBufferTimer = 0f;
-                _canDoubleJump = true;  // 一段跳后允许二段跳
-                if (_enableDebugLog)
-                {
-                    Debug.Log($"[PlayerJumpController] TryJump: First jump executed, _canDoubleJump set to TRUE");
-                }
+                _jumpCount = 1;
                 return;
             }
 
-            // 二段跳条件：在空中且二段跳可用
-            if (_canDoubleJump && !IsGrounded())
+            // 二段跳条件：在空中且跳跃次数等于 1
+            if (_jumpCount == 1 && !grounded)
             {
                 ExecuteJump(_jumpConfig.doubleJumpForce);
                 _jumpBufferTimer = 0f;
-                _canDoubleJump = false;  // 二段跳后不可再次跳跃
-                if (_enableDebugLog)
-                {
-                    Debug.Log($"[PlayerJumpController] TryJump: Double jump executed, _canDoubleJump set to FALSE");
-                }
+                _jumpCount = 2;
                 return;
-            }
-
-            // 如果执行到这里，说明跳跃条件不满足
-            if (_enableDebugLog)
-            {
-                Debug.Log($"[PlayerJumpController] TryJump: No jump condition met. IsGrounded={IsGrounded()}, _canDoubleJump={_canDoubleJump}, _coyoteTimeTimer={_coyoteTimeTimer}");
             }
         }
 
@@ -233,7 +227,8 @@ namespace SquareFireline.Player
         {
             _jumpBufferTimer = 0f;
             _coyoteTimeTimer = 0f;
-            _canDoubleJump = true;
+            _jumpCount = 0;
+            _isGroundedLastFrame = false;
         }
 
         /// <summary>
@@ -260,7 +255,7 @@ namespace SquareFireline.Player
         /// <returns>True 如果二段跳可用，否则 False</returns>
         public bool CanDoubleJump()
         {
-            return _canDoubleJump && !IsGrounded();
+            return _jumpCount < 2 && !IsGrounded();
         }
         #endregion
 

@@ -13,8 +13,8 @@ namespace SquareFireline.Player
         [SerializeField] private Vector2 _groundCheckOffset = new Vector2(0f, -0.5f);
 
         [Header("地面检测")]
-        [Tooltip("地面检测盒子尺寸")]
-        [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.8f, 0.1f);
+        [Tooltip("地面检测盒子尺寸（宽度要小于玩家宽度，避免碰到侧面）")]
+        [SerializeField] private Vector2 _groundCheckSize = new Vector2(0.3f, 0.05f);
         #endregion
 
         #region 私有字段
@@ -36,16 +36,23 @@ namespace SquareFireline.Player
         /// <returns>True 如果玩家在地面上，否则 False</returns>
         public bool IsGrounded()
         {
-            // 使用 JumpConfig 的距离参数，从玩家底部向下检测
+            var checkPos = (Vector2)transform.position + _groundCheckOffset;
+
+            // 获取地面层，但排除玩家自身的 Layer
+            LayerMask groundLayer = _jumpConfig != null ? _jumpConfig.groundLayer : LayerMask.GetMask("Ground");
+
             var hit = Physics2D.OverlapBox(
-                (Vector2)transform.position + _groundCheckOffset,
+                checkPos,
                 _groundCheckSize,
                 0f,
-                _jumpConfig != null ? _jumpConfig.groundLayer : LayerMask.GetMask("Ground")
+                groundLayer
             );
 
-            // 可选：Debug 可视化
-            DebugGroundCheck(hit != null);
+            // 排除玩家自身的 Collider
+            if (hit != null && hit.transform == transform)
+            {
+                return false;
+            }
 
             return hit != null;
         }
