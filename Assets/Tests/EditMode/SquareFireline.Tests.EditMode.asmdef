@@ -1,0 +1,18 @@
+{
+    "name": "SquareFireline.Tests.EditMode",
+    "rootNamespace": "SquareFireline.Tests",
+    "references": [
+        "SquareFireline"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "generateReferenceInfo": false,
+    "versionDefines": [],
+    "noEngineReferences": false
+}
