@@ -3718,7 +3718,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 12
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -3823,6 +3823,8 @@ GameObject:
   - component: {fileID: 1165569036}
   - component: {fileID: 1165569035}
   - component: {fileID: 1165569039}
+  - component: {fileID: 1165569041}
+  - component: {fileID: 1165569040}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3942,7 +3944,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 13
   m_Sprite: {fileID: 395334215, guid: 183d994ecfed5b843b0789a204d92601, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3963,7 +3965,7 @@ Transform:
   m_GameObject: {fileID: 1165569034}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6, y: 0, z: 0}
+  m_LocalPosition: {x: -6, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3981,9 +3983,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a46efd8af0d87c4db7ed43ae7029f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 8
+  jumpHeight: 16
+  doubleJumpHeight: 14
   groundCheckOffset: {x: 0, y: -0.5}
   groundCheckSize: {x: 0.8, y: 0.1}
+  jumpBufferTime: 0.2
+  coyoteTime: 0.15
+  maxFallSpeed: -15
+--- !u!114 &1165569040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165569034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f7e350cd247db34190cf3bb218ccd95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _jumpConfig: {fileID: 0}
+  _groundDetector: {fileID: 0}
+  _enableDebugLog: 0
+--- !u!114 &1165569041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165569034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1122af854e5b740a44a9b3a7c58710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groundCheckOffset: {x: 0, y: -0.5}
+  _groundCheckSize: {x: 0.8, y: 0.1}
 --- !u!1 &1382262306
 GameObject:
   m_ObjectHideFlags: 0
@@ -4094,7 +4129,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 12
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16

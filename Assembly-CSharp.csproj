@@ -64,14 +64,8 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f3c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\InfiniteBackgroundTiler.cs" />
-    <Compile Include="Assets\Scripts\ParallaxBackgroundTilemap.cs" />
-    <Compile Include="Assets\Scripts\Map\TilemapMapConfig.cs" />
-    <Compile Include="Assets\Scripts\Map\TilemapEndlessMapGenerator.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\ParallaxBackground.cs" />
-    <Compile Include="Assets\Scripts\BackgroundManager.cs" />
-    <Compile Include="Assets\Scripts\ProceduralBackgroundGenerator.cs" />
+    <Compile Include="Assets\Tests\EditMode\Player\PlayerJumpControllerTests.cs" />
+    <Compile Include="Assets\Tests\EditMode\Player\GroundDetectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1160,6 +1154,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="SquareFireline.Tests.PlayMode.csproj" />
+    <ProjectReference Include="SquareFireline.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
