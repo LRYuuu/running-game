@@ -47,7 +47,7 @@ namespace SquareFireline.Player
             {
                 Debug.LogError($"[PlayerJumpController] Awake: Failed to get Rigidbody2D! gameObject={gameObject.name}");
             }
-            else
+            else if (_enableDebugLog)
             {
                 Debug.Log($"[PlayerJumpController] Awake: Successfully got Rigidbody2D for {gameObject.name}");
             }
@@ -154,8 +154,6 @@ namespace SquareFireline.Player
         /// <param name="force">跳跃力度</param>
         public void ExecuteJump(float force)
         {
-            Debug.Log($"[PlayerJumpController] ExecuteJump START - _rigidbody2D==null:{_rigidbody2D == null}, _jumpConfig==null:{_jumpConfig == null}");
-
             // Debug: 检查依赖
             if (_rigidbody2D == null)
             {
@@ -169,19 +167,13 @@ namespace SquareFireline.Player
                 // 使用默认值继续
             }
 
-            Debug.Log($"[PlayerJumpController] ExecuteJump: Before velocity reset, current velocity={_rigidbody2D.velocity}");
-
             // 清除垂直速度，确保跳跃高度一致
             var velocity = _rigidbody2D.velocity;
             velocity.y = 0f;
             _rigidbody2D.velocity = velocity;
 
-            Debug.Log($"[PlayerJumpController] ExecuteJump: After velocity reset, new velocity={_rigidbody2D.velocity}");
-
             // 应用向上力
             _rigidbody2D.AddForce(Vector2.up * force, ForceMode2D.Impulse);
-
-            Debug.Log($"[PlayerJumpController] ExecuteJump: After AddForce, final velocity={_rigidbody2D.velocity}");
 
             // 日志输出
             if (_enableDebugLog)
