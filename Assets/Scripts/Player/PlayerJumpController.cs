@@ -86,6 +86,10 @@ namespace SquareFireline.Player
             // 重置二段跳（当玩家在地面时）
             if (IsGrounded())
             {
+                if (!_canDoubleJump && _enableDebugLog)
+                {
+                    Debug.Log($"[PlayerJumpController] Update: Landed, resetting _canDoubleJump to TRUE");
+                }
                 _canDoubleJump = true;
                 _coyoteTimeTimer = _jumpConfig.coyoteTime;
             }
@@ -94,6 +98,10 @@ namespace SquareFireline.Player
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.K))
             {
                 _jumpBufferTimer = _jumpConfig.jumpBufferTime;
+                if (_enableDebugLog)
+                {
+                    Debug.Log($"[PlayerJumpController] Update: Jump input detected, buffer={_jumpBufferTimer}");
+                }
                 TryJump();
             }
         }
@@ -134,7 +142,11 @@ namespace SquareFireline.Player
             {
                 ExecuteJump(_jumpConfig.jumpForce);
                 _jumpBufferTimer = 0f;
-                _canDoubleJump = true;
+                _canDoubleJump = true;  // 一段跳后允许二段跳
+                if (_enableDebugLog)
+                {
+                    Debug.Log($"[PlayerJumpController] TryJump: First jump executed, _canDoubleJump set to TRUE");
+                }
                 return;
             }
 
@@ -143,8 +155,18 @@ namespace SquareFireline.Player
             {
                 ExecuteJump(_jumpConfig.doubleJumpForce);
                 _jumpBufferTimer = 0f;
-                _canDoubleJump = false;
+                _canDoubleJump = false;  // 二段跳后不可再次跳跃
+                if (_enableDebugLog)
+                {
+                    Debug.Log($"[PlayerJumpController] TryJump: Double jump executed, _canDoubleJump set to FALSE");
+                }
                 return;
+            }
+
+            // 如果执行到这里，说明跳跃条件不满足
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerJumpController] TryJump: No jump condition met. IsGrounded={IsGrounded()}, _canDoubleJump={_canDoubleJump}, _coyoteTimeTimer={_coyoteTimeTimer}");
             }
         }
 

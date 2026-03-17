@@ -3822,7 +3822,6 @@ GameObject:
   - component: {fileID: 1165569037}
   - component: {fileID: 1165569036}
   - component: {fileID: 1165569035}
-  - component: {fileID: 1165569039}
   - component: {fileID: 1165569041}
   - component: {fileID: 1165569040}
   m_Layer: 0
@@ -3971,25 +3970,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1165569039
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1165569034}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a46efd8af0d87c4db7ed43ae7029f72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpHeight: 16
-  doubleJumpHeight: 14
-  groundCheckOffset: {x: 0, y: -0.5}
-  groundCheckSize: {x: 0.8, y: 0.1}
-  jumpBufferTime: 0.2
-  coyoteTime: 0.15
-  maxFallSpeed: -15
 --- !u!114 &1165569040
 MonoBehaviour:
   m_ObjectHideFlags: 0

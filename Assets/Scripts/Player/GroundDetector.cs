@@ -19,6 +19,7 @@ namespace SquareFireline.Player
 
         #region 私有字段
         private JumpConfig _jumpConfig;
+        private bool _lastFrameGrounded = false;
         #endregion
 
         #region Unity 生命周期
