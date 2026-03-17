@@ -99,6 +99,11 @@ namespace SquareFireline.Player
             if (_isGroundedLastFrame && !wasGrounded)
             {
                 _jumpCount = 0;
+            }
+
+            // 启动土狼时间（当玩家刚离开地面时）
+            if (!_isGroundedLastFrame && wasGrounded)
+            {
                 _coyoteTimeTimer = _jumpConfig.coyoteTime;
             }
 
@@ -150,6 +155,16 @@ namespace SquareFireline.Player
             {
                 ExecuteJump(_jumpConfig.jumpForce);
                 _jumpBufferTimer = 0f;
+                _jumpCount = 1;
+                return;
+            }
+
+            // 土狼时间跳跃：在空中但土狼时间计时器仍有效
+            if (_coyoteTimeTimer > 0f && !grounded)
+            {
+                ExecuteJump(_jumpConfig.jumpForce);
+                _jumpBufferTimer = 0f;
+                _coyoteTimeTimer = 0f;
                 _jumpCount = 1;
                 return;
             }
