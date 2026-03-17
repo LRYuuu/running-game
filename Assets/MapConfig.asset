@@ -28,3 +28,12 @@ MonoBehaviour:
   minObstacleGap: 3
   maxObstacleGap: 8
   obstacleLayerY: 5
+  enableTerrainVariation: 1
+  baseHeight: 5
+  minHeight: 2
+  maxHeight: 8
+  heightVariation: 3
+  noiseFrequency: 0.15
+  noiseStrength: 1
+  seed: 12345
+  flatChunkCount: 2
