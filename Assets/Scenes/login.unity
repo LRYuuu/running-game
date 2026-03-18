@@ -3824,6 +3824,7 @@ GameObject:
   - component: {fileID: 1165569035}
   - component: {fileID: 1165569041}
   - component: {fileID: 1165569040}
+  - component: {fileID: 1165569042}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3982,8 +3983,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f7e350cd247db34190cf3bb218ccd95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpConfig: {fileID: 0}
-  _groundDetector: {fileID: 0}
+  _jumpConfig: {fileID: 11400000, guid: 6c877c136860efc4cb0afb458c45517b, type: 2}
+  _groundDetector: {fileID: 1165569041}
   _enableDebugLog: 0
 --- !u!114 &1165569041
 MonoBehaviour:
@@ -3999,6 +4000,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundCheckOffset: {x: 0, y: -0.5}
   _groundCheckSize: {x: 0.8, y: 0.1}
+--- !u!114 &1165569042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165569034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 963634a3cf24a014a859d9c2b957f40d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  _respawnDelay: 1
+  _enableDebugLog: 0
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &1382262306
 GameObject:
   m_ObjectHideFlags: 0
@@ -4013,7 +4031,7 @@ GameObject:
   - component: {fileID: 1382262308}
   m_Layer: 0
   m_Name: Obstacles
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
