@@ -1,12 +1,12 @@
 # Square Fireline - Sprint Status Tracking
 # Generated: 2026-03-16
-# Last Updated: 2026-03-17
+# Last Updated: 2026-03-18
 # Total Epics: 8 | Total Stories: 46
 
 metadata:
   project_name: "Square Fireline"
   generated_date: "2026-03-16"
-  last_updated: "2026-03-17"
+  last_updated: "2026-03-18"
   total_epics: 8
   total_stories: 46
   communication_language: "中文"
@@ -45,13 +45,13 @@ development_status:
   # -------------------------------------------------------------------------
   # Epic 3: 障碍物与碰撞 (7 stories)
   # -------------------------------------------------------------------------
-  epic-3: backlog
-  3-1-作为系统我可以在地图中生成障碍物以便增加挑战性：backlog
-  3-2-作为系统我可以按配置概率生成障碍物以便控制难度：backlog
-  3-3-作为系统我可以生成空隙地形以便增加跳跃挑战：backlog
+  epic-3: in_progress
+  3-1-作为系统我可以在地图中生成障碍物以便增加挑战性：in_progress
+  3-2-作为系统我可以按配置概率生成障碍物以便控制难度：done
+  3-3-作为系统我可以生成空隙地形以便增加跳跃挑战：done
   3-4-作为玩家我希望与障碍物碰撞时触发死亡以便有明确反馈：backlog
-  3-5-作为玩家我希望与地形有正确碰撞以便可以站立：backlog
-  3-6-作为开发者我希望有障碍物配置 ScriptableObject 以便调整参数：backlog
+  3-5-作为玩家我希望与地形有正确碰撞以便可以站立：done
+  3-6-作为开发者我希望有障碍物配置 ScriptableObject 以便调整参数：in_progress
   3-7-作为开发者我希望障碍物与地形位置可控以便避免不可玩局面：backlog
   epic-3-retrospective: optional
 
@@ -124,7 +124,7 @@ current_sprint:
   start_date: null
   end_date: null
   stories_committed: []
-  stories_completed: ["1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "2-1", "2-2", "2-3", "2-4", "2-5", "2-6", "2-7", "2-8"]
+  stories_completed: ["1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "2-1", "2-2", "2-3", "2-4", "2-5", "2-6", "2-7", "2-8", "3-3"]
 
 # =============================================================================
 # 冲刺历史 (Sprint History)
@@ -188,3 +188,4 @@ notes:
   - "垂直切片里程碑：Epic 1-4 完成后即可玩"
   - "Epic 1 已完成：玩家跳跃系统（一段跳/二段跳/土狼时间/跳跃缓冲）"
   - "Epic 2 已完成：地图系统（Chunk 生成/Perlin Noise 地形/动态清理）"
+  - "Epic 3 进行中：障碍物生成 (3.2✅ 3.3✅ 3.5✅)、死亡逻辑待完成"

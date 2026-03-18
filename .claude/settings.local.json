@@ -33,7 +33,13 @@
       "Bash(unity-editor -batchmode -quit -executeMethod \"UnityEditor.TestTools.CLI.CommandLineTestRunner.RunTests\" -- -testPlatform EditMode -testFilter \"SquareFireline.Player.Tests\")",
       "mcp__UnityMCP__apply_text_edits",
       "Bash(sed -i 's/epic-1: backlog/epic-1: in-progress/' '_bmad-output/implementation-artifacts/sprint-status.yaml')",
-      "Bash(sed -i 's/1-1-作为玩家我可以按跳跃键起跳以便越过障碍：ready-for-dev/1-1-作为玩家我可以按跳跃键起跳以便越过障碍：done/' '_bmad-output/implementation-artifacts/sprint-status.yaml')"
+      "Bash(sed -i 's/1-1-作为玩家我可以按跳跃键起跳以便越过障碍：ready-for-dev/1-1-作为玩家我可以按跳跃键起跳以便越过障碍：done/' '_bmad-output/implementation-artifacts/sprint-status.yaml')",
+      "Bash(unity-editor -runTests -testPlatform EditMode -testFilter \"SquareFireline.Map.Tests.GapGenerationTests\")",
+      "Bash(unity-cli test:*)",
+      "Bash(unity.exe -batchmode -quit -logFile - -executeMethod \"UnityEditor.TestTools.TestRunner.Api.TestRunnerApi.RunTests\" -testPlatform EditMode)",
+      "Bash(C:UnityHubEditor2022.3.62f1c1EditorUnity.exe -batchmode -quit -projectPath . -runTestsEditMode -testResults C:shiyou-workspaceSquare FirelineTestResults.xml -testCategory EditMode)",
+      "Bash(unity-editor -batchmode -quit -executeMethod \"UnityEditor.TestTools.CLI.CommandLineTest.RunTests\" -- --testPlatform EditMode --filter \"MapGeneration\")",
+      "Bash(timeout 10)"
     ]
   }
 }
