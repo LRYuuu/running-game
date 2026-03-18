@@ -50,22 +50,12 @@ namespace SquareFireline.Map
         // 地形起伏高度缓存
         private Dictionary<int, int> _heightCache = new Dictionary<int, int>();
 
-        // 空隙配置（暂时禁用）
-        // [System.Serializable]
-        // public class GapConfig
-        // {
-        //     public int minGapWidth = 1;
-        //     public int maxGapWidth = 3;
-        //     public float gapChance = 0.1f;
-        //     [Range(0, 10)]
-        //     public int minGapStart = 5;
-        // }
+        // 当前空隙范围（世界坐标）
+        private int gapStartWorldX = -1;
+        private int gapEndWorldX = -1; // exclusive: gapStartWorldX <= x < gapEndWorldX
 
-        // public GapConfig gapConfig = new GapConfig();
-
-        // 当前空隙范围（暂时禁用）
-        // private int gapStartWorldX = -1;
-        // private int gapEndWorldX = -1;
+        // 上一个空隙的结束位置（用于间隔控制）
+        private int lastGapEndWorldX = -999;
 
         private void Awake()
         {
@@ -142,17 +132,78 @@ namespace SquareFireline.Map
             // 计算起始 X 位置：基于 minGeneratedChunk 的起始位置 + 偏移
             int startX = minGeneratedChunk * config.chunkWidth + (maxGeneratedChunk - minGeneratedChunk) * config.chunkWidth;
 
+            // 检查是否生成空隙
+            bool shouldGenerateGap = ShouldGenerateGap(maxGeneratedChunk, startX);
+            int gapWidth = 0;
+            int gapStartLocalX = -1;
+            int gapGroundHeight = -1;
+
+            if (shouldGenerateGap)
+            {
+                // 随机选择空隙宽度
+                gapWidth = Random.Range(config.minGapWidth, config.maxGapWidth + 1);
+                // 空隙开始位置（Chunk 内部，留出边界）
+                gapStartLocalX = Random.Range(2, config.chunkWidth - gapWidth - 2);
+
+                // 检查空隙位置的地形高度
+                int candidateStartX = startX + gapStartLocalX;
+                int candidateEndX = candidateStartX + gapWidth;
+
+                // 获取空隙左右两侧的地块高度
+                int leftGroundHeight = GetColumnHeight(candidateStartX - 1);
+                int rightGroundHeight = GetColumnHeight(candidateEndX);
+
+                // 检查是否为无效位置（左右两侧有空隙或高度为 0）
+                if (leftGroundHeight <= 0 || rightGroundHeight <= 0)
+                {
+                    // 空隙旁边已经是空隙，取消生成
+                    gapWidth = 0;
+                    gapStartLocalX = -1;
+                    shouldGenerateGap = false;
+                    Debug.Log($"[TilemapMapGenerator] 空隙位置无效（旁边是空隙），取消生成 @ Chunk #{maxGeneratedChunk}");
+                }
+                else
+                {
+                    // 使用左右两侧较低的地块高度作为空隙基准高度
+                    gapGroundHeight = Mathf.Min(leftGroundHeight, rightGroundHeight);
+
+                    if (leftGroundHeight != rightGroundHeight)
+                    {
+                        Debug.Log($"[TilemapMapGenerator] 空隙两侧高度不同 (左={leftGroundHeight}, 右={rightGroundHeight})，使用较低高度 {gapGroundHeight} @ Chunk #{maxGeneratedChunk}");
+                    }
+                }
+            }
+
+            if (shouldGenerateGap)
+            {
+                // 设置全局空隙范围
+                gapStartWorldX = startX + gapStartLocalX;
+                gapEndWorldX = gapStartWorldX + gapWidth;
+                lastGapEndWorldX = gapEndWorldX;
+
+                Debug.Log($"[TilemapMapGenerator] 生成空隙 @ Chunk #{maxGeneratedChunk}, 宽度={gapWidth}, 起始={gapStartWorldX}, 高度={gapGroundHeight}");
+            }
+
             Debug.Log($"[TilemapMapGenerator] 生成 Chunk #{maxGeneratedChunk} @ X={startX}");
 
             for (int x = 0; x < config.chunkWidth; x++)
             {
                 int worldX = startX + x;
 
+                // 检查是否在空隙范围内
+                if (gapStartLocalX >= 0 && x >= gapStartLocalX && x < gapStartLocalX + gapWidth)
+                {
+                    // 空隙列：生成空隙 Tile 并清除高度缓存
+                    GenerateGapColumn(worldX, gapGroundHeight);
+                    _heightCache[worldX] = 0; // 标记为空隙
+                    continue;
+                }
+
                 // 生成地面列
                 GenerateGroundColumn(worldX, x);
 
-                // 尝试生成障碍物
-                if (ShouldSpawnObstacle(worldX))
+                // 生成障碍物（空隙上方不生成障碍物）
+                if (gapStartLocalX < 0 && ShouldSpawnObstacle(worldX))
                 {
                     SpawnObstacle(worldX);
                 }
@@ -210,11 +261,56 @@ namespace SquareFireline.Map
         }
 
         /// <summary>
-        /// 判断是否需要生成空隙（暂时禁用，始终返回 false）
+        /// 判断是否需要生成空隙
         /// </summary>
-        private bool ShouldGenerateGap(int chunkIndex)
+        private bool ShouldGenerateGap(int chunkIndex, int startX)
         {
-            return false;
+            // 起始保护区检查：前 N 个 Chunk 不生成空隙
+            if (chunkIndex < config.minGapStartChunk)
+            {
+                return false;
+            }
+
+            // 间隔检查：与上一个空隙的距离不能太近
+            int gapStartCandidate = chunkIndex * config.chunkWidth;
+            if (gapStartCandidate - lastGapEndWorldX < config.minGapInterval * config.chunkWidth)
+            {
+                return false;
+            }
+
+            // 概率判定
+            if (Random.value > config.gapSpawnChance)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 判断世界坐标是否在空隙范围内
+        /// </summary>
+        private bool IsInGap(int worldX)
+        {
+            return worldX >= gapStartWorldX && worldX < gapEndWorldX;
+        }
+
+        /// <summary>
+        /// 获取空隙另一侧的地块高度
+        /// </summary>
+        /// <param name="currentX">当前位置</param>
+        /// <param name="direction">方向：-1=向左查找，1=向右查找</param>
+        /// <returns>空隙另一侧的地块高度，如果找不到则返回 0</returns>
+        private int GetGapOppositeHeight(int currentX, int direction)
+        {
+            // 从当前位置向指定方向查找，跳过空隙列
+            int searchX = currentX;
+            while (IsInGap(searchX))
+            {
+                searchX += direction;
+            }
+            // 返回空隙另一侧的地块高度
+            return GetColumnHeight(searchX);
         }
 
         /// <summary>
@@ -229,34 +325,139 @@ namespace SquareFireline.Map
             int leftHeight = GetColumnHeight(worldX - 1);
             int rightHeight = GetColumnHeight(worldX + 1);
 
-            // 3. 判断是否需要黑边（暴露的侧面）
-            bool leftExposed = (leftHeight < columnHeight);   // 左侧低，当前列左侧暴露
-            bool rightExposed = (rightHeight < columnHeight); // 右侧低，当前列右侧暴露
+            // 3. 判断是否在空隙旁边
+            bool leftIsGap = IsInGap(worldX - 1);
+            bool rightIsGap = IsInGap(worldX + 1);
 
-            // 4. 选择草坪 Tile
+            // 4. 获取空隙另一侧的地块高度（如果需要）
+            int leftGroundHeight = leftHeight;
+            int rightGroundHeight = rightHeight;
+
+            if (leftIsGap)
+            {
+                // 左侧是空隙，获取空隙左侧的地块高度（从左侧相邻列开始向左查找）
+                leftGroundHeight = GetGapOppositeHeight(worldX - 1, -1);
+            }
+
+            if (rightIsGap)
+            {
+                // 右侧是空隙，获取空隙右侧的地块高度（从右侧相邻列开始向右查找）
+                rightGroundHeight = GetGapOppositeHeight(worldX + 1, 1);
+            }
+
+            // 5. 判断是否需要黑边（暴露的侧面）
+            // 核心逻辑：只要当前列比相邻列高，该侧就显示黑边（因为与空气接触）
+
+            bool leftExposed = false;
+            bool rightExposed = false;
+
+            // 左侧暴露：当前列严格高于左侧（且左侧不是空隙）
+            if (!leftIsGap && columnHeight > leftHeight)
+            {
+                leftExposed = true;
+            }
+            // 右侧暴露：当前列严格高于右侧（且右侧不是空隙）
+            if (!rightIsGap && columnHeight > rightHeight)
+            {
+                rightExposed = true;
+            }
+
+            // 保存土壤层的暴露状态（不受空隙影响，用于后续土壤 Tile 选择）
+            bool dirtLeftExposed = leftExposed;
+            bool dirtRightExposed = rightExposed;
+
+            // 特殊情况：空隙相邻时，靠近空隙的一侧根据空隙另一侧的地块高度决定是否显示黑边
+            // 逻辑：靠近空隙的一侧，如果比空隙另一侧的地块高，则显示黑边；如果相等或更低，则不显示黑边（无缝衔接）
+            // 注意：这个逻辑只影响草坪层，不影响土壤层
+            if (rightIsGap)
+            {
+                // 右侧是空隙，判断右侧（靠近空隙）是否需要黑边
+                // 比较：当前列 vs 空隙右侧的地块高度（rightGroundHeight）
+                if (columnHeight > rightGroundHeight)
+                {
+                    // 当前列比空隙右侧高，右侧（靠近空隙）应该显示黑边
+                    rightExposed = true;
+                }
+                else
+                {
+                    // 当前列比空隙右侧低或相等，右侧（靠近空隙）不显示黑边（无缝衔接）
+                    rightExposed = false;
+                }
+            }
+            if (leftIsGap)
+            {
+                // 左侧是空隙，判断左侧（靠近空隙）是否需要黑边
+                // 比较：当前列 vs 空隙左侧的地块高度（leftGroundHeight）
+                if (columnHeight > leftGroundHeight)
+                {
+                    // 当前列比空隙左侧高，左侧（靠近空隙）应该显示黑边
+                    leftExposed = true;
+                }
+                else
+                {
+                    // 当前列比空隙左侧低或相等，左侧（靠近空隙）不显示黑边（无缝衔接）
+                    leftExposed = false;
+                }
+            }
+
+            // 6. 选择草坪 Tile
             TileBase grassTile;
             if (leftExposed && rightExposed)
             {
-                // 两侧都暴露：使用 grass_left 或 grass_right（或用专门的孤立 Tile）
-                grassTile = config.grassLeft;
+                // 两侧都暴露：使用 grassIsolated（两侧都有黑边，用于普通单格凸起地块）
+                grassTile = config.grassIsolated != null ? config.grassIsolated : config.grassRight;
             }
             else if (leftExposed)
             {
-                // 仅左侧暴露：使用 grass_left
+                // 仅左侧暴露：使用 grassLeft
                 grassTile = config.grassLeft;
             }
             else if (rightExposed)
             {
-                // 仅右侧暴露：使用 grass_right
+                // 仅右侧暴露：使用 grassRight
                 grassTile = config.grassRight;
             }
             else
             {
-                // 无暴露：使用 grass_middle
+                // 无暴露（包括空隙旁边）：使用 grassMiddle（无缝衔接）
                 grassTile = config.grassMiddle;
             }
 
-            // 5. 设置草坪层（y = columnHeight - 1）
+            // 6.5 选择土壤 Tile（根据暴露状态选择）
+            // 注意：土壤层只在真正的边界（左/右暴露 且 不是凸出地块）才使用带黑边的 Tile
+            // 内部地块（两侧都不暴露）和凸出地块（两侧都暴露）都使用普通 dirtTile
+            TileBase dirtTileToUse = null;
+            int dirtFlipMode = 0; // 0=无翻转，1=水平翻转，2=垂直翻转，3=水平 + 垂直翻转
+
+            if (dirtLeftExposed && dirtRightExposed)
+            {
+                // 两侧都暴露（凸出地块）：土壤层使用普通 dirtTile + 随机翻转
+                // 草坪层会使用 grassIsolated 显示两侧黑边，但土壤层不需要
+                dirtTileToUse = config.dirtTile;
+                dirtFlipMode = GetDirtFlipMode(worldX, 0);
+            }
+            else if (dirtLeftExposed)
+            {
+                // 仅左侧暴露：使用 dirtTile + 随机翻转（不使用 dirtLeft，因为那是给边界列用的）
+                // 凸出地块的土壤层不需要黑边，黑边只在草坪层显示
+                dirtTileToUse = config.dirtTile;
+                dirtFlipMode = GetDirtFlipMode(worldX, 0);
+            }
+            else if (dirtRightExposed)
+            {
+                // 仅右侧暴露：使用 dirtTile + 随机翻转（不使用 dirtRight，因为那是给边界列用的）
+                // 凸出地块的土壤层不需要黑边，黑边只在草坪层显示
+                dirtTileToUse = config.dirtTile;
+                dirtFlipMode = GetDirtFlipMode(worldX, 0);
+            }
+            else
+            {
+                // 无暴露（内部地块）：使用 dirtTile，随机翻转
+                dirtTileToUse = config.dirtTile;
+                dirtFlipMode = GetDirtFlipMode(worldX, 0);
+            }
+
+            // 6. 设置草坪层（y = columnHeight - 1）
             Vector3Int grassPos = new Vector3Int(worldX, columnHeight - 1, 0);
 
             if (grassTile == null)
@@ -267,11 +468,11 @@ namespace SquareFireline.Map
 
             groundTilemap.SetTile(grassPos, grassTile);
 
-            // 6. 设置土壤层（y = 0 到 columnHeight - 2）
-            // 土壤层不会暴露（因为高度差≤1），统一使用 dirtTile
+            // 7. 设置土壤层（y = 0 到 columnHeight - 2）
+            // 土壤层根据暴露状态使用不同的 Tile
             for (int y = 0; y < columnHeight - 1; y++)
             {
-                if (config.dirtTile == null)
+                if (dirtTileToUse == null)
                 {
                     Debug.LogWarning("[TilemapMapGenerator] dirtTile 为 null，跳过土壤层生成");
                     continue;
@@ -279,11 +480,8 @@ namespace SquareFireline.Map
 
                 Vector3Int dirtPos = new Vector3Int(worldX, y, 0);
 
-                // 根据位置生成不同的翻转效果
-                int flipMode = GetDirtFlipMode(worldX, y);
-
                 // 设置 Tile 并应用翻转
-                SetTileWithFlip(dirtPos, config.dirtTile, flipMode, worldX, y);
+                SetTileWithFlip(dirtPos, dirtTileToUse, dirtFlipMode, worldX, y);
             }
         }
 
@@ -335,6 +533,36 @@ namespace SquareFireline.Map
             {
                 // 如果不是 Tile 类型，直接设置
                 groundTilemap.SetTile(position, tile);
+            }
+        }
+
+        /// <summary>
+        /// 生成空隙列（填充水流 Tile）
+        /// </summary>
+        /// <param name="worldX">世界 X 坐标</param>
+        /// <param name="groundHeight">地面高度（水流顶部位置）</param>
+        private void GenerateGapColumn(int worldX, int groundHeight)
+        {
+            if (config.gapTopTile == null || config.gapCenterTile == null)
+            {
+                // 如果没有配置空隙 Tile，则不生成（保持空白）
+                Debug.LogWarning($"[TilemapMapGenerator] 空隙 Tile 未配置！gapTopTile={(config.gapTopTile != null ? "OK" : "NULL")}, gapCenterTile={(config.gapCenterTile != null ? "OK" : "NULL")}");
+                return;
+            }
+
+            // 在空隙位置生成填充 Tile
+            // 顶部水流 Tile（地面高度位置）
+            if (groundHeight > 0)
+            {
+                Vector3Int gapTopPos = new Vector3Int(worldX, groundHeight - 1, 0);
+                groundTilemap.SetTile(gapTopPos, config.gapTopTile);
+            }
+
+            // 中间水流 Tile（从 y=0 到 y=groundHeight-2）
+            for (int y = 0; y < groundHeight - 1; y++)
+            {
+                Vector3Int gapCenterPos = new Vector3Int(worldX, y, 0);
+                groundTilemap.SetTile(gapCenterPos, config.gapCenterTile);
             }
         }
 
@@ -433,6 +661,12 @@ namespace SquareFireline.Map
         /// </summary>
         private int GetColumnHeight(int worldX)
         {
+            // 检查是否在空隙范围内
+            if (IsInGap(worldX))
+            {
+                return 0; // 空隙没有地面
+            }
+
             // 检查缓存
             if (_heightCache.TryGetValue(worldX, out int cached))
                 return cached;
@@ -478,6 +712,17 @@ namespace SquareFireline.Map
         private void ClearHeightCache(int worldX)
         {
             _heightCache.Remove(worldX);
+
+            // 如果清除的是空隙范围内的列，检查是否需要清除空隙状态
+            if (worldX >= gapStartWorldX && worldX < gapEndWorldX)
+            {
+                // 当 Chunk 被清理时，如果空隙起始位置在该 Chunk 内，清除空隙状态
+                if (worldX == gapStartWorldX)
+                {
+                    gapStartWorldX = -1;
+                    gapEndWorldX = -1;
+                }
+            }
         }
 
         /// <summary>
@@ -513,6 +758,11 @@ namespace SquareFireline.Map
 
             // 清空高度缓存
             _heightCache.Clear();
+
+            // 重置空隙状态
+            gapStartWorldX = -1;
+            gapEndWorldX = -1;
+            lastGapEndWorldX = -999;
         }
 
 #if UNITY_EDITOR
@@ -538,6 +788,28 @@ namespace SquareFireline.Map
                 new Vector3(minGeneratedChunk * config.chunkWidth, groundY, 0),
                 new Vector3(maxGeneratedChunk * config.chunkWidth, groundY, 0)
             );
+
+            // 绘制空隙范围（红色）
+            if (gapStartWorldX >= 0 && gapEndWorldX > gapStartWorldX)
+            {
+                Gizmos.color = new Color(1, 0, 0, 0.5f); // 半透明红色
+                float gapWidth = gapEndWorldX - gapStartWorldX;
+                Gizmos.DrawCube(
+                    new Vector3(gapStartWorldX + gapWidth / 2f, config.baseHeight / 2f, 0),
+                    new Vector3(gapWidth, config.baseHeight, 1)
+                );
+
+                // 绘制空隙边界标记
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(
+                    new Vector3(gapStartWorldX, 0, 0),
+                    new Vector3(gapStartWorldX, config.baseHeight + 1, 0)
+                );
+                Gizmos.DrawLine(
+                    new Vector3(gapEndWorldX, 0, 0),
+                    new Vector3(gapEndWorldX, config.baseHeight + 1, 0)
+                );
+            }
         }
 #endif
     }

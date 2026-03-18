@@ -19,7 +19,10 @@ MonoBehaviour:
   grassLeft: {fileID: 11400000, guid: 75a8c3a2b3189c046a673bd8cee847a0, type: 2}
   grassMiddle: {fileID: 11400000, guid: ec20f9761685fe64b9d71dfb9fde2c1d, type: 2}
   grassRight: {fileID: 11400000, guid: 2523314c3bfbab0408724440a3b49906, type: 2}
+  grassIsolated: {fileID: 11400000, guid: 8a27a5f4df493864f836a9b35078a9cc, type: 2}
   dirtTile: {fileID: 11400000, guid: b8f9123515ff88b40a88af33e0b447fa, type: 2}
+  dirtLeft: {fileID: 11400000, guid: c0f31c5c922d2a444954da46c58d8dd1, type: 2}
+  dirtRight: {fileID: 11400000, guid: fb0a694a0440c354999ba06a71764005, type: 2}
   obstacleTiles:
   - {fileID: 11400000, guid: cc23b4c4f5f2c7849ac5161102d10fe7, type: 2}
   - {fileID: 11400000, guid: 5c1aeb9d3f21f434588b0d1e6c6e3bd9, type: 2}
@@ -37,3 +40,10 @@ MonoBehaviour:
   noiseStrength: 1
   seed: 12345
   flatChunkCount: 2
+  minGapWidth: 1
+  maxGapWidth: 3
+  gapSpawnChance: 0.1
+  minGapStartChunk: 0
+  minGapInterval: 3
+  gapTopTile: {fileID: 11400000, guid: 2d6d5ccaddba6684ea765ee8c8376e93, type: 2}
+  gapCenterTile: {fileID: 11400000, guid: b236266b69c18794c83281668a7e374a, type: 2}

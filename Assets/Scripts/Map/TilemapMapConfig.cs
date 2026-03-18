@@ -33,9 +33,18 @@ namespace SquareFireline.Map
         [Tooltip("右边界草坪 Tile（右侧有黑边）")]
         public TileBase grassRight;
 
+        [Tooltip("孤立草坪 Tile（两侧都有黑边，用于单格凸起地块）")]
+        public TileBase grassIsolated;
+
         [Header("土壤 Tile（地下层）")]
         [Tooltip("单个土壤 Tile，生成时通过翻转创造不同效果")]
         public TileBase dirtTile;
+
+        [Tooltip("左边界土壤 Tile（左侧有黑边）")]
+        public TileBase dirtLeft;
+
+        [Tooltip("右边界土壤 Tile（右侧有黑边）")]
+        public TileBase dirtRight;
 
         [Header("障碍物 Tile 池")]
         [Tooltip("障碍物 Tile 池，至少包含一个障碍物 Tile")]
@@ -82,5 +91,29 @@ namespace SquareFireline.Map
 
         [Tooltip("前 N 个 Chunk 保持平坦")]
         public int flatChunkCount = 3;
+
+        [Header("空隙配置")]
+        [Tooltip("空隙最小宽度（瓦片数量）")]
+        public int minGapWidth = 1;
+
+        [Tooltip("空隙最大宽度（瓦片数量）")]
+        public int maxGapWidth = 3;
+
+        [Tooltip("空隙生成概率 (0-1)")]
+        [Range(0f, 1f)]
+        public float gapSpawnChance = 0.1f;
+
+        [Tooltip("起始保护区 Chunk 数量，前 N 个 Chunk 不生成空隙")]
+        public int minGapStartChunk = 5;
+
+        [Tooltip("空隙之间的最小间隔（Chunk 数量）")]
+        public int minGapInterval = 3;
+
+        [Header("空隙 Tile")]
+        [Tooltip("空隙顶部水流 Tile（生成在地面高度位置，面向玩家的一侧）")]
+        public TileBase gapTopTile;
+
+        [Tooltip("空隙中间水流 Tile（填充空隙中心区域）")]
+        public TileBase gapCenterTile;
     }
 }
