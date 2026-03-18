@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Tests\EditMode\Map\GapGenerationTests.cs" />
+    <Compile Include="Assets\Tests\EditMode\Map\ObstacleGenerationTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Player\PlayerJumpControllerTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Player\GroundDetectorTests.cs" />
   </ItemGroup>

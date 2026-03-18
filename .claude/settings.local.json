@@ -39,7 +39,9 @@
       "Bash(unity.exe -batchmode -quit -logFile - -executeMethod \"UnityEditor.TestTools.TestRunner.Api.TestRunnerApi.RunTests\" -testPlatform EditMode)",
       "Bash(C:UnityHubEditor2022.3.62f1c1EditorUnity.exe -batchmode -quit -projectPath . -runTestsEditMode -testResults C:shiyou-workspaceSquare FirelineTestResults.xml -testCategory EditMode)",
       "Bash(unity-editor -batchmode -quit -executeMethod \"UnityEditor.TestTools.CLI.CommandLineTest.RunTests\" -- --testPlatform EditMode --filter \"MapGeneration\")",
-      "Bash(timeout 10)"
+      "Bash(timeout 10)",
+      "Bash(mcp__UnityMCP__read_console --action get --count 20 --types error)",
+      "Bash(dotnet build:*)"
     ]
   }
 }
