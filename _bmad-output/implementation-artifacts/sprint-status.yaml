@@ -1,6 +1,6 @@
 # Square Fireline - Sprint Status Tracking
 # Generated: 2026-03-16
-# Last Updated: 2026-03-19
+# Last Updated: 2026-03-19 (Story 4-2 created)
 # Total Epics: 8 | Total Stories: 46
 
 metadata:
@@ -60,14 +60,14 @@ development_status:
   # -------------------------------------------------------------------------
   epic-4: in_progress
   4-1-作为系统我可以管理游戏状态开始/运行/死亡以便控制流程：done
-  4-2-作为玩家我希望分数随生存时间增加以便有进步感：backlog
+  4-2-作为玩家我希望分数随生存时间增加以便有进步感：done
   4-3-作为玩家我希望死亡后立即重生以便减少等待：backlog
   4-4-作为玩家我希望重生到检查点位置以便继续游戏：backlog
   4-5-作为系统我可以在死亡时重置当前分数以便公平计分：backlog
   4-6-作为系统我可以保存历史最高分内存以便显示成就：backlog
   4-7-作为开发者我希望有游戏配置 ScriptableObject 以便调整参数：backlog
   epic-4-retrospective: optional
-  # Epic 4 进度：1/7 完成，剩余 6 个故事在 backlog 中
+  # Epic 4 进度：2/7 完成，剩余 5 个故事在 backlog 中
 
   # -------------------------------------------------------------------------
   # Epic 5: UI 系统 (6 stories)
