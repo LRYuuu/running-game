@@ -115,5 +115,21 @@ namespace SquareFireline.Map
 
         [Tooltip("空隙中间水流 Tile（填充空隙中心区域）")]
         public TileBase gapCenterTile;
+
+        [Header("可玩性验证")]
+        [Tooltip("玩家可跳跃的最大空隙宽度（建议值：8-9，基于跳跃测试确定）")]
+        public int maxGapWidthPlayable = 8;
+
+        [Tooltip("障碍物之间最小可玩间隔（建议值：3-4，基于跳跃测试确定）")]
+        public int minPlayableObstacleGap = 3;
+
+        [Tooltip("相邻列最大高度差（建议值：1-2，保证可以跳上）")]
+        public int maxHeightDifference = 1;
+
+        [Tooltip("起始安全区域 Chunk 数量（建议值：3-5）")]
+        public int safeStartChunkCount = 3;
+
+        [Tooltip("是否启用可玩性验证（编辑器下自动验证配置）")]
+        public bool enablePlayabilityValidation = true;
     }
 }

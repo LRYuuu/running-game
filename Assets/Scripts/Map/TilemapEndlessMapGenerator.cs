@@ -68,6 +68,11 @@ namespace SquareFireline.Map
             {
                 Debug.LogError("[TilemapMapGenerator] 缺少 MapConfig 配置！");
             }
+            else
+            {
+                // 验证配置可玩性
+                MapPlayabilityValidator.ValidateConfig(config);
+            }
         }
 
         private void Start()
@@ -164,12 +169,36 @@ namespace SquareFireline.Map
                 }
                 else
                 {
-                    // 使用左右两侧较低的地块高度作为空隙基准高度
-                    gapGroundHeight = Mathf.Min(leftGroundHeight, rightGroundHeight);
-
-                    if (leftGroundHeight != rightGroundHeight)
+                    // 可玩性验证：空隙宽度检查
+                    if (!MapPlayabilityValidator.IsGapWidthPlayable(config, gapWidth))
                     {
-                        Debug.Log($"[TilemapMapGenerator] 空隙两侧高度不同 (左={leftGroundHeight}, 右={rightGroundHeight})，使用较低高度 {gapGroundHeight} @ Chunk #{maxGeneratedChunk}");
+                        Debug.LogWarning($"[TilemapMapGenerator] 空隙宽度过大 ({gapWidth} > {config.maxGapWidthPlayable})，取消生成 @ Chunk #{maxGeneratedChunk}");
+                        gapWidth = 0;
+                        gapStartLocalX = -1;
+                        shouldGenerateGap = false;
+                    }
+                    else
+                    {
+                        // 可玩性验证：空隙两侧需要有足够的落地空间
+                        // 检查空隙左侧是否有足够的障碍物间隔
+                        if (candidateStartX - 1 - lastObstacleWorldX < config.minPlayableObstacleGap)
+                        {
+                            Debug.LogWarning($"[TilemapMapGenerator] 空隙左侧障碍物间隔不足 ({candidateStartX - 1 - lastObstacleWorldX} < {config.minPlayableObstacleGap})，取消生成 @ Chunk #{maxGeneratedChunk}");
+                            gapWidth = 0;
+                            gapStartLocalX = -1;
+                            shouldGenerateGap = false;
+                        }
+                    }
+
+                    if (shouldGenerateGap)
+                    {
+                        // 使用左右两侧较低的地块高度作为空隙基准高度
+                        gapGroundHeight = Mathf.Min(leftGroundHeight, rightGroundHeight);
+
+                        if (leftGroundHeight != rightGroundHeight)
+                        {
+                            Debug.Log($"[TilemapMapGenerator] 空隙两侧高度不同 (左={leftGroundHeight}, 右={rightGroundHeight})，使用较低高度 {gapGroundHeight} @ Chunk #{maxGeneratedChunk}");
+                        }
                     }
                 }
             }
@@ -281,6 +310,13 @@ namespace SquareFireline.Map
             // 概率判定
             if (Random.value > config.gapSpawnChance)
             {
+                return false;
+            }
+
+            // 可玩性验证：最大空隙宽度超过可玩值时不生成
+            if (config.maxGapWidth > config.maxGapWidthPlayable)
+            {
+                Debug.LogWarning($"[TilemapMapGenerator] 配置警告：maxGapWidth ({config.maxGapWidth}) > maxGapWidthPlayable ({config.maxGapWidthPlayable})，已禁用空隙生成");
                 return false;
             }
 
@@ -608,10 +644,22 @@ namespace SquareFireline.Map
                 {
                     return false;
                 }
+
+                // 可玩性验证：高度差超过可玩限制时不生成
+                if (!MapPlayabilityValidator.IsHeightDifferencePlayable(config, currentHeight - prevHeight))
+                {
+                    return false;
+                }
             }
 
             // 检查与上一个障碍物的间隔
             if (worldX - lastObstacleWorldX < currentObstacleGap)
+            {
+                return false;
+            }
+
+            // 可玩性验证：障碍物间隔小于可玩最小值时不生成
+            if (!MapPlayabilityValidator.IsObstacleGapPlayable(config, worldX - lastObstacleWorldX))
             {
                 return false;
             }
@@ -810,6 +858,106 @@ namespace SquareFireline.Map
                     new Vector3(gapEndWorldX, config.baseHeight + 1, 0)
                 );
             }
+
+            // ========== 可玩性调试可视化 ==========
+
+            // 1. 绘制可玩性区域指示器
+            int startX = minGeneratedChunk * config.chunkWidth;
+            int endX = maxGeneratedChunk * config.chunkWidth;
+
+            for (int x = startX; x < endX; x++)
+            {
+                int currentHeight = GetColumnHeight(x);
+                if (currentHeight <= 0) continue; // 跳过空隙列
+
+                // 检查高度差警告
+                if (x > 0)
+                {
+                    int prevHeight = GetColumnHeight(x - 1);
+                    int heightDiff = Mathf.Abs(currentHeight - prevHeight);
+
+                    if (heightDiff > config.maxHeightDifference)
+                    {
+                        // 高度差过大 - 绘制红色警告
+                        Gizmos.color = new Color(1, 0.5f, 0, 0.7f);
+                        Gizmos.DrawCube(
+                            new Vector3(x, currentHeight / 2f, 0),
+                            new Vector3(0.8f, currentHeight, 0.8f)
+                        );
+                    }
+                    else if (heightDiff > 0)
+                    {
+                        // 有高度差但在可玩范围内 - 绘制黄色提示
+                        Gizmos.color = new Color(1, 1, 0, 0.3f);
+                        Gizmos.DrawCube(
+                            new Vector3(x, currentHeight / 2f, 0),
+                            new Vector3(0.8f, currentHeight, 0.8f)
+                        );
+                    }
+                }
+
+                // 检查障碍物可玩性
+                if (x - lastObstacleWorldX >= config.minObstacleGap)
+                {
+                    // 可以生成障碍物的位置 - 绘制蓝色半透明框
+                    Gizmos.color = new Color(0, 0.5f, 1, 0.2f);
+                    Gizmos.DrawCube(
+                        new Vector3(x, currentHeight + 0.5f, 0),
+                        new Vector3(0.5f, 0.5f, 0.5f)
+                    );
+                }
+            }
+
+            // 2. 绘制障碍物间隔安全区域（上一个障碍物右侧）
+            if (lastObstacleWorldX >= 0)
+            {
+                // 最小可玩间隔区域 - 绿色
+                Gizmos.color = new Color(0, 1, 0, 0.1f);
+                int safeZoneEnd = lastObstacleWorldX + config.minPlayableObstacleGap;
+                Gizmos.DrawCube(
+                    new Vector3((lastObstacleWorldX + safeZoneEnd) / 2f, config.baseHeight / 2f, 0),
+                    new Vector3(config.minPlayableObstacleGap, config.baseHeight, 0.5f)
+                );
+
+                // 标记最小可玩间隔边界
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(
+                    new Vector3(safeZoneEnd, 0, 0),
+                    new Vector3(safeZoneEnd, config.baseHeight + 1, 0)
+                );
+            }
+
+            // 3. 绘制空隙可玩性指示器
+            if (gapStartWorldX >= 0 && gapEndWorldX > gapStartWorldX)
+            {
+                int gapWidth = gapEndWorldX - gapStartWorldX;
+
+                if (gapWidth > config.maxGapWidthPlayable)
+                {
+                    // 空隙宽度过大 - 红色警告
+                    Gizmos.color = new Color(1, 0, 0, 0.8f);
+                    Gizmos.DrawCube(
+                        new Vector3(gapStartWorldX + gapWidth / 2f, config.baseHeight + 2f, 0),
+                        new Vector3(gapWidth, 0.5f, 0.5f)
+                    );
+                }
+                else
+                {
+                    // 空隙宽度可玩 - 绿色
+                    Gizmos.color = new Color(0, 1, 0, 0.5f);
+                    Gizmos.DrawCube(
+                        new Vector3(gapStartWorldX + gapWidth / 2f, config.baseHeight + 2f, 0),
+                        new Vector3(gapWidth, 0.3f, 0.3f)
+                    );
+                }
+            }
+
+            // 4. 显示配置参数 HUD
+            Vector3 labelPos = transform.position + Vector3.up * (config.baseHeight + 5);
+            UnityEditor.Handles.Label(labelPos,
+                $"Gap: {config.minGapWidth}-{config.maxGapWidth} (max playable: {config.maxGapWidthPlayable}) | " +
+                $"Obs Gap: {config.minObstacleGap}-{config.maxObstacleGap} (min playable: {config.minPlayableObstacleGap}) | " +
+                $"Max Height Diff: {config.maxHeightDifference}");
         }
 #endif
     }

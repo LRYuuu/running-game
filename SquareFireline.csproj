@@ -65,7 +65,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\PlayerAnimation.cs" />
+    <Compile Include="Assets\Scripts\Map\MapPlayabilityValidator.cs" />
     <Compile Include="Assets\Scripts\Player\GroundDetector.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerDeathController.cs" />
     <Compile Include="Assets\Scripts\InfiniteBackgroundTiler.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerJumpController.cs" />
     <Compile Include="Assets\Scripts\Map\TilemapMapConfig.cs" />
