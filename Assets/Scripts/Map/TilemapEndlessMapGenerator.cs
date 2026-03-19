@@ -36,6 +36,10 @@ namespace SquareFireline.Map
         [Tooltip("初始地图偏移（用于调整玩家视觉位置，负值向左）")]
         public float initialMapOffset = -12f;
 
+        [Header("调试设置")]
+        [Tooltip("是否启用详细日志")]
+        public bool enableDebugLog = false;
+
         // 地图整体偏移（累计滚动距离）
         private float _mapOffset = 0f;
 
@@ -165,14 +169,20 @@ namespace SquareFireline.Map
                     gapWidth = 0;
                     gapStartLocalX = -1;
                     shouldGenerateGap = false;
-                    Debug.Log($"[TilemapMapGenerator] 空隙位置无效（旁边是空隙），取消生成 @ Chunk #{maxGeneratedChunk}");
+                    if (enableDebugLog)
+                    {
+                        Debug.Log($"[TilemapMapGenerator] 空隙位置无效（旁边是空隙），取消生成 @ Chunk #{maxGeneratedChunk}");
+                    }
                 }
                 else
                 {
                     // 可玩性验证：空隙宽度检查
                     if (!MapPlayabilityValidator.IsGapWidthPlayable(config, gapWidth))
                     {
-                        Debug.LogWarning($"[TilemapMapGenerator] 空隙宽度过大 ({gapWidth} > {config.maxGapWidthPlayable})，取消生成 @ Chunk #{maxGeneratedChunk}");
+                        if (enableDebugLog)
+                        {
+                            Debug.LogWarning($"[TilemapMapGenerator] 空隙宽度过大 ({gapWidth} > {config.maxGapWidthPlayable})，取消生成 @ Chunk #{maxGeneratedChunk}");
+                        }
                         gapWidth = 0;
                         gapStartLocalX = -1;
                         shouldGenerateGap = false;
@@ -183,7 +193,10 @@ namespace SquareFireline.Map
                         // 检查空隙左侧是否有足够的障碍物间隔
                         if (candidateStartX - 1 - lastObstacleWorldX < config.minPlayableObstacleGap)
                         {
-                            Debug.LogWarning($"[TilemapMapGenerator] 空隙左侧障碍物间隔不足 ({candidateStartX - 1 - lastObstacleWorldX} < {config.minPlayableObstacleGap})，取消生成 @ Chunk #{maxGeneratedChunk}");
+                            if (enableDebugLog)
+                            {
+                                Debug.LogWarning($"[TilemapMapGenerator] 空隙左侧障碍物间隔不足 ({candidateStartX - 1 - lastObstacleWorldX} < {config.minPlayableObstacleGap})，取消生成 @ Chunk #{maxGeneratedChunk}");
+                            }
                             gapWidth = 0;
                             gapStartLocalX = -1;
                             shouldGenerateGap = false;
@@ -197,23 +210,24 @@ namespace SquareFireline.Map
 
                         if (leftGroundHeight != rightGroundHeight)
                         {
-                            Debug.Log($"[TilemapMapGenerator] 空隙两侧高度不同 (左={leftGroundHeight}, 右={rightGroundHeight})，使用较低高度 {gapGroundHeight} @ Chunk #{maxGeneratedChunk}");
+                            if (enableDebugLog)
+                            {
+                                Debug.Log($"[TilemapMapGenerator] 空隙两侧高度不同 (左={leftGroundHeight}, 右={rightGroundHeight})，使用较低高度 {gapGroundHeight} @ Chunk #{maxGeneratedChunk}");
+                            }
                         }
                     }
                 }
             }
 
-            if (shouldGenerateGap)
+            if (enableDebugLog && shouldGenerateGap)
             {
-                // 设置全局空隙范围
-                gapStartWorldX = startX + gapStartLocalX;
-                gapEndWorldX = gapStartWorldX + gapWidth;
-                lastGapEndWorldX = gapEndWorldX;
-
                 Debug.Log($"[TilemapMapGenerator] 生成空隙 @ Chunk #{maxGeneratedChunk}, 宽度={gapWidth}, 起始={gapStartWorldX}, 高度={gapGroundHeight}");
             }
 
-            Debug.Log($"[TilemapMapGenerator] 生成 Chunk #{maxGeneratedChunk} @ X={startX}");
+            if (enableDebugLog)
+            {
+                Debug.Log($"[TilemapMapGenerator] 生成 Chunk #{maxGeneratedChunk} @ X={startX}");
+            }
 
             for (int x = 0; x < config.chunkWidth; x++)
             {
@@ -261,12 +275,15 @@ namespace SquareFireline.Map
         /// </summary>
         public void Initialize()
         {
-            Debug.Log($"[TilemapMapGenerator] 初始化 - Chunk 宽度：{config.chunkWidth}, 基准高度：{config.baseHeight}");
-            Debug.Log($"[TilemapMapGenerator] Tile 检查 - grassLeft: {(config.grassLeft != null ? "OK" : "NULL")}, grassMiddle: {(config.grassMiddle != null ? "OK" : "NULL")}, grassRight: {(config.grassRight != null ? "OK" : "NULL")}");
-            Debug.Log($"[TilemapMapGenerator] Tile 检查 - dirtTile: {(config.dirtTile != null ? "OK" : "NULL")}");
-            Debug.Log($"[TilemapMapGenerator] groundTilemap: {(groundTilemap != null ? "OK" : "NULL")}");
-            Debug.Log($"[TilemapMapGenerator] 起始 Chunk 索引：{playerChunkIndex}");
-            Debug.Log($"[TilemapMapGenerator] 地形起伏：{config.enableTerrainVariation}");
+            if (enableDebugLog)
+            {
+                Debug.Log($"[TilemapMapGenerator] 初始化 - Chunk 宽度：{config.chunkWidth}, 基准高度：{config.baseHeight}");
+                Debug.Log($"[TilemapMapGenerator] Tile 检查 - grassLeft: {(config.grassLeft != null ? "OK" : "NULL")}, grassMiddle: {(config.grassMiddle != null ? "OK" : "NULL")}, grassRight: {(config.grassRight != null ? "OK" : "NULL")}");
+                Debug.Log($"[TilemapMapGenerator] Tile 检查 - dirtTile: {(config.dirtTile != null ? "OK" : "NULL")}");
+                Debug.Log($"[TilemapMapGenerator] groundTilemap: {(groundTilemap != null ? "OK" : "NULL")}");
+                Debug.Log($"[TilemapMapGenerator] 起始 Chunk 索引：{playerChunkIndex}");
+                Debug.Log($"[TilemapMapGenerator] 地形起伏：{config.enableTerrainVariation}");
+            }
 
             // 设置初始 minGeneratedChunk
             minGeneratedChunk = 0;
@@ -316,7 +333,10 @@ namespace SquareFireline.Map
             // 可玩性验证：最大空隙宽度超过可玩值时不生成
             if (config.maxGapWidth > config.maxGapWidthPlayable)
             {
-                Debug.LogWarning($"[TilemapMapGenerator] 配置警告：maxGapWidth ({config.maxGapWidth}) > maxGapWidthPlayable ({config.maxGapWidthPlayable})，已禁用空隙生成");
+                if (enableDebugLog)
+                {
+                    Debug.LogWarning($"[TilemapMapGenerator] 配置警告：maxGapWidth ({config.maxGapWidth}) > maxGapWidthPlayable ({config.maxGapWidthPlayable})，已禁用空隙生成");
+                }
                 return false;
             }
 
@@ -498,7 +518,10 @@ namespace SquareFireline.Map
 
             if (grassTile == null)
             {
-                Debug.LogWarning($"[TilemapMapGenerator] grassTile 为 null! localX={localX}, worldX={worldX}");
+                if (enableDebugLog)
+                {
+                    Debug.LogWarning($"[TilemapMapGenerator] grassTile 为 null! localX={localX}, worldX={worldX}");
+                }
                 return;
             }
 
@@ -510,7 +533,10 @@ namespace SquareFireline.Map
             {
                 if (dirtTileToUse == null)
                 {
-                    Debug.LogWarning("[TilemapMapGenerator] dirtTile 为 null，跳过土壤层生成");
+                    if (enableDebugLog)
+                    {
+                        Debug.LogWarning("[TilemapMapGenerator] dirtTile 为 null，跳过土壤层生成");
+                    }
                     continue;
                 }
 
@@ -582,7 +608,10 @@ namespace SquareFireline.Map
             if (config.gapTopTile == null || config.gapCenterTile == null)
             {
                 // 如果没有配置空隙 Tile，则不生成（保持空白）
-                Debug.LogWarning($"[TilemapMapGenerator] 空隙 Tile 未配置！gapTopTile={(config.gapTopTile != null ? "OK" : "NULL")}, gapCenterTile={(config.gapCenterTile != null ? "OK" : "NULL")}");
+                if (enableDebugLog)
+                {
+                    Debug.LogWarning($"[TilemapMapGenerator] 空隙 Tile 未配置！gapTopTile={(config.gapTopTile != null ? "OK" : "NULL")}, gapCenterTile={(config.gapCenterTile != null ? "OK" : "NULL")}");
+                }
                 return;
             }
 
@@ -682,13 +711,19 @@ namespace SquareFireline.Map
         {
             if (obstacleTilemap == null)
             {
-                Debug.LogWarning("[TilemapMapGenerator] 障碍物 Tilemap 未设置，跳过障碍物生成");
+                if (enableDebugLog)
+                {
+                    Debug.LogWarning("[TilemapMapGenerator] 障碍物 Tilemap 未设置，跳过障碍物生成");
+                }
                 return;
             }
 
             if (config.obstacleTiles == null || config.obstacleTiles.Length == 0)
             {
-                Debug.LogWarning("[TilemapMapGenerator] 障碍物 Tile 池为空，请在 MapConfig 中配置障碍物 Tile");
+                if (enableDebugLog)
+                {
+                    Debug.LogWarning("[TilemapMapGenerator] 障碍物 Tile 池为空，请在 MapConfig 中配置障碍物 Tile");
+                }
                 return;
             }
 
@@ -701,7 +736,11 @@ namespace SquareFireline.Map
 
             obstacleTilemap.SetTile(obsPos, obstacleTile);
             lastObstacleWorldX = worldX;
-            Debug.Log($"[TilemapMapGenerator] 生成障碍物 @ X={worldX}, Y={columnHeight}, Tile={obstacleTile.name}");
+
+            if (enableDebugLog)
+            {
+                Debug.Log($"[TilemapMapGenerator] 生成障碍物 @ X={worldX}, Y={columnHeight}, Tile={obstacleTile.name}");
+            }
         }
 
         /// <summary>
@@ -786,7 +825,10 @@ namespace SquareFireline.Map
                 ClearColumn(startX + x);
             }
 
-            Debug.Log($"[TilemapMapGenerator] 清理 Chunk #{chunkIndex} @ X={startX}");
+            if (enableDebugLog)
+            {
+                Debug.Log($"[TilemapMapGenerator] 清理 Chunk #{chunkIndex} @ X={startX}");
+            }
         }
 
         /// <summary>

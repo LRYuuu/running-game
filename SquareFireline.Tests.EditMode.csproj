@@ -68,6 +68,7 @@
     <Compile Include="Assets\Tests\EditMode\Player\PlayerDeathTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Map\GapGenerationTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Map\ObstacleGenerationTests.cs" />
+    <Compile Include="Assets\Tests\EditMode\Game\ScoreManagerTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Player\PlayerJumpControllerTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Player\GroundDetectorTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Game\GameManagerTests.cs" />

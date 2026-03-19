@@ -114,7 +114,6 @@ namespace SquareFireline.Game
         public void AddScore(int amount)
         {
             CurrentScore += amount;
-            Debug.Log($"[ScoreManager] Score: {CurrentScore} (+{amount})");
             OnScoreChanged?.Invoke(CurrentScore, HighScore);
         }
 
@@ -124,7 +123,6 @@ namespace SquareFireline.Game
         public void ResetScore()
         {
             CurrentScore = 0;
-            Debug.Log($"[ScoreManager] Score reset to 0");
             OnScoreChanged?.Invoke(CurrentScore, HighScore);
         }
 
@@ -138,7 +136,6 @@ namespace SquareFireline.Game
             {
                 HighScore = CurrentScore;
                 SaveHighScore();
-                Debug.Log($"[ScoreManager] New High Score: {HighScore}!");
                 OnScoreChanged?.Invoke(CurrentScore, HighScore);
                 return true;
             }
@@ -192,7 +189,6 @@ namespace SquareFireline.Game
         private void LoadHighScore()
         {
             HighScore = PlayerPrefs.GetInt(HighScoreKey, 0);
-            Debug.Log($"[ScoreManager] Loaded High Score: {HighScore}");
         }
         #endregion
     }

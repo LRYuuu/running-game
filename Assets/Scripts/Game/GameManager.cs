@@ -44,6 +44,10 @@ namespace SquareFireline.Game
         /// 检查点位置（用于重生）
         /// </summary>
         private Vector3 _lastSafePosition;
+
+        [Header("调试选项")]
+        [Tooltip("是否启用详细日志")]
+        [SerializeField] private bool _enableDebugLog = false;
         #endregion
 
         #region Unity 生命周期
@@ -106,7 +110,10 @@ namespace SquareFireline.Game
         {
             if (CurrentState != GameState.Waiting)
             {
-                Debug.LogWarning($"[GameManager] StartGame called but state is {CurrentState}, expected Waiting");
+                if (_enableDebugLog)
+                {
+                    Debug.LogWarning($"[GameManager] StartGame called but state is {CurrentState}, expected Waiting");
+                }
             }
             ChangeState(GameState.Playing);
         }
@@ -118,7 +125,10 @@ namespace SquareFireline.Game
         public void UpdateCheckpoint(Vector3 position)
         {
             _lastSafePosition = position;
-            Debug.Log($"[GameManager] Checkpoint updated: {_lastSafePosition}");
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[GameManager] Checkpoint updated: {_lastSafePosition}");
+            }
         }
 
         /// <summary>
@@ -138,11 +148,13 @@ namespace SquareFireline.Game
         {
             if (CurrentState != GameState.Playing)
             {
-                Debug.LogWarning($"[GameManager] OnPlayerDied called but state is {CurrentState}, expected Playing");
+                if (_enableDebugLog)
+                {
+                    Debug.LogWarning($"[GameManager] OnPlayerDied called but state is {CurrentState}, expected Playing");
+                }
                 return;
             }
 
-            Debug.Log("[GameManager] Player died, starting death sequence...");
             ChangeState(GameState.Dying);
             StartCoroutine(StartRespawn());
         }
@@ -159,7 +171,6 @@ namespace SquareFireline.Game
             GameState oldState = CurrentState;
             CurrentState = newState;
 
-            Debug.Log($"[GameManager] State: {oldState} → {newState}");
             OnGameStateChanged?.Invoke(oldState, newState);
         }
 

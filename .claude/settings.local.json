@@ -43,7 +43,9 @@
       "Bash(mcp__UnityMCP__read_console --action get --count 20 --types error)",
       "Bash(dotnet build:*)",
       "Bash(git push:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(git commit:*)",
+      "mcp__UnityMCP__find_in_file"
     ]
   }
 }

@@ -39,7 +39,10 @@ namespace SquareFireline.Player
             // 如果 Awake 时获取失败，尝试立即再次获取
             if (_rigidbody2D == null)
             {
-                Debug.LogWarning($"[PlayerJumpController] Awake: GetComponent<Rigidbody2D>() returned null, trying again...");
+                if (_enableDebugLog)
+                {
+                    Debug.LogWarning($"[PlayerJumpController] Awake: GetComponent<Rigidbody2D>() returned null, trying again...");
+                }
                 _rigidbody2D = GetComponent<Rigidbody2D>();
             }
 
@@ -135,7 +138,10 @@ namespace SquareFireline.Player
         public void SetRigidbodyForTest(Rigidbody2D rb)
         {
             _rigidbody2D = rb;
-            Debug.Log($"[PlayerJumpController] SetRigidbodyForTest called, rb==null: {rb == null}");
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerJumpController] SetRigidbodyForTest called, rb==null: {rb == null}");
+            }
         }
 
         /// <summary>

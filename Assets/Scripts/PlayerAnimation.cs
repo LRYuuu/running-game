@@ -8,6 +8,12 @@ namespace SquareFireline.Player
     /// </summary>
     public class PlayerAnimation : MonoBehaviour
     {
+        #region 序列化字段
+        [Header("调试选项")]
+        [Tooltip("是否启用详细日志")]
+        [SerializeField] private bool _enableDebugLog = false;
+        #endregion
+
         #region 私有字段
 
         private Animator _animator;
@@ -36,7 +42,10 @@ namespace SquareFireline.Player
 
             if (_animator == null)
             {
-                Debug.LogWarning($"[{nameof(PlayerAnimation)}] Animator 组件缺失！");
+                if (_enableDebugLog)
+                {
+                    Debug.LogWarning($"[{nameof(PlayerAnimation)}] Animator 组件缺失！");
+                }
             }
         }
 
