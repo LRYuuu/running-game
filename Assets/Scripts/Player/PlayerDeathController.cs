@@ -94,6 +94,11 @@ namespace SquareFireline.Player
 
         #region 公共方法
         /// <summary>
+        /// 获取死亡重生延迟（只读）
+        /// </summary>
+        public float RespawnDelay => _respawnDelay;
+
+        /// <summary>
         /// 处理与障碍物的碰撞
         /// </summary>
         private void HandleObstacleCollision()

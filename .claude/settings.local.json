@@ -41,7 +41,9 @@
       "Bash(unity-editor -batchmode -quit -executeMethod \"UnityEditor.TestTools.CLI.CommandLineTest.RunTests\" -- --testPlatform EditMode --filter \"MapGeneration\")",
       "Bash(timeout 10)",
       "Bash(mcp__UnityMCP__read_console --action get --count 20 --types error)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "Bash(git push:*)",
+      "Bash(dir:*)"
     ]
   }
 }
