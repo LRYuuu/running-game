@@ -34,18 +34,19 @@ namespace SquareFireline.Game
         #endregion
 
         #region 配置
-        [Header("分数配置")]
-        [Tooltip("每秒增加的分数")]
-        [SerializeField] private int _scorePerSecond = 1;
-
-        [Tooltip("分数累加间隔（秒）")]
-        [SerializeField] private float _scoreInterval = 1f;
+        [Header("游戏配置")]
+        [Tooltip("分数配置 ScriptableObject")]
+        [SerializeField] private ScoreConfig _scoreConfig;
         #endregion
 
         #region 私有字段
         private float _accumulationTime;
         private bool _isAccumulating;
         private const string HighScoreKey = "SquareFireline_HighScore";
+
+        // 缓存配置值（从 ScoreConfig 读取）
+        private int _scorePerSecond;
+        private float _scoreInterval;
         #endregion
 
         #region Unity 生命周期
@@ -63,6 +64,20 @@ namespace SquareFireline.Game
             if (Application.isPlaying)
             {
                 DontDestroyOnLoad(gameObject);
+            }
+
+            // 从 ScoreConfig 读取配置
+            if (_scoreConfig != null)
+            {
+                _scorePerSecond = _scoreConfig.scorePerSecond;
+                _scoreInterval = _scoreConfig.scoreInterval;
+            }
+            else
+            {
+                // 默认值
+                _scorePerSecond = 1;
+                _scoreInterval = 1f;
+                Debug.LogWarning("[ScoreManager] ScoreConfig 未设置，使用默认值");
             }
 
             // 加载最高分

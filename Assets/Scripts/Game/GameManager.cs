@@ -41,6 +41,10 @@ namespace SquareFireline.Game
 
         [Tooltip("地图生成器")]
         [SerializeField] private TilemapEndlessMapGenerator _mapGenerator;
+
+        [Header("游戏配置")]
+        [Tooltip("游戏配置 ScriptableObject")]
+        [SerializeField] private GameConfig _gameConfig;
         #endregion
 
         #region 私有字段
@@ -247,9 +251,9 @@ namespace SquareFireline.Game
                 Debug.Log("[GameManager] 开始重生流程...");
             }
 
-            // 等待死亡延迟
-            float respawnDelay = _playerDeathController != null
-                ? _playerDeathController.RespawnDelay
+            // 等待死亡延迟 - 从 GameConfig 读取
+            float respawnDelay = _gameConfig != null
+                ? _gameConfig.respawnDelay
                 : 1f;
 
             if (_enableDebugLog)
