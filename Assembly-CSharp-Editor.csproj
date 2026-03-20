@@ -1232,7 +1232,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="SquareFireline.Tests.EditMode.csproj" />
-    <ProjectReference Include="SquareFireline.Tests.PlayMode.csproj" />
     <ProjectReference Include="SquareFireline.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

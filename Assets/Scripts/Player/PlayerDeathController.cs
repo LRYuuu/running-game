@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using SquareFireline.Game;
 
 namespace SquareFireline.Player
 {
@@ -31,35 +32,46 @@ namespace SquareFireline.Player
 
         #region 私有字段
         private bool _isDead = false;
-        private float _respawnTimer = 0f;
-        private Vector3 _lastSafePosition;
         private PlayerJumpController _jumpController;
+        private Vector3 _startPosition;
         #endregion
 
         #region Unity 生命周期
         private void Awake()
         {
             _jumpController = GetComponent<PlayerJumpController>();
-            _lastSafePosition = transform.position;
-        }
+            // 保存游戏开始时的初始位置
+            _startPosition = transform.position;
 
-        private void Update()
-        {
-            if (_isDead)
+            // 检查必需的组件
+            var rb2d = GetComponent<Rigidbody2D>();
+            var collider2d = GetComponent<Collider2D>();
+
+            if (rb2d == null)
             {
-                _respawnTimer -= Time.deltaTime;
-                if (_respawnTimer <= 0f)
-                {
-                    Respawn();
-                }
+                Debug.LogError($"[PlayerDeathController] 玩家缺少 Rigidbody2D 组件！gameObject={gameObject.name}");
+            }
+            if (collider2d == null)
+            {
+                Debug.LogError($"[PlayerDeathController] 玩家缺少 Collider2D 组件！gameObject={gameObject.name}");
+            }
+
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerDeathController] 组件检查 - Rigidbody2D: {(rb2d != null ? "OK" : "MISSING")}, Collider2D: {(collider2d != null ? "OK" : "MISSING")}");
             }
         }
 
-        /// <summary>
-        /// 检测与障碍物的碰撞
-        /// </summary>
+        // 添加碰撞检测的调试日志
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            Debug.Log($"[PlayerDeathController] 发生碰撞：{collision.gameObject.name}, 接触点数量：{collision.contactCount}");
+
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerDeathController] OnCollisionEnter2D: {collision.gameObject.name}, layer: {collision.gameObject.layer}, tag: {collision.gameObject.tag}");
+            }
+
             if (IsObstacle(collision.gameObject))
             {
                 HandleObstacleCollision();
@@ -71,6 +83,13 @@ namespace SquareFireline.Player
         /// </summary>
         private void OnTriggerEnter2D(Collider2D other)
         {
+            Debug.Log($"[PlayerDeathController] 触发器碰撞：{other.gameObject.name}");
+
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerDeathController] OnTriggerEnter2D: {other.gameObject.name}, layer: {other.gameObject.layer}, tag: {other.gameObject.tag}");
+            }
+
             if (IsObstacle(other.gameObject))
             {
                 HandleObstacleCollision();
@@ -85,10 +104,21 @@ namespace SquareFireline.Player
             // 方法 1: 通过 Layer 检测
             if (_obstacleLayer.value > 0)
             {
-                return ((_obstacleLayer.value & (1 << obj.layer)) != 0);
+                bool isObstacle = ((_obstacleLayer.value & (1 << obj.layer)) != 0);
+                if (_enableDebugLog)
+                {
+                    Debug.Log($"[PlayerDeathController] Layer 检测：{obj.name} layer={obj.layer}, isObstacle={isObstacle}");
+                }
+                return isObstacle;
             }
+
             // 方法 2: 通过 Tag 检测（后备方案）
-            return obj.CompareTag("Obstacle");
+            bool isTagObstacle = obj.CompareTag("Obstacle");
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerDeathController] Tag 检测：{obj.name} tag={obj.tag}, isTagObstacle={isTagObstacle}");
+            }
+            return isTagObstacle;
         }
         #endregion
 
@@ -103,7 +133,14 @@ namespace SquareFireline.Player
         /// </summary>
         private void HandleObstacleCollision()
         {
-            if (_isDead) return;
+            if (_isDead)
+            {
+                if (_enableDebugLog)
+                {
+                    Debug.Log("[PlayerDeathController] 已经死亡，忽略碰撞");
+                }
+                return;
+            }
 
             if (_enableDebugLog)
             {
@@ -121,24 +158,31 @@ namespace SquareFireline.Player
             if (_isDead) return;
 
             _isDead = true;
-            _respawnTimer = _respawnDelay;
 
-            if (_enableDebugLog)
-            {
-                Debug.Log($"[PlayerDeathController] 玩家死亡，将在 {_respawnDelay} 秒后重生...");
-            }
+            Debug.Log($"[PlayerDeathController] 玩家死亡，将在 {_respawnDelay} 秒后重生...");
 
             // 触发死亡事件
-            OnPlayerDied?.Invoke();
+            if (OnPlayerDied != null)
+            {
+                Debug.Log($"[PlayerDeathController] 触发 OnPlayerDied 事件，订阅者数量：{OnPlayerDied.GetInvocationList().Length}");
+                OnPlayerDied?.Invoke();
+            }
+            else
+            {
+                Debug.LogWarning("[PlayerDeathController] OnPlayerDied 事件没有订阅者！");
+            }
         }
 
         /// <summary>
-        /// 重生到安全位置
+        /// 重生到安全位置（由 GameManager 调用）
         /// </summary>
-        private void Respawn()
+        public void Respawn()
         {
             _isDead = false;
-            transform.position = _lastSafePosition;
+
+            // 从 GameManager 获取检查点位置（优先）或起始位置
+            Vector3 spawnPosition = GetSpawnPosition();
+            transform.position = spawnPosition;
 
             // 重置跳跃状态
             if (_jumpController != null)
@@ -153,19 +197,55 @@ namespace SquareFireline.Player
                 rb.velocity = Vector2.zero;
             }
 
+            Debug.Log($"[PlayerDeathController] 玩家重生到位置：{spawnPosition}");
+        }
+
+        /// <summary>
+        /// 重置起始位置（游戏开始时调用）
+        /// </summary>
+        public void ResetStartPosition()
+        {
+            _startPosition = transform.position;
             if (_enableDebugLog)
             {
-                Debug.Log($"[PlayerDeathController] 玩家重生到位置：{_lastSafePosition}");
+                Debug.Log($"[PlayerDeathController] 起始位置已重置：{_startPosition}");
             }
         }
 
         /// <summary>
-        /// 更新安全位置（用于重生）
+        /// 获取起始位置（用于 GameManager）
+        /// </summary>
+        public Vector3 GetStartPosition()
+        {
+            return _startPosition;
+        }
+
+        /// <summary>
+        /// 更新安全位置（用于重生）- 直接修改初始位置
         /// </summary>
         /// <param name="position">安全位置</param>
         public void SetSafePosition(Vector3 position)
         {
-            _lastSafePosition = position;
+            _startPosition = position;
+        }
+
+        /// <summary>
+        /// 获取重生位置
+        /// </summary>
+        /// <returns>重生位置（优先使用 GameManager 的检查点位置）</returns>
+        private Vector3 GetSpawnPosition()
+        {
+            // 优先从 GameManager 获取检查点位置
+            if (GameManager.Instance != null)
+            {
+                Vector3 checkpointPosition = GameManager.Instance.GetLastSafePosition();
+                Debug.Log($"[PlayerDeathController] 从 GameManager 获取检查点位置：{checkpointPosition}");
+                return checkpointPosition;
+            }
+
+            // 回退到游戏开始时的初始位置
+            Debug.Log($"[PlayerDeathController] GameManager 为空，使用起始位置：{_startPosition}");
+            return _startPosition;
         }
 
         /// <summary>

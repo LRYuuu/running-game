@@ -845,6 +845,7 @@ namespace SquareFireline.Map
             minGeneratedChunk = 0;
             maxGeneratedChunk = 0;
             lastObstacleWorldX = -999;
+            currentObstacleGap = 3; // 重置障碍物间隔为初始值
 
             // 清空高度缓存
             _heightCache.Clear();
@@ -853,6 +854,11 @@ namespace SquareFireline.Map
             gapStartWorldX = -1;
             gapEndWorldX = -1;
             lastGapEndWorldX = -999;
+
+            if (enableDebugLog)
+            {
+                Debug.Log("[TilemapMapGenerator] Cleanup 完成");
+            }
         }
 
 #if UNITY_EDITOR

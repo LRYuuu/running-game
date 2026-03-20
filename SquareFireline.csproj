@@ -64,8 +64,8 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f3c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\PlayerAnimation.cs" />
     <Compile Include="Assets\Scripts\Map\MapPlayabilityValidator.cs" />
+    <Compile Include="Assets\Scripts\PlayerAnimation.cs" />
     <Compile Include="Assets\Scripts\Player\GroundDetector.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerDeathController.cs" />
     <Compile Include="Assets\Scripts\InfiniteBackgroundTiler.cs" />
@@ -75,6 +75,8 @@
     <Compile Include="Assets\Scripts\Map\TilemapMapConfig.cs" />
     <Compile Include="Assets\Scripts\ParallaxBackgroundTilemap.cs" />
     <Compile Include="Assets\Scripts\Map\TilemapEndlessMapGenerator.cs" />
+    <Compile Include="Assets\Scripts\Game\Checkpoint.cs" />
+    <Compile Include="Assets\Scripts\Game\GameStarter.cs" />
     <Compile Include="Assets\Scripts\ParallaxBackground.cs" />
     <Compile Include="Assets\Scripts\Game\ScoreManager.cs" />
     <Compile Include="Assets\Scripts\Player\JumpConfig.cs" />

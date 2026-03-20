@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using SquareFireline.Player;
+using SquareFireline.Map;
 
 namespace SquareFireline.Game
 {
@@ -37,6 +38,9 @@ namespace SquareFireline.Game
 
         [Tooltip("玩家跳跃控制器")]
         [SerializeField] private PlayerJumpController _playerJumpController;
+
+        [Tooltip("地图生成器")]
+        [SerializeField] private TilemapEndlessMapGenerator _mapGenerator;
         #endregion
 
         #region 私有字段
@@ -67,6 +71,16 @@ namespace SquareFireline.Game
                 DontDestroyOnLoad(gameObject);
             }
 
+            // 自动获取地图生成器引用（如果 Inspector 中未配置）
+            if (_mapGenerator == null)
+            {
+                _mapGenerator = FindObjectOfType<TilemapEndlessMapGenerator>();
+                if (_mapGenerator == null && _enableDebugLog)
+                {
+                    Debug.LogWarning("[GameManager] 未找到 TilemapEndlessMapGenerator 引用！");
+                }
+            }
+
             // 初始化检查点为当前玩家位置
             if (_playerDeathController != null)
             {
@@ -84,13 +98,22 @@ namespace SquareFireline.Game
         {
             // 订阅玩家死亡事件
             if (_playerDeathController != null)
+            {
+                Debug.Log("[GameManager] 订阅 OnPlayerDied 事件");
                 _playerDeathController.OnPlayerDied += OnPlayerDied;
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] _playerDeathController 为空，无法订阅事件");
+            }
         }
 
         private void OnDisable()
         {
             if (_playerDeathController != null)
+            {
                 _playerDeathController.OnPlayerDied -= OnPlayerDied;
+            }
         }
         #endregion
 
@@ -115,6 +138,37 @@ namespace SquareFireline.Game
                     Debug.LogWarning($"[GameManager] StartGame called but state is {CurrentState}, expected Waiting");
                 }
             }
+
+            // 验证地图生成器引用
+            if (_mapGenerator == null)
+            {
+                _mapGenerator = FindObjectOfType<TilemapEndlessMapGenerator>();
+                if (_mapGenerator == null)
+                {
+                    Debug.LogError("[GameManager] 未找到 TilemapEndlessMapGenerator！请确保场景中有地图生成器组件。");
+                }
+                else if (_enableDebugLog)
+                {
+                    Debug.Log($"[GameManager] 已自动获取地图生成器引用：{_mapGenerator.name}");
+                }
+            }
+
+            // 重置玩家起始位置（游戏开始时保存当前位置）
+            if (_playerDeathController != null)
+            {
+                _playerDeathController.ResetStartPosition();
+            }
+
+            // 初始化地图（确保地图已生成）
+            if (_mapGenerator != null)
+            {
+                if (_enableDebugLog)
+                {
+                    Debug.Log("[GameManager] 初始化地图...");
+                }
+                _mapGenerator.Initialize();
+            }
+
             ChangeState(GameState.Playing);
         }
 
@@ -132,6 +186,15 @@ namespace SquareFireline.Game
         }
 
         /// <summary>
+        /// 获取最后一个安全位置
+        /// </summary>
+        /// <returns>检查点位置</returns>
+        public Vector3 GetLastSafePosition()
+        {
+            return _lastSafePosition;
+        }
+
+        /// <summary>
         /// 重启游戏（从任何状态回到 Waiting）
         /// </summary>
         public void RestartGame()
@@ -146,15 +209,15 @@ namespace SquareFireline.Game
         /// </summary>
         private void OnPlayerDied()
         {
+            Debug.Log($"[GameManager] OnPlayerDied 被调用，当前状态：{CurrentState}");
+
             if (CurrentState != GameState.Playing)
             {
-                if (_enableDebugLog)
-                {
-                    Debug.LogWarning($"[GameManager] OnPlayerDied called but state is {CurrentState}, expected Playing");
-                }
+                Debug.LogWarning($"[GameManager] OnPlayerDied called but state is {CurrentState}, expected Playing");
                 return;
             }
 
+            Debug.Log("[GameManager] 玩家死亡，开始重生流程");
             ChangeState(GameState.Dying);
             StartCoroutine(StartRespawn());
         }
@@ -179,30 +242,88 @@ namespace SquareFireline.Game
         /// </summary>
         private IEnumerator StartRespawn()
         {
+            if (_enableDebugLog)
+            {
+                Debug.Log("[GameManager] 开始重生流程...");
+            }
+
             // 等待死亡延迟
             float respawnDelay = _playerDeathController != null
                 ? _playerDeathController.RespawnDelay
                 : 1f;
 
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[GameManager] 等待重生延迟：{respawnDelay}秒");
+            }
+
             yield return new WaitForSeconds(respawnDelay);
 
             ChangeState(GameState.Respawning);
 
-            // 重置玩家状态
+            // 1. 清理地图和障碍物
+            if (_mapGenerator != null)
+            {
+                if (_enableDebugLog)
+                {
+                    Debug.Log("[GameManager] 清理地图和障碍物...");
+                }
+                _mapGenerator.Cleanup();
+            }
+            else
+            {
+                if (_enableDebugLog)
+                {
+                    Debug.LogWarning("[GameManager] _mapGenerator 为空，跳过地图清理");
+                }
+            }
+
+            // 2. 重置玩家跳跃状态
             if (_playerJumpController != null)
             {
+                if (_enableDebugLog)
+                {
+                    Debug.Log("[GameManager] 重置玩家跳跃状态");
+                }
                 _playerJumpController.ResetJumpState();
             }
 
-            // 重置位置
+            // 3. 重置玩家位置到起始点
             if (_playerDeathController != null)
             {
-                _playerDeathController.SetSafePosition(_lastSafePosition);
-                _playerDeathController.RespawnImmediately();
+                if (_enableDebugLog)
+                {
+                    Debug.Log("[GameManager] 重置玩家位置到起始点");
+                }
+                _playerDeathController.Respawn();
+            }
+            else
+            {
+                if (_enableDebugLog)
+                {
+                    Debug.LogWarning("[GameManager] _playerDeathController 为空，跳过玩家位置重置");
+                }
             }
 
-            // 恢复游戏状态
+            // 4. 重新生成地图
+            if (_mapGenerator != null)
+            {
+                Debug.Log("[GameManager] 重新生成地图...");
+                _mapGenerator.Initialize();
+                Debug.Log("[GameManager] 地图重新生成完成");
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] _mapGenerator 为空，跳过地图重新生成");
+            }
+
+            // 5. 恢复游戏状态
             ChangeState(GameState.Playing);
+
+            if (_enableDebugLog)
+            {
+                Debug.Log("[GameManager] 重生流程完成 - 玩家已回到起始位置，地图已重新生成");
+            }
         }
         #endregion
     }
