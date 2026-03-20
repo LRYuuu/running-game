@@ -150,5 +150,108 @@ namespace SquareFireline.Tests.EditMode.Game
             PlayerPrefs.Save();
             Object.DestroyImmediate(newObject);
         }
+
+        #region Story 4-5 Tests: 死亡时分数重置测试
+
+        [Test]
+        public void ResetScore_WhenDyingState_ResetsCurrentScoreToZero()
+        {
+            // Arrange
+            _scoreManager.AddScore(100);
+            int recordedCurrentScore = -1;
+            _scoreManager.OnScoreChanged += (current, high) => recordedCurrentScore = current;
+
+            // Act
+            _scoreManager.ResetScore();
+
+            // Assert
+            Assert.AreEqual(0, _scoreManager.CurrentScore);
+            Assert.AreEqual(0, recordedCurrentScore);
+        }
+
+        [Test]
+        public void HighScore_UnaffectedByDeath_RemainsIntact()
+        {
+            // Arrange
+            _scoreManager.AddScore(100);
+            _scoreManager.CheckHighScore(); // 保存为最高分
+            int expectedHighScore = _scoreManager.HighScore;
+
+            // Act
+            _scoreManager.ResetScore();
+
+            // Assert
+            Assert.AreEqual(0, _scoreManager.CurrentScore);
+            Assert.AreEqual(expectedHighScore, _scoreManager.HighScore);
+        }
+
+        [Test]
+        public void OnGameStateChanged_ToDying_CallsResetScore()
+        {
+            // Arrange
+            _scoreManager.AddScore(100);
+            int recordedCurrentScore = -1;
+            _scoreManager.OnScoreChanged += (current, high) => recordedCurrentScore = current;
+
+            // Act - 模拟切换到 Dying 状态
+            var onGameStateChangedMethod = typeof(ScoreManager).GetMethod("OnGameStateChanged",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            onGameStateChangedMethod?.Invoke(_scoreManager, new object[] { GameState.Playing, GameState.Dying });
+
+            // Assert
+            Assert.AreEqual(0, _scoreManager.CurrentScore);
+            Assert.AreEqual(0, recordedCurrentScore);
+        }
+
+        [Test]
+        public void OnGameStateChanged_ToDying_HighScoreUnchanged()
+        {
+            // Arrange
+            _scoreManager.AddScore(100);
+            _scoreManager.CheckHighScore(); // 保存为最高分
+            int expectedHighScore = _scoreManager.HighScore;
+
+            // Act - 模拟切换到 Dying 状态
+            var onGameStateChangedMethod = typeof(ScoreManager).GetMethod("OnGameStateChanged",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            onGameStateChangedMethod?.Invoke(_scoreManager, new object[] { GameState.Playing, GameState.Dying });
+
+            // Assert
+            Assert.AreEqual(expectedHighScore, _scoreManager.HighScore);
+        }
+
+        [Test]
+        public void ScoreAfterRespawn_StartsAccumulatingFromZero()
+        {
+            // Arrange
+            _scoreManager.AddScore(50);
+            _scoreManager.ResetScore();
+
+            // Act - 模拟重新开始
+            _scoreManager.AddScore(10);
+
+            // Assert
+            Assert.AreEqual(10, _scoreManager.CurrentScore);
+        }
+
+        [Test]
+        public void OnGameStateChanged_ToWaiting_ResetsScore()
+        {
+            // Arrange
+            _scoreManager.AddScore(75);
+            int recordedCurrentScore = -1;
+            _scoreManager.OnScoreChanged += (current, high) => recordedCurrentScore = current;
+
+            // Act - 模拟切换到 Waiting 状态
+            var onGameStateChangedMethod = typeof(ScoreManager).GetMethod("OnGameStateChanged",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+            onGameStateChangedMethod?.Invoke(_scoreManager, new object[] { GameState.Playing, GameState.Waiting });
+
+            // Assert
+            Assert.AreEqual(0, _scoreManager.CurrentScore);
+            Assert.AreEqual(0, recordedCurrentScore);
+        }
+
+        #endregion
     }
 }

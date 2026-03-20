@@ -166,6 +166,7 @@ namespace SquareFireline.Game
                 case GameState.Dying:
                     _isAccumulating = false;
                     CheckHighScore();
+                    ResetScore();  // Story 4-5: 死亡时重置分数
                     break;
                 case GameState.Waiting:
                     _isAccumulating = false;
