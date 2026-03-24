@@ -64,20 +64,28 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f3c1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\UI\MainMenuUI.cs" />
     <Compile Include="Assets\Scripts\Map\MapPlayabilityValidator.cs" />
     <Compile Include="Assets\Scripts\PlayerAnimation.cs" />
     <Compile Include="Assets\Scripts\Player\GroundDetector.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerDeathController.cs" />
     <Compile Include="Assets\Scripts\InfiniteBackgroundTiler.cs" />
+    <Compile Include="Assets\Scripts\UI\UITestHelper.cs" />
+    <Compile Include="Assets\Scripts\Game\ScoreConfig.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerJumpController.cs" />
     <Compile Include="Assets\Scripts\Game\GameState.cs" />
+    <Compile Include="Assets\Scripts\Editor\UISetupTool.cs" />
+    <Compile Include="Assets\Scripts\UI\UIState.cs" />
     <Compile Include="Assets\Scripts\Game\GameManager.cs" />
     <Compile Include="Assets\Scripts\Map\TilemapMapConfig.cs" />
     <Compile Include="Assets\Scripts\ParallaxBackgroundTilemap.cs" />
     <Compile Include="Assets\Scripts\Map\TilemapEndlessMapGenerator.cs" />
     <Compile Include="Assets\Scripts\Game\Checkpoint.cs" />
     <Compile Include="Assets\Scripts\Game\GameStarter.cs" />
+    <Compile Include="Assets\Scripts\UI\UIManager.cs" />
+    <Compile Include="Assets\Scripts\UI\SimpleUITest.cs" />
     <Compile Include="Assets\Scripts\ParallaxBackground.cs" />
+    <Compile Include="Assets\Scripts\Game\GameConfig.cs" />
     <Compile Include="Assets\Scripts\Game\ScoreManager.cs" />
     <Compile Include="Assets\Scripts\Player\JumpConfig.cs" />
     <Compile Include="Assets\Scripts\BackgroundManager.cs" />

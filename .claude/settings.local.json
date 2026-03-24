@@ -45,7 +45,22 @@
       "Bash(git push:*)",
       "Bash(dir:*)",
       "Bash(git commit:*)",
-      "mcp__UnityMCP__find_in_file"
+      "mcp__UnityMCP__find_in_file",
+      "mcp__UnityMCP__batch_execute",
+      "mcp__UnityMCP__manage_prefabs",
+      "mcp__UnityMCP__unity_reflect",
+      "mcp__UnityMCP__delete_script",
+      "Bash(timeout /t 2 /nobreak)",
+      "mcp__UnityMCP__execute_menu_item",
+      "Bash(timeout 3)",
+      "Bash(unity-cli console:*)",
+      "Bash(for id:*)",
+      "Bash(do echo:*)",
+      "Bash(done)",
+      "mcp__UnityMCP__manage_camera",
+      "mcp__UnityMCP__manage_ui",
+      "Bash(rm -rf Assets/Screenshots/)",
+      "Bash(rm -f Assets/Screenshots.meta)"
     ]
   }
 }

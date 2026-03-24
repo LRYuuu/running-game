@@ -1,4 +1,5 @@
 using UnityEngine;
+using SquareFireline.Game;
 
 namespace SquareFireline.Player
 {
@@ -27,6 +28,7 @@ namespace SquareFireline.Player
         private float _coyoteTimeTimer;
         private int _jumpCount;
         private bool _isGroundedLastFrame;
+        private bool _isInputEnabled = true;
         #endregion
 
         #region Unity 生命周期
@@ -81,8 +83,31 @@ namespace SquareFireline.Player
             _isGroundedLastFrame = false;
         }
 
+        private void OnEnable()
+        {
+            // 订阅游戏状态变化事件
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+                // 初始化输入状态
+                _isInputEnabled = GameManager.Instance.CurrentState != GameState.Waiting;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStateChanged -= OnGameStateChanged;
+            }
+        }
+
         private void Update()
         {
+            // Waiting 状态下禁用输入处理
+            if (!_isInputEnabled)
+                return;
+
             // 更新地面状态
             bool wasGrounded = _isGroundedLastFrame;
             _isGroundedLastFrame = IsGrounded();
@@ -127,6 +152,19 @@ namespace SquareFireline.Player
                     _rigidbody2D.velocity.x,
                     _jumpConfig.maxFallSpeed
                 );
+            }
+        }
+
+        /// <summary>
+        /// 游戏状态变化回调
+        /// </summary>
+        private void OnGameStateChanged(GameState oldState, GameState newState)
+        {
+            // Waiting 状态下禁用输入，其他状态启用
+            _isInputEnabled = (newState != GameState.Waiting);
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerJumpController] 输入控制已{(_isInputEnabled ? "启用" : "禁用")}");
             }
         }
         #endregion

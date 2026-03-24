@@ -1,6 +1,6 @@
 # Square Fireline - Sprint Status Tracking
 # Generated: 2026-03-16
-# Last Updated: 2026-03-19 (Story 4-4 completed)
+# Last Updated: 2026-03-24 (Story 5-1 完成 - 世界暂停系统)
 # Total Epics: 8 | Total Stories: 46
 
 metadata:
@@ -72,8 +72,8 @@ development_status:
   # -------------------------------------------------------------------------
   # Epic 5: UI 系统 (6 stories)
   # -------------------------------------------------------------------------
-  epic-5: backlog
-  5-1-作为玩家我可以看到主界面并开始游戏以便进入体验：backlog
+  epic-5: in-progress
+  5-1-作为玩家我可以看到主界面并开始游戏以便进入体验：done
   5-2-作为玩家我可以在游戏中看到当前分数以便了解进度：backlog
   5-3-作为玩家我可以看到历史最高分以便有挑战目标：backlog
   5-4-作为玩家我希望打破纪录时收到提示以便有成就感：backlog
@@ -122,10 +122,23 @@ development_status:
 current_sprint:
   sprint_number: 1
   sprint_goal: "垂直切片 - 完成 Epic 1-4，实现完整核心游戏循环"
+  start_date: "2026-03-16"
+  end_date: "2026-03-20"
+  stories_committed: []
+  stories_completed: ["1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "2-1", "2-2", "2-3", "2-4", "2-5", "2-6", "2-7", "2-8", "3-1", "3-2", "3-3", "3-4", "3-5", "3-6", "3-7", "4-1", "4-2", "4-3", "4-4", "4-5", "4-6", "4-7"]
+  status: "completed"
+
+# =============================================================================
+# 下一冲刺 (Next Sprint)
+# =============================================================================
+next_sprint:
+  sprint_number: 2
+  sprint_goal: "UI 系统 - 完成 Epic 5，实现主界面和分数显示"
   start_date: null
   end_date: null
   stories_committed: []
-  stories_completed: ["1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "2-1", "2-2", "2-3", "2-4", "2-5", "2-6", "2-7", "2-8", "3-1", "3-2", "3-3", "3-4", "3-5", "3-6", "3-7", "4-1", "4-2", "4-3", "4-4", "4-5", "4-6", "4-7"]
+  stories_target: ["5-1", "5-2", "5-3", "5-4", "5-5", "5-6"]
+  status: "planning"
 
 # =============================================================================
 # 冲刺历史 (Sprint History)
@@ -140,13 +153,14 @@ milestones:
     name: "垂直切片"
     description: "完整核心循环：奔跑→跳跃→躲避→死亡→重生"
     required_epics: [1, 2, 3, 4]
-    status: "in_progress"
+    status: "completed"
+    completed_date: "2026-03-20"
 
   feature_complete:
     name: "功能完整"
     description: "所有计划功能可用，包含 UI 和音频"
     required_epics: [1, 2, 3, 4, 5, 6, 7]
-    status: "not_started"
+    status: "in_progress"
 
   release_candidate:
     name: "发布候选"
@@ -186,11 +200,12 @@ notes:
   - "Epic 状态跟随其 Story 进度自动更新"
   - "Retrospective 为可选，在 Epic 完成后执行"
   - "推荐开发顺序：Epic 1→2→3→4→5→6→7→8"
-  - "垂直切片里程碑：Epic 1-4 完成后即可玩"
+  - "垂直切片里程碑：Epic 1-4 已完成 ✅"
   - "Epic 1 已完成：玩家跳跃系统（一段跳/二段跳/土狼时间/跳跃缓冲）"
   - "Epic 2 已完成：地图系统（Chunk 生成/Perlin Noise 地形/动态清理）"
   - "Epic 3 已完成：障碍物与碰撞系统（障碍物生成/空隙生成/死亡反馈/可玩性验证）✅"
   - "Epic 4 已完成：7/7 完成（游戏状态管理/分数系统/立即重生/检查点系统/死亡分数重置/最高分保存/游戏配置 ScriptableObject）✅"
   - "Epic 4 Retrospective 已完成：提取了配置驱动、事件订阅、单例模式等经验，行动计划已制定"
-  - "当前冲刺目标：完成 Epic 4（游戏流程管理），实现完整核心循环"
-  - "下一里程碑：Epic 5（UI 系统）- 主界面、分数显示、最高分显示、破纪录提示"
+  - "冲刺 1 已完成：Epic 1-4 全部完成，垂直切片里程碑达成 ✅"
+  - "下一冲刺目标：Epic 5（UI 系统）- 主界面、分数显示、最高分显示、破纪录提示"
+  - "Epic 5 技术要点：UI 订阅 ScoreManager 事件、UIConfig 配置驱动、单例 UIManager"

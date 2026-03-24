@@ -28,6 +28,9 @@ public class ParallaxBackgroundTilemap : MonoBehaviour
     private Vector3 _lastCameraPosition;
     private Tilemap _tilemap;
 
+    // 滚动暂停状态
+    private bool _isScrollingPaused = false;
+
     private void Start()
     {
         _mainCamera = Camera.main;
@@ -50,6 +53,10 @@ public class ParallaxBackgroundTilemap : MonoBehaviour
             transform.Translate(Vector3.right * scrollSpeed * Time.deltaTime);
             return;
         }
+
+        // 暂停时不更新滚动
+        if (_isScrollingPaused)
+            return;
 
         if (_mainCamera == null)
             return;
@@ -92,5 +99,14 @@ public class ParallaxBackgroundTilemap : MonoBehaviour
     public void SetParallaxFactor(float factor)
     {
         parallaxFactor = Mathf.Clamp01(factor);
+    }
+
+    /// <summary>
+    /// 设置滚动暂停状态
+    /// </summary>
+    /// <param name="paused">true=暂停，false=恢复</param>
+    public void SetScrollPaused(bool paused)
+    {
+        _isScrollingPaused = paused;
     }
 }

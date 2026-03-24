@@ -65,9 +65,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Tests\EditMode\Map\MapPlayabilityTests.cs" />
+    <Compile Include="Assets\Tests\EditMode\Game\GameConfigTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Player\PlayerDeathTests.cs" />
+    <Compile Include="Assets\Tests\EditMode\Game\ScoreConfigTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Map\GapGenerationTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Map\ObstacleGenerationTests.cs" />
+    <Compile Include="Assets\Tests\EditMode\UI\UIManagerTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Game\ScoreManagerTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Game\CheckpointTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Player\PlayerJumpControllerTests.cs" />

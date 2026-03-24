@@ -1,0 +1,84 @@
+/* ===== 主界面容器 ===== */
+.main-menu {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* 深蓝色渐变背景 */
+    background-color: rgba(20, 30, 60, 1.0);
+}
+
+/* ===== 游戏标题 ===== */
+.title {
+    font-size: 72px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+    -unity-text-align: middle-center;
+}
+
+/* ===== 副标题 ===== */
+.subtitle {
+    font-size: 24px;
+    color: rgb(200, 200, 200);
+    -unity-font-style: italic;
+    margin-bottom: 60px;
+    -unity-text-align: middle-center;
+}
+
+/* ===== 开始游戏按钮 ===== */
+.start-button {
+    min-width: 300px;
+    min-height: 80px;
+    font-size: 36px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    background-color: rgb(60, 120, 220);
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: rgb(80, 140, 240);
+}
+
+/* 按钮 - 默认状态 */
+.start-button {
+    -unity-cursor-default: true;
+}
+
+/* 按钮 - 悬停状态 */
+.start-button:hover {
+    background-color: rgb(80, 140, 240);
+    border-color: rgb(100, 160, 255);
+    -unity-cursor-default: true;
+}
+
+/* 按钮 - 按下状态 */
+.start-button:active {
+    background-color: rgb(40, 100, 200);
+    border-color: rgb(60, 120, 220);
+    -unity-cursor-default: true;
+}
+
+/* 按钮 - 焦点状态 */
+.start-button:focus {
+    outline-color: rgb(255, 255, 255);
+    outline-width: 3px;
+}
+
+/* ===== 装饰元素 ===== */
+.decoration {
+    position: absolute;
+    width: 200px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.decoration-top {
+    top: 100px;
+}
+
+.decoration-bottom {
+    bottom: 100px;
+}

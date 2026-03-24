@@ -61,6 +61,9 @@ namespace SquareFireline.Map
         // 上一个空隙的结束位置（用于间隔控制）
         private int lastGapEndWorldX = -999;
 
+        // 滚动暂停状态
+        private bool _isScrollingPaused = false;
+
         private void Awake()
         {
             if (groundTilemap == null)
@@ -86,7 +89,8 @@ namespace SquareFireline.Map
 
         private void Update()
         {
-            if (playerTransform == null || groundTilemap == null || config == null) return;
+            // 暂停时不更新地图滚动
+            if (_isScrollingPaused || playerTransform == null || groundTilemap == null || config == null) return;
 
             // 更新地图偏移（地图向左移动）
             _mapOffset += scrollSpeed * Time.deltaTime;
@@ -858,6 +862,19 @@ namespace SquareFireline.Map
             if (enableDebugLog)
             {
                 Debug.Log("[TilemapMapGenerator] Cleanup 完成");
+            }
+        }
+
+        /// <summary>
+        /// 设置地图滚动暂停状态
+        /// </summary>
+        /// <param name="paused">true=暂停，false=恢复</param>
+        public void SetScrollPaused(bool paused)
+        {
+            _isScrollingPaused = paused;
+            if (enableDebugLog)
+            {
+                Debug.Log($"[TilemapMapGenerator] 滚动已{(paused ? "暂停" : "恢复")}");
             }
         }
 

@@ -56,6 +56,9 @@ namespace SquareFireline.Game
         [Header("调试选项")]
         [Tooltip("是否启用详细日志")]
         [SerializeField] private bool _enableDebugLog = false;
+
+        // 世界暂停状态
+        private bool _isWorldPaused = false;
         #endregion
 
         #region Unity 生命周期
@@ -109,6 +112,12 @@ namespace SquareFireline.Game
             else
             {
                 Debug.LogWarning("[GameManager] _playerDeathController 为空，无法订阅事件");
+            }
+
+            // 初始化世界暂停状态（Waiting 状态下暂停世界）
+            if (CurrentState == GameState.Waiting)
+            {
+                SetWorldPaused(true);
             }
         }
 
@@ -205,6 +214,43 @@ namespace SquareFireline.Game
         {
             ChangeState(GameState.Waiting);
         }
+
+        /// <summary>
+        /// 设置世界暂停状态（暂停/恢复地图和背景滚动）
+        /// </summary>
+        /// <param name="paused">true=暂停，false=恢复</param>
+        public void SetWorldPaused(bool paused)
+        {
+            if (_isWorldPaused == paused)
+                return;
+
+            _isWorldPaused = paused;
+
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[GameManager] 世界已{(paused ? "暂停" : "恢复")}");
+            }
+
+            // 暂停/恢复地图滚动
+            if (_mapGenerator != null)
+            {
+                _mapGenerator.SetScrollPaused(paused);
+            }
+
+            // 暂停/恢复背景滚动
+            var backgrounds = FindObjectsOfType<MonoBehaviour>();
+            foreach (var bg in backgrounds)
+            {
+                if (bg is ParallaxBackground parallaxBg)
+                {
+                    parallaxBg.SetScrollPaused(paused);
+                }
+                else if (bg is ParallaxBackgroundTilemap tilemapBg)
+                {
+                    tilemapBg.SetScrollPaused(paused);
+                }
+            }
+        }
         #endregion
 
         #region 私有方法
@@ -237,6 +283,18 @@ namespace SquareFireline.Game
 
             GameState oldState = CurrentState;
             CurrentState = newState;
+
+            // 根据状态自动暂停/恢复世界
+            if (newState == GameState.Waiting)
+            {
+                // Waiting 状态：暂停世界滚动
+                SetWorldPaused(true);
+            }
+            else if (newState == GameState.Playing)
+            {
+                // Playing 状态：恢复世界滚动
+                SetWorldPaused(false);
+            }
 
             OnGameStateChanged?.Invoke(oldState, newState);
         }

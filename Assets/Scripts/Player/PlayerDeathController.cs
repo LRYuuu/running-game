@@ -34,6 +34,7 @@ namespace SquareFireline.Player
         private bool _isDead = false;
         private PlayerJumpController _jumpController;
         private Vector3 _startPosition;
+        private bool _isCollisionDetectionEnabled = true;
         #endregion
 
         #region Unity 生命周期
@@ -62,9 +63,34 @@ namespace SquareFireline.Player
             }
         }
 
+        private void OnEnable()
+        {
+            // 订阅游戏状态变化事件
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+                // 初始化碰撞检测状态
+                _isCollisionDetectionEnabled = GameManager.Instance.CurrentState != GameState.Waiting;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStateChanged -= OnGameStateChanged;
+            }
+        }
+
         // 添加碰撞检测的调试日志
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            // Waiting 状态下禁用碰撞检测
+            if (!_isCollisionDetectionEnabled)
+            {
+                return;
+            }
+
             Debug.Log($"[PlayerDeathController] 发生碰撞：{collision.gameObject.name}, 接触点数量：{collision.contactCount}");
 
             if (_enableDebugLog)
@@ -83,6 +109,12 @@ namespace SquareFireline.Player
         /// </summary>
         private void OnTriggerEnter2D(Collider2D other)
         {
+            // Waiting 状态下禁用碰撞检测
+            if (!_isCollisionDetectionEnabled)
+            {
+                return;
+            }
+
             Debug.Log($"[PlayerDeathController] 触发器碰撞：{other.gameObject.name}");
 
             if (_enableDebugLog)
@@ -119,6 +151,19 @@ namespace SquareFireline.Player
                 Debug.Log($"[PlayerDeathController] Tag 检测：{obj.name} tag={obj.tag}, isTagObstacle={isTagObstacle}");
             }
             return isTagObstacle;
+        }
+
+        /// <summary>
+        /// 游戏状态变化回调
+        /// </summary>
+        private void OnGameStateChanged(GameState oldState, GameState newState)
+        {
+            // Waiting 状态下禁用碰撞检测，其他状态启用
+            _isCollisionDetectionEnabled = (newState != GameState.Waiting);
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerDeathController] 碰撞检测已{(_isCollisionDetectionEnabled ? "启用" : "禁用")}");
+            }
         }
         #endregion
 
