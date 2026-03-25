@@ -1,12 +1,12 @@
 # Square Fireline - Sprint Status Tracking
 # Generated: 2026-03-16
-# Last Updated: 2026-03-25 (Story 5-4 完成实现)
+# Last Updated: 2026-03-25 (Story 6-3 难度系统完成实现)
 # Total Epics: 8 | Total Stories: 46
 
 metadata:
   project_name: "Square Fireline"
   generated_date: "2026-03-16"
-  last_updated: "2026-03-24"
+  last_updated: "2026-03-25"
   total_epics: 8
   total_stories: 46
   communication_language: "中文"
@@ -78,17 +78,17 @@ development_status:
   5-3-作为玩家我可以看到历史最高分以便有挑战目标：done
   5-4-作为玩家我希望打破纪录时收到提示以便有成就感：done
   5-5-作为玩家我希望关闭游戏后最高分不丢失以便进度保存：done
-  5-6-作为玩家我希望在死亡时有UI界面提示玩家是否重新开始游戏：backlog
+  5-6-作为玩家我希望关闭游戏后最高分不丢失以便进度保存：done
   epic-5-retrospective: done
   # Epic 5 进度：6/6 完成（Epic 5 已完成）✅
 
   # -------------------------------------------------------------------------
   # Epic 6: 地图生成扩展 (6 stories)
   # -------------------------------------------------------------------------
-  epic-6: backlog
+  epic-6: in-progress
   6-1-作为系统我可以生成不同生物群系的地形提供视觉变化：backlog
   6-2-作为玩家我希望通过达成目标解锁新群系以便有进度感：backlog
-  6-3-作为玩家我希望随游戏进行难度逐渐增加以便有挑战性：backlog
+  6-3-作为玩家我希望随游戏进行难度逐渐增加以便有挑战性：done
   6-4-作为开发者我希望有群系配置 ScriptableObject 以便扩展内容：backlog
   6-5-作为开发者我希望有难度曲线配置以便平衡体验：backlog
   6-6-作为玩家我希望不同群系有特殊元素以便有新鲜感：backlog
@@ -214,3 +214,4 @@ notes:
   - "Story 5-3 文档已创建：历史最高分显示（扩展 UXML/USS 添加最高分元素、InGameUI.cs 完善更新逻辑）✅"
   - "Story 5-3 已完成：最高分显示 UI（InGameUI.uxml 移除隐藏样式、InGameUI.uss 调整位置到右上角、InGameUI.cs 添加缓存机制）✅"
   - "Story 5-4 已完成：破纪录提示 UI（ScoreManager.OnNewRecord 事件、InGameUI 显示 2.5 秒金色提示）✅"
+  - "Story 6-3 已完成：难度系统（DifficultyConfig/DistanceCalculator、动态障碍/空隙概率、距离追踪、单元测试）✅"

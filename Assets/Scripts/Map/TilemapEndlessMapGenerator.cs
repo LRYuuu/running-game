@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using SquareFireline.Game;
 
 namespace SquareFireline.Map
 {
@@ -39,6 +40,10 @@ namespace SquareFireline.Map
         [Header("调试设置")]
         [Tooltip("是否启用详细日志")]
         public bool enableDebugLog = false;
+
+        [Header("难度系统")]
+        [Tooltip("难度计算器引用（用于动态难度）")]
+        public DifficultyCalculator difficultyCalculator;
 
         // 地图整体偏移（累计滚动距离）
         private float _mapOffset = 0f;
@@ -328,8 +333,14 @@ namespace SquareFireline.Map
                 return false;
             }
 
-            // 概率判定
-            if (Random.value > config.gapSpawnChance)
+            // 概率判定 - 使用难度系统计算的当前概率（如果有难度计算器）
+            float gapChance = config.gapSpawnChance;
+            if (difficultyCalculator != null && difficultyCalculator.CurrentGapChance > 0f)
+            {
+                gapChance = difficultyCalculator.CurrentGapChance;
+            }
+
+            if (Random.value > gapChance)
             {
                 return false;
             }
@@ -697,8 +708,14 @@ namespace SquareFireline.Map
                 return false;
             }
 
-            // 概率判定
-            if (Random.value > config.obstacleSpawnChance)
+            // 概率判定 - 使用难度系统计算的当前概率（如果有难度计算器）
+            float obstacleChance = config.obstacleSpawnChance;
+            if (difficultyCalculator != null && difficultyCalculator.CurrentObstacleChance > 0f)
+            {
+                obstacleChance = difficultyCalculator.CurrentObstacleChance;
+            }
+
+            if (Random.value > obstacleChance)
             {
                 return false;
             }

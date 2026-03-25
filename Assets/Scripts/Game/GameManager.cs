@@ -45,6 +45,10 @@ namespace SquareFireline.Game
         [Header("游戏配置")]
         [Tooltip("游戏配置 ScriptableObject")]
         [SerializeField] private GameConfig _gameConfig;
+
+        [Header("难度系统")]
+        [Tooltip("难度计算器引用")]
+        [SerializeField] private DifficultyCalculator _difficultyCalculator;
         #endregion
 
         #region 私有字段
@@ -52,6 +56,11 @@ namespace SquareFireline.Game
         /// 检查点位置（用于重生）
         /// </summary>
         private Vector3 _lastSafePosition;
+
+        /// <summary>
+        /// 玩家前进距离（用于难度计算）
+        /// </summary>
+        private float _playerDistance = 0f;
 
         [Header("调试选项")]
         [Tooltip("是否启用详细日志")]
@@ -126,6 +135,25 @@ namespace SquareFireline.Game
             if (_playerDeathController != null)
             {
                 _playerDeathController.OnPlayerDied -= OnPlayerDied;
+            }
+        }
+
+        private void Update()
+        {
+            if (CurrentState == GameState.Playing && _playerDeathController != null)
+            {
+                // 更新玩家前进距离（基于玩家位置的 X 轴绝对值）
+                float newDistance = Mathf.Max(0f, _playerDeathController.transform.position.x);
+                if (newDistance > _playerDistance)
+                {
+                    _playerDistance = newDistance;
+
+                    // 更新难度计算器
+                    if (_difficultyCalculator != null)
+                    {
+                        _difficultyCalculator.SetPlayerDistance(_playerDistance);
+                    }
+                }
             }
         }
         #endregion
@@ -212,6 +240,15 @@ namespace SquareFireline.Game
         /// </summary>
         public void RestartGame()
         {
+            // 重置难度进度
+            if (_difficultyCalculator != null)
+            {
+                _difficultyCalculator.ResetProgress();
+            }
+
+            // 重置玩家距离
+            _playerDistance = 0f;
+
             ChangeState(GameState.Waiting);
         }
 
@@ -221,6 +258,15 @@ namespace SquareFireline.Game
         public void ResumeGameFromDeath()
         {
             Debug.Log("[GameManager] ResumeGameFromDeath called - starting respawn sequence");
+
+            // 重置难度进度
+            if (_difficultyCalculator != null)
+            {
+                _difficultyCalculator.ResetProgress();
+            }
+
+            // 重置玩家距离
+            _playerDistance = 0f;
 
             // 1. 清理地图和障碍物
             if (_mapGenerator != null)
