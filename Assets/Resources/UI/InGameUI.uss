@@ -32,3 +32,22 @@
     -unity-font-style: bold;
     -unity-shadow-color: rgba(0, 0, 0, 0.8);
 }
+
+/* 破纪录容器 - 居中显示 */
+.new-record-container {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    translate: -50% 0;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 破纪录标签样式 - 金色大字体 */
+.new-record-label {
+    font-size: 48px;
+    color: rgb(255, 215, 0);
+    -unity-font-style: bold;
+    -unity-shadow-color: rgba(0, 0, 0, 0.8);
+    -unity-shadow-offset: 4px 4px;
+}

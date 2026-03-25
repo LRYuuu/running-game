@@ -16,5 +16,10 @@
             <Label name="highscore-label" text="最高分：0" class="highscore-label" />
         </VisualElement>
 
+        <!-- 破纪录提示（居中显示） -->
+        <VisualElement name="new-record-container" class="new-record-container">
+            <Label name="new-record-label" text="新纪录！" class="new-record-label" />
+        </VisualElement>
+
     </VisualElement>
 </UXML>

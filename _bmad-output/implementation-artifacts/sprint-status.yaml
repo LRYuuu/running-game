@@ -1,6 +1,6 @@
 # Square Fireline - Sprint Status Tracking
 # Generated: 2026-03-16
-# Last Updated: 2026-03-25 (Story 5-3 完成实现)
+# Last Updated: 2026-03-25 (Story 5-4 完成实现)
 # Total Epics: 8 | Total Stories: 46
 
 metadata:
@@ -76,7 +76,7 @@ development_status:
   5-1-作为玩家我可以看到主界面并开始游戏以便进入体验：done
   5-2-作为玩家我可以在游戏中看到当前分数以便了解进度：done
   5-3-作为玩家我可以看到历史最高分以便有挑战目标：done
-  5-4-作为玩家我希望打破纪录时收到提示以便有成就感：backlog
+  5-4-作为玩家我希望打破纪录时收到提示以便有成就感：done
   5-5-作为玩家我希望关闭游戏后最高分不丢失以便进度保存：backlog
   5-6-作为玩家我希望可以选择已解锁的生物群系以便有选择感：backlog
   epic-5-retrospective: optional
@@ -213,3 +213,4 @@ notes:
   - "Story 5-2 已完成：游戏内分数显示 UI（InGameUI.uxml/USS/InGameUI.cs、UIManager 集成、EditMode 测试）✅"
   - "Story 5-3 文档已创建：历史最高分显示（扩展 UXML/USS 添加最高分元素、InGameUI.cs 完善更新逻辑）✅"
   - "Story 5-3 已完成：最高分显示 UI（InGameUI.uxml 移除隐藏样式、InGameUI.uss 调整位置到右上角、InGameUI.cs 添加缓存机制）✅"
+  - "Story 5-4 已完成：破纪录提示 UI（ScoreManager.OnNewRecord 事件、InGameUI 显示 2.5 秒金色提示）✅"

@@ -20,9 +20,12 @@ namespace SquareFireline.UI
         private VisualElement _root;
         private Label _scoreLabel;
         private Label _highScoreLabel;
+        private VisualElement _newRecordContainer;
+        private Label _newRecordLabel;
         private int _lastDisplayedScore = -1; // 用于避免重复更新
         private int _lastDisplayedHighScore = -1; // 用于避免重复更新最高分
         private bool _isSubscribed = false;
+        private Coroutine _hideNewRecordCoroutine;
         #endregion
 
         #region Unity 生命周期
@@ -65,6 +68,9 @@ namespace SquareFireline.UI
 
             // 订阅分数变化事件（在 UI 初始化完成后再更新显示）
             SubscribeToScoreManager(registerOnly: true);
+
+            // 订阅破纪录事件（在 UI 初始化完成后）
+            // 注意：不在这里直接订阅，而是在 InitializeUIElements 完成后订阅
         }
 
         private void SubscribeToScoreManager(bool registerOnly = false)
@@ -118,6 +124,13 @@ namespace SquareFireline.UI
                 {
                     UpdateScoreDisplay(ScoreManager.Instance.CurrentScore, ScoreManager.Instance.HighScore);
                 }
+
+                // 订阅破纪录事件（UI 初始化完成后）
+                if (ScoreManager.Instance != null)
+                {
+                    ScoreManager.Instance.OnNewRecord += OnNewRecord;
+                    Debug.Log("[InGameUI] Subscribed to OnNewRecord event");
+                }
             }
             else
             {
@@ -133,6 +146,17 @@ namespace SquareFireline.UI
                 ScoreManager.Instance.OnScoreChanged -= OnScoreChanged;
                 _isSubscribed = false;
                 Debug.Log("[InGameUI] Unsubscribed from ScoreManager");
+            }
+
+            if (ScoreManager.Instance != null)
+            {
+                ScoreManager.Instance.OnNewRecord -= OnNewRecord;
+            }
+
+            // 停止协程
+            if (_hideNewRecordCoroutine != null)
+            {
+                StopCoroutine(_hideNewRecordCoroutine);
             }
         }
         #endregion
@@ -227,6 +251,20 @@ namespace SquareFireline.UI
             {
                 Debug.Log($"[InGameUI] highscore-label found, initial text: {_highScoreLabel.text}");
             }
+
+            // 获取破纪录提示容器引用
+            _newRecordContainer = _root.Q<VisualElement>("new-record-container");
+            _newRecordLabel = _root.Q<Label>("new-record-label");
+            if (_newRecordContainer == null)
+            {
+                Debug.LogWarning("[InGameUI] new-record-container not found in UXML");
+            }
+            else
+            {
+                // 默认隐藏
+                _newRecordContainer.style.display = DisplayStyle.None;
+                Debug.Log("[InGameUI] new-record-container found, visibility set to None");
+            }
         }
 
         /// <summary>
@@ -236,6 +274,52 @@ namespace SquareFireline.UI
         {
             Debug.Log($"[InGameUI] OnScoreChanged: currentScore={currentScore}, highScore={highScore}");
             UpdateScoreDisplay(currentScore, highScore);
+        }
+
+        /// <summary>
+        /// 破纪录事件回调
+        /// </summary>
+        private void OnNewRecord(int newHighScore)
+        {
+            Debug.Log($"[InGameUI] New record during game: {newHighScore}");
+            ShowNewRecordHint();
+        }
+
+        /// <summary>
+        /// 显示破纪录提示
+        /// </summary>
+        public void ShowNewRecordHint()
+        {
+            if (_newRecordContainer != null)
+            {
+                _newRecordContainer.style.display = DisplayStyle.Flex;
+                Debug.Log("[InGameUI] New record hint shown");
+
+                // 取消之前的隐藏协程
+                if (_hideNewRecordCoroutine != null)
+                {
+                    StopCoroutine(_hideNewRecordCoroutine);
+                }
+
+                // 2.5 秒后自动隐藏
+                _hideNewRecordCoroutine = StartCoroutine(HideNewRecordAfterDelay(2.5f));
+            }
+        }
+
+        /// <summary>
+        /// 延迟隐藏破纪录提示
+        /// </summary>
+        private System.Collections.IEnumerator HideNewRecordAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+
+            if (_newRecordContainer != null)
+            {
+                _newRecordContainer.style.display = DisplayStyle.None;
+                Debug.Log("[InGameUI] New record hint hidden");
+            }
+
+            _hideNewRecordCoroutine = null;
         }
         #endregion
     }

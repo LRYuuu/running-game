@@ -19,6 +19,8 @@ namespace SquareFireline.Game
         #region 事件
         /// <summary>分数改变时触发（当前分数，最高分）</summary>
         public event Action<int, int> OnScoreChanged;
+        /// <summary>打破新纪录时触发（新最高分）</summary>
+        public event Action<int> OnNewRecord;
         #endregion
 
         #region 分数
@@ -47,6 +49,9 @@ namespace SquareFireline.Game
         // 缓存配置值（从 ScoreConfig 读取）
         private int _scorePerSecond;
         private float _scoreInterval;
+
+        // 标记本局游戏是否已触发破纪录提示
+        private bool _hasTriggeredNewRecordThisGame = false;
         #endregion
 
         #region Unity 生命周期
@@ -146,6 +151,13 @@ namespace SquareFireline.Game
         {
             CurrentScore += amount;
             OnScoreChanged?.Invoke(CurrentScore, HighScore);
+
+            // 游戏过程中检查是否打破纪录（实时提示，每局游戏只触发一次）
+            if (!_hasTriggeredNewRecordThisGame && CurrentScore > HighScore)
+            {
+                _hasTriggeredNewRecordThisGame = true;
+                OnNewRecord?.Invoke(CurrentScore);
+            }
         }
 
         /// <summary>
@@ -168,6 +180,10 @@ namespace SquareFireline.Game
                 HighScore = CurrentScore;
                 SaveHighScore();
                 OnScoreChanged?.Invoke(CurrentScore, HighScore);
+
+                // 触发破纪录事件
+                OnNewRecord?.Invoke(HighScore);
+
                 return true;
             }
             return false;
@@ -195,12 +211,21 @@ namespace SquareFireline.Game
                 case GameState.Playing:
                     _isAccumulating = true;
                     _accumulationTime = 0f;
+                    _hasTriggeredNewRecordThisGame = false; // 重置破纪录标志
                     Debug.Log("[ScoreManager] Started accumulating score (_isAccumulating = true)");
                     break;
                 case GameState.Dying:
                     _isAccumulating = false;
                     Debug.Log("[ScoreManager] Stopped accumulating score (Dying)");
-                    CheckHighScore();
+                    // 游戏结束：保存最高分但不触发破纪录事件（游戏过程中已实时提示）
+                    if (CurrentScore > HighScore)
+                    {
+                        HighScore = CurrentScore;
+                        SaveHighScore();
+                        Debug.Log($"[ScoreManager] New highscore saved: {HighScore}");
+                    }
+                    // 通知 UI 更新最高分显示
+                    OnScoreChanged?.Invoke(0, HighScore);
                     ResetScore();
                     break;
                 case GameState.Waiting:
