@@ -120,6 +120,9 @@ namespace SquareFireline.UI
             {
                 _mainMenuDocument.enabled = true;
                 Debug.Log("[UIManager] Main menu enabled");
+
+                // 重新注册按钮事件（UIDocument 禁用后重新启用时需要重新注册）
+                RegisterStartButton();
             }
             else
             {

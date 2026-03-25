@@ -24,6 +24,7 @@ namespace SquareFireline.UI
         private UnityEngine.UIElements.Button _restartButton;
         private UnityEngine.UIElements.Button _mainMenuButton;
         private bool _isSubscribed = false;
+        private bool _areButtonEventsRegistered = false;
         private int _lastDisplayedScore = -1;
         private int _lastDisplayedHighScore = -1;
         #endregion
@@ -38,21 +39,23 @@ namespace SquareFireline.UI
 
             if (uiDocument != null)
             {
-                var root = uiDocument.rootVisualElement;
-                if (root != null)
-                {
-                    root.style.display = DisplayStyle.None;
-                }
+                Debug.Log("[GameOverUI] Awake called, uiDocument assigned");
+            }
+            else
+            {
+                Debug.LogWarning("[GameOverUI] UIDocument not found on GameObject");
             }
         }
 
         private void OnEnable()
         {
+            Debug.Log("[GameOverUI] OnEnable called, starting UI initialization");
             StartCoroutine(InitializeUIAfterDelay());
         }
 
         private void OnDisable()
         {
+            // 取消订阅事件
             if (_isSubscribed && GameManager.Instance != null)
             {
                 GameManager.Instance.OnGameStateChanged -= OnGameStateChanged;
@@ -63,6 +66,20 @@ namespace SquareFireline.UI
                 ScoreManager.Instance.OnScoreChanged -= OnScoreChanged;
                 ScoreManager.Instance.OnNewRecord -= OnNewRecord;
             }
+
+            // 取消注册按钮事件
+            if (_areButtonEventsRegistered && _restartButton != null)
+            {
+                _restartButton.clicked -= OnRestartButtonClicked;
+            }
+            if (_areButtonEventsRegistered && _mainMenuButton != null)
+            {
+                _mainMenuButton.clicked -= OnMainMenuButtonClicked;
+            }
+
+            // 重置订阅标志，允许下次 OnEnable 时重新订阅
+            _isSubscribed = false;
+            _areButtonEventsRegistered = false;
         }
         #endregion
 
@@ -72,11 +89,26 @@ namespace SquareFireline.UI
         /// </summary>
         public void Show()
         {
-            Debug.Log("[GameOverUI] Show() called");
+            Debug.Log($"[GameOverUI] Show() called, _root is null: {_root == null}");
             if (_root != null)
             {
                 _root.style.display = DisplayStyle.Flex;
+
+                // 设置 SortingOrder 确保 UI 在最前面
+                if (uiDocument != null)
+                {
+                    uiDocument.panelSettings.sortingOrder = 100;
+                    Debug.Log("[GameOverUI] SortingOrder set to 100");
+                }
+
                 Debug.Log("[GameOverUI] Game over UI shown");
+            }
+            else
+            {
+                Debug.LogWarning("[GameOverUI] Show() called but _root is null, restarting UI initialization");
+                // 如果 _root 为 null，重新初始化
+                _isSubscribed = false; // 重置订阅标志，允许重新订阅
+                StartCoroutine(InitializeUIAfterDelay());
             }
         }
 
@@ -151,6 +183,9 @@ namespace SquareFireline.UI
             _root = uiDocument.rootVisualElement;
             if (_root != null)
             {
+                // 初始隐藏 UI
+                _root.style.display = DisplayStyle.None;
+
                 InitializeUIElements();
                 Debug.Log("[GameOverUI] UI initialized");
 
@@ -187,6 +222,12 @@ namespace SquareFireline.UI
             }
 
             // 验证元素
+            Debug.Log($"[GameOverUI] _root: {_root.name}, childCount: {_root.childCount}");
+            Debug.Log($"[GameOverUI] _scoreLabel found: {_scoreLabel != null}");
+            Debug.Log($"[GameOverUI] _highScoreLabel found: {_highScoreLabel != null}");
+            Debug.Log($"[GameOverUI] _restartButton found: {_restartButton != null}");
+            Debug.Log($"[GameOverUI] _mainMenuButton found: {_mainMenuButton != null}");
+
             if (_scoreLabel == null)
             {
                 Debug.LogWarning("[GameOverUI] final-score-label not found");
@@ -205,16 +246,17 @@ namespace SquareFireline.UI
             }
 
             // 注册按钮事件
-            if (_restartButton != null)
+            if (_restartButton != null && !_areButtonEventsRegistered)
             {
                 _restartButton.clicked += OnRestartButtonClicked;
                 Debug.Log("[GameOverUI] Restart button clicked event registered");
             }
-            if (_mainMenuButton != null)
+            if (_mainMenuButton != null && !_areButtonEventsRegistered)
             {
                 _mainMenuButton.clicked += OnMainMenuButtonClicked;
                 Debug.Log("[GameOverUI] Main menu button clicked event registered");
             }
+            _areButtonEventsRegistered = true;
         }
 
         /// <summary>
@@ -249,12 +291,13 @@ namespace SquareFireline.UI
         /// </summary>
         private void OnGameStateChanged(GameState oldState, GameState newState)
         {
-            Debug.Log($"[GameOverUI] OnGameStateChanged: {oldState} -> {newState}");
+            Debug.Log($"[GameOverUI] OnGameStateChanged: {oldState} -> {newState}, _isSubscribed={_isSubscribed}");
 
             switch (newState)
             {
                 case GameState.Dying:
                     // 死亡状态：显示界面并更新分数
+                    Debug.Log($"[GameOverUI] Dying state: calling Show(), _root={_root != null}");
                     Show();
                     if (ScoreManager.Instance != null)
                     {
@@ -294,7 +337,7 @@ namespace SquareFireline.UI
         /// </summary>
         private void OnRestartButtonClicked()
         {
-            Debug.Log("[GameOverUI] Restart button clicked");
+            Debug.Log("[GameOverUI] OnRestartButtonClicked called - button was clicked!");
             Hide();
             HideNewRecordBadge();
 
@@ -310,7 +353,7 @@ namespace SquareFireline.UI
         /// </summary>
         private void OnMainMenuButtonClicked()
         {
-            Debug.Log("[GameOverUI] Main menu button clicked");
+            Debug.Log("[GameOverUI] OnMainMenuButtonClicked called - button was clicked!");
             Hide();
             HideNewRecordBadge();
 

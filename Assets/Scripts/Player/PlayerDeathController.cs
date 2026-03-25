@@ -164,6 +164,16 @@ namespace SquareFireline.Player
             {
                 Debug.Log($"[PlayerDeathController] 碰撞检测已{(_isCollisionDetectionEnabled ? "启用" : "禁用")}");
             }
+
+            // Waiting 状态下重置死亡标志，允许重新开始游戏
+            if (newState == GameState.Waiting)
+            {
+                _isDead = false;
+                if (_enableDebugLog)
+                {
+                    Debug.Log("[PlayerDeathController] 死亡标志已重置");
+                }
+            }
         }
         #endregion
 

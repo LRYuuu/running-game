@@ -37,17 +37,9 @@ namespace SquareFireline.UI
                 uiDocument = GetComponent<UIDocument>();
             }
 
-            // 获取 UI 根元素（UIDocument 会在 OnEnable 时创建 rootVisualElement）
             if (uiDocument != null)
             {
                 Debug.Log($"[InGameUI] Awake called, uiDocument={uiDocument != null}");
-                // 默认隐藏游戏内 UI，直到 Show() 被调用
-                var root = uiDocument.rootVisualElement;
-                if (root != null)
-                {
-                    root.style.display = DisplayStyle.None;
-                    Debug.Log("[InGameUI] Root visibility set to None in Awake");
-                }
             }
             else
             {

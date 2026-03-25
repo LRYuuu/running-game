@@ -84,17 +84,13 @@
     <Compile Include="Assets\Scripts\Map\TilemapEndlessMapGenerator.cs" />
     <Compile Include="Assets\Scripts\Game\Checkpoint.cs" />
     <Compile Include="Assets\Scripts\Game\GameStarter.cs" />
-    <Compile Include="Assets\Scripts\UI\Editor\InGameUIEditor.cs" />
-    <Compile Include="Assets\Scripts\UI\Editor\InGameUIQuickSetup.cs" />
-    <Compile Include="Assets\Scripts\UI\Editor\InGameUIConfigFixer.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\UI\SimpleUITest.cs" />
     <Compile Include="Assets\Scripts\ParallaxBackground.cs" />
-    <Compile Include="Assets\Scripts\UI\Editor\InGameUIRuntimeConfigurator.cs" />
     <Compile Include="Assets\Scripts\Game\GameConfig.cs" />
     <Compile Include="Assets\Scripts\Game\ScoreManager.cs" />
-    <Compile Include="Assets\Scripts\Player\JumpConfig.cs" />
     <Compile Include="Assets\Scripts\UI\GameOverUI.cs" />
+    <Compile Include="Assets\Scripts\Player\JumpConfig.cs" />
     <Compile Include="Assets\Scripts\BackgroundManager.cs" />
     <Compile Include="Assets\Scripts\ProceduralBackgroundGenerator.cs" />
   </ItemGroup>

@@ -1,20 +1,15 @@
-<ui:UIDocument xmlns:ui="http://unity3d.com/ui">
-    <!-- 游戏结束 UI -->
-    <VisualElement name="game-over-container" class="game-over-container">
-        <!-- 标题 -->
-        <Label name="game-over-title" text="游戏结束" class="game-over-title" />
-
-        <!-- 分数显示 -->
-        <Label name="final-score-label" text="分数：0" class="game-over-score" />
-        <Label name="highscore-display-label" text="最高分：0" class="game-over-highscore" />
-
-        <!-- 新纪录标志（默认隐藏） -->
-        <VisualElement name="new-record-badge" class="new-record-badge">
-            <Label name="new-record-badge-label" text="新纪录！" class="new-record-badge-label" />
-        </VisualElement>
-
-        <!-- 按钮 -->
-        <Button name="restart-button" text="重新开始" class="restart-button" />
-        <Button name="main-menu-button" text="返回主菜单" class="main-menu-button" />
-    </VisualElement>
-</ui:UIDocument>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/UI/GameOverUI.uss?fileID=7433441132597879392&amp;guid=a1f2b69d80355494dad5e15206e694d6&amp;type=3#GameOverUI" />
+    <ui:VisualElement name="root" class="root-container">
+        <ui:VisualElement name="game-over-container" class="game-over-container" style="width: 1920px; height: 1080px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+            <ui:Label name="game-over-title" text="游戏结束" class="game-over-title" />
+            <ui:Label name="final-score-label" text="分数：0" class="game-over-score" />
+            <ui:Label name="highscore-display-label" text="最高分：0" class="game-over-highscore" />
+            <ui:VisualElement name="new-record-badge" class="new-record-badge">
+                <ui:Label name="new-record-badge-label" text="新纪录！" class="new-record-badge-label" />
+            </ui:VisualElement>
+            <ui:Button name="restart-button" text="重新开始" class="restart-button" style="min-width: auto; margin-bottom: 10px;" />
+            <ui:Button name="main-menu-button" text="返回主菜单" class="main-menu-button" style="-unity-slice-top: 10;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

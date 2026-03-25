@@ -216,38 +216,45 @@ namespace SquareFireline.Game
         }
 
         /// <summary>
-        /// 从死亡状态重新开始游戏（直接进入 Playing 状态）
+        /// 从死亡状态重新开始游戏（玩家点击重新开始按钮后调用）
         /// </summary>
         public void ResumeGameFromDeath()
         {
-            // 重置玩家起始位置
-            if (_playerDeathController != null)
-            {
-                _playerDeathController.ResetStartPosition();
-            }
+            Debug.Log("[GameManager] ResumeGameFromDeath called - starting respawn sequence");
 
-            // 清理并重新生成地图
+            // 1. 清理地图和障碍物
             if (_mapGenerator != null)
             {
                 _mapGenerator.Cleanup();
-                _mapGenerator.Initialize();
             }
 
-            // 重置玩家跳跃状态
+            // 2. 重置玩家跳跃状态
             if (_playerJumpController != null)
             {
                 _playerJumpController.ResetJumpState();
             }
 
-            // 重置玩家位置
+            // 3. 重置玩家起始位置
+            if (_playerDeathController != null)
+            {
+                _playerDeathController.ResetStartPosition();
+            }
+
+            // 4. 重置玩家位置
             if (_playerDeathController != null)
             {
                 _playerDeathController.Respawn();
             }
 
-            // 直接进入游戏状态
+            // 5. 重新生成地图
+            if (_mapGenerator != null)
+            {
+                _mapGenerator.Initialize();
+            }
+
+            // 6. 恢复游戏状态
             ChangeState(GameState.Playing);
-            Debug.Log("[GameManager] Game resumed from death");
+            Debug.Log("[GameManager] Game resumed from death - respawn complete");
         }
 
         /// <summary>
@@ -302,9 +309,9 @@ namespace SquareFireline.Game
                 return;
             }
 
-            Debug.Log("[GameManager] 玩家死亡，开始重生流程");
+            Debug.Log("[GameManager] 玩家死亡，进入 Dying 状态（等待玩家操作）");
             ChangeState(GameState.Dying);
-            StartCoroutine(StartRespawn());
+            // 不再自动重生，等待玩家点击重新开始按钮
         }
 
         /// <summary>
@@ -320,9 +327,9 @@ namespace SquareFireline.Game
             CurrentState = newState;
 
             // 根据状态自动暂停/恢复世界
-            if (newState == GameState.Waiting)
+            if (newState == GameState.Waiting || newState == GameState.Dying)
             {
-                // Waiting 状态：暂停世界滚动
+                // Waiting/Dying 状态：暂停世界滚动
                 SetWorldPaused(true);
             }
             else if (newState == GameState.Playing)

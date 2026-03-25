@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PanelSettings: {fileID: 11400000, guid: 68839fc83efb134499ac847f96d8b0a3, type: 2}
+  m_PanelSettings: {fileID: 11400000, guid: b7bad8fe7a46b8f42b5e03a0d7a4aec9, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 2b4223597f89bf046903a5199a65a33d, type: 3}
   m_SortingOrder: 0
@@ -4223,7 +4223,7 @@ MonoBehaviour:
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PanelSettings: {fileID: 11400000, guid: 68839fc83efb134499ac847f96d8b0a3, type: 2}
+  m_PanelSettings: {fileID: 11400000, guid: b7bad8fe7a46b8f42b5e03a0d7a4aec9, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: b8db01f3222cfa047b041dfd2954240b, type: 3}
   m_SortingOrder: 0
@@ -4505,7 +4505,7 @@ MonoBehaviour:
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name:
   m_EditorClassIdentifier:
-  m_PanelSettings: {fileID: 11400000, guid: 68839fc83efb134499ac847f96d8b0a3, type: 2}
+  m_PanelSettings: {fileID: 11400000, guid: b7bad8fe7a46b8f42b5e03a0d7a4aec9, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: a05bda9831d90e04d909f84bc3bf132c, type: 3}
   m_SortingOrder: 0
