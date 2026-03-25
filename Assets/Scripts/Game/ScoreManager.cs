@@ -52,18 +52,23 @@ namespace SquareFireline.Game
         #region Unity 生命周期
         private void Awake()
         {
+            Debug.Log("[ScoreManager] Awake started");
+
             // 单例初始化
             if (Instance != null && Instance != this)
             {
+                Debug.LogWarning("[ScoreManager] Instance already exists, destroying");
                 Destroy(gameObject);
                 return;
             }
             Instance = this;
+            Debug.Log("[ScoreManager] Singleton instance set");
 
             // DontDestroyOnLoad 只能在 play mode 下使用
             if (Application.isPlaying)
             {
                 DontDestroyOnLoad(gameObject);
+                Debug.Log("[ScoreManager] DontDestroyOnLoad set");
             }
 
             // 从 ScoreConfig 读取配置
@@ -71,6 +76,7 @@ namespace SquareFireline.Game
             {
                 _scorePerSecond = _scoreConfig.scorePerSecond;
                 _scoreInterval = _scoreConfig.scoreInterval;
+                Debug.Log($"[ScoreManager] Config loaded: scorePerSecond={_scorePerSecond}, interval={_scoreInterval}");
             }
             else
             {
@@ -82,6 +88,8 @@ namespace SquareFireline.Game
 
             // 加载最高分
             LoadHighScore();
+            Debug.Log($"[ScoreManager] HighScore loaded: {HighScore}");
+            Debug.Log("[ScoreManager] Awake completed");
         }
 
         private void OnDestroy()
@@ -92,10 +100,17 @@ namespace SquareFireline.Game
 
         private void OnEnable()
         {
+            Debug.Log($"[ScoreManager] OnEnable called, GameManager.Instance={GameManager.Instance != null}");
+
             // 订阅游戏状态变化
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+                Debug.Log("[ScoreManager] Subscribed to GameManager.OnGameStateChanged");
+            }
+            else
+            {
+                Debug.LogWarning("[ScoreManager] GameManager.Instance is null, cannot subscribe");
             }
         }
 
@@ -117,6 +132,7 @@ namespace SquareFireline.Game
             {
                 AddScore(_scorePerSecond);
                 _accumulationTime -= _scoreInterval;
+                Debug.Log($"[ScoreManager] Score added: {CurrentScore}, _accumulationTime={_accumulationTime}");
             }
         }
         #endregion
@@ -172,19 +188,24 @@ namespace SquareFireline.Game
         /// </summary>
         private void OnGameStateChanged(GameState oldState, GameState newState)
         {
+            Debug.Log($"[ScoreManager] OnGameStateChanged: {oldState} → {newState}");
+
             switch (newState)
             {
                 case GameState.Playing:
                     _isAccumulating = true;
                     _accumulationTime = 0f;
+                    Debug.Log("[ScoreManager] Started accumulating score (_isAccumulating = true)");
                     break;
                 case GameState.Dying:
                     _isAccumulating = false;
+                    Debug.Log("[ScoreManager] Stopped accumulating score (Dying)");
                     CheckHighScore();
-                    ResetScore();  // Story 4-5: 死亡时重置分数
+                    ResetScore();
                     break;
                 case GameState.Waiting:
                     _isAccumulating = false;
+                    Debug.Log("[ScoreManager] Stopped accumulating score (Waiting)");
                     ResetScore();
                     break;
             }

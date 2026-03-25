@@ -47,6 +47,7 @@ namespace SquareFireline.UI
         #region 私有字段
         private UIDocument _mainMenuDocument;
         private UnityEngine.UIElements.Button _startButton;
+        private InGameUI _inGameUI;
         #endregion
 
         #region Unity 生命周期
@@ -86,6 +87,9 @@ namespace SquareFireline.UI
             // 初始显示主界面（直接在 Awake 中加载，确保 UI 能显示）
             LoadMainMenuUXML();
             Debug.Log("[UIManager] Awake - Main menu loaded");
+
+            // 初始化游戏内 UI 引用
+            InitializeInGameUI();
         }
 
         private void OnEnable()
@@ -149,6 +153,7 @@ namespace SquareFireline.UI
                 Debug.Log("[UIManager] Main menu hidden");
             }
 
+            Debug.Log("[UIManager] HideMainMenu completed");
             OnUIStateChanged?.Invoke(oldState, CurrentUIState);
         }
 
@@ -157,11 +162,29 @@ namespace SquareFireline.UI
         /// </summary>
         public void ShowInGameUI()
         {
-            if (CurrentUIState == UIState.InGame)
+            Debug.Log($"[UIManager] ShowInGameUI called, CurrentUIState={CurrentUIState}");
+            Debug.Log($"[UIManager] _inGameUI is null: {_inGameUI == null}");
+
+            // 允许从 MainMenu 或 InGame 状态调用（HideMainMenu 可能已经设置了 InGame 状态）
+            if (CurrentUIState != UIState.InGame && CurrentUIState != UIState.MainMenu)
+            {
+                Debug.LogWarning($"[UIManager] ShowInGameUI called with unexpected state: {CurrentUIState}");
                 return;
+            }
 
             var oldState = CurrentUIState;
             CurrentUIState = UIState.InGame;
+
+            // 显示游戏内 UI
+            if (_inGameUI != null)
+            {
+                _inGameUI.Show();
+                Debug.Log("[UIManager] Called _inGameUI.Show()");
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] _inGameUI is null, cannot show InGameUI");
+            }
 
             Debug.Log("[UIManager] In-game UI shown");
             OnUIStateChanged?.Invoke(oldState, CurrentUIState);
@@ -169,6 +192,28 @@ namespace SquareFireline.UI
         #endregion
 
         #region 私有方法
+        /// <summary>
+        /// 初始化游戏内 UI 引用
+        /// </summary>
+        private void InitializeInGameUI()
+        {
+            // 查找游戏内 UI 控制器
+            var inGameUIObj = GameObject.Find("InGameUIDocument");
+            if (inGameUIObj != null)
+            {
+                _inGameUI = inGameUIObj.GetComponent<InGameUI>();
+                if (_inGameUI == null)
+                {
+                    _inGameUI = inGameUIObj.AddComponent<InGameUI>();
+                }
+                Debug.Log("[UIManager] InGameUI initialized");
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] InGameUIDocument not found in scene");
+            }
+        }
+
         /// <summary>
         /// 创建 UI 容器 GameObject
         /// </summary>
@@ -308,13 +353,15 @@ namespace SquareFireline.UI
             switch (newState)
             {
                 case GameState.Waiting:
-                    // 等待开始状态 → 显示主界面
+                    // 等待开始状态 → 显示主界面，隐藏游戏内 UI
                     ShowMainMenu();
+                    if (_inGameUI != null) _inGameUI.Hide();
                     break;
 
                 case GameState.Playing:
-                    // 游戏中状态 → 隐藏主界面
+                    // 游戏中状态 → 隐藏主界面，显示游戏内 UI
                     HideMainMenu();
+                    ShowInGameUI();
                     break;
 
                 case GameState.Dying:

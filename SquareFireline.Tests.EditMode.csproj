@@ -70,6 +70,7 @@
     <Compile Include="Assets\Tests\EditMode\Game\ScoreConfigTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Map\GapGenerationTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Map\ObstacleGenerationTests.cs" />
+    <Compile Include="Assets\Tests\EditMode\UI\InGameUITests.cs" />
     <Compile Include="Assets\Tests\EditMode\UI\UIManagerTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Game\ScoreManagerTests.cs" />
     <Compile Include="Assets\Tests\EditMode\Game\CheckpointTests.cs" />

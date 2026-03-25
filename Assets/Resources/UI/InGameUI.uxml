@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="UnityEngine.UIElements">
+    <!-- 样式引用 -->
+    <Style src="InGameUI.uss" />
+
+    <!-- 游戏内 UI 根容器 -->
+    <VisualElement name="in-game-ui-panel" class="in-game-ui">
+
+        <!-- 分数容器（左上角） -->
+        <VisualElement name="score-container" class="score-container">
+            <Label name="score-label" text="分数：0" class="score-label" />
+        </VisualElement>
+
+        <!-- 最高分容器（可选，Story 5-3 扩展） -->
+        <VisualElement name="highscore-container" class="highscore-container" style.display="none">
+            <Label name="highscore-label" text="最高分：0" class="highscore-label" />
+        </VisualElement>
+
+    </VisualElement>
+</UXML>
