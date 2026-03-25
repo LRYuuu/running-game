@@ -11,8 +11,8 @@
             <Label name="score-label" text="分数：0" class="score-label" />
         </VisualElement>
 
-        <!-- 最高分容器（可选，Story 5-3 扩展） -->
-        <VisualElement name="highscore-container" class="highscore-container" style.display="none">
+        <!-- 最高分容器（右上角） -->
+        <VisualElement name="highscore-container" class="highscore-container">
             <Label name="highscore-label" text="最高分：0" class="highscore-label" />
         </VisualElement>
 

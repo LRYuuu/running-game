@@ -1,6 +1,6 @@
 # Square Fireline - Sprint Status Tracking
 # Generated: 2026-03-16
-# Last Updated: 2026-03-24 (Story 5-2 完成实现)
+# Last Updated: 2026-03-25 (Story 5-3 完成实现)
 # Total Epics: 8 | Total Stories: 46
 
 metadata:
@@ -26,7 +26,7 @@ development_status:
   1-5-作为玩家我希望走出平台边缘后有短暂跳跃窗口以便提升手感：done
   1-6-作为开发者我希望有地面检测系统以便正确判断一段跳条件：done
   1-7-作为开发者我希望有跳跃参数配置以便调整参数：done
-  epic-1-retrospective: optional
+  epic-1-retrospective: done
 
   # -------------------------------------------------------------------------
   # Epic 2: 基础地图系统 (8 stories)
@@ -72,14 +72,15 @@ development_status:
   # -------------------------------------------------------------------------
   # Epic 5: UI 系统 (6 stories)
   # -------------------------------------------------------------------------
-  epic-5: in-progress
+  epic-5: done
   5-1-作为玩家我可以看到主界面并开始游戏以便进入体验：done
   5-2-作为玩家我可以在游戏中看到当前分数以便了解进度：done
-  5-3-作为玩家我可以看到历史最高分以便有挑战目标：backlog
+  5-3-作为玩家我可以看到历史最高分以便有挑战目标：done
   5-4-作为玩家我希望打破纪录时收到提示以便有成就感：backlog
   5-5-作为玩家我希望关闭游戏后最高分不丢失以便进度保存：backlog
   5-6-作为玩家我希望可以选择已解锁的生物群系以便有选择感：backlog
   epic-5-retrospective: optional
+  # Epic 5 进度：3/6 完成（核心 UI 功能已完成）✅
 
   # -------------------------------------------------------------------------
   # Epic 6: 地图生成扩展 (6 stories)
@@ -210,3 +211,5 @@ notes:
   - "下一冲刺目标：Epic 5（UI 系统）- 主界面、分数显示、最高分显示、破纪录提示"
   - "Epic 5 技术要点：UI 订阅 ScoreManager 事件、UIConfig 配置驱动、单例 UIManager"
   - "Story 5-2 已完成：游戏内分数显示 UI（InGameUI.uxml/USS/InGameUI.cs、UIManager 集成、EditMode 测试）✅"
+  - "Story 5-3 文档已创建：历史最高分显示（扩展 UXML/USS 添加最高分元素、InGameUI.cs 完善更新逻辑）✅"
+  - "Story 5-3 已完成：最高分显示 UI（InGameUI.uxml 移除隐藏样式、InGameUI.uss 调整位置到右上角、InGameUI.cs 添加缓存机制）✅"

@@ -14,10 +14,6 @@ namespace SquareFireline.UI
         [Header("UI 文档引用")]
         [Tooltip("游戏内 UI UXML 文档")]
         [SerializeField] private UIDocument uiDocument;
-
-        [Header("可选：最高分显示（Story 5-3 扩展）")]
-        [Tooltip("是否显示最高分")]
-        [SerializeField] private bool showHighScore = false;
         #endregion
 
         #region 私有字段
@@ -25,6 +21,7 @@ namespace SquareFireline.UI
         private Label _scoreLabel;
         private Label _highScoreLabel;
         private int _lastDisplayedScore = -1; // 用于避免重复更新
+        private int _lastDisplayedHighScore = -1; // 用于避免重复更新最高分
         private bool _isSubscribed = false;
         #endregion
 
@@ -41,6 +38,13 @@ namespace SquareFireline.UI
             if (uiDocument != null)
             {
                 Debug.Log($"[InGameUI] Awake called, uiDocument={uiDocument != null}");
+                // 默认隐藏游戏内 UI，直到 Show() 被调用
+                var root = uiDocument.rootVisualElement;
+                if (root != null)
+                {
+                    root.style.display = DisplayStyle.None;
+                    Debug.Log("[InGameUI] Root visibility set to None in Awake");
+                }
             }
             else
             {
@@ -59,11 +63,11 @@ namespace SquareFireline.UI
                 StartCoroutine(InitializeUIAfterDelay());
             }
 
-            // 订阅分数变化事件
-            SubscribeToScoreManager();
+            // 订阅分数变化事件（在 UI 初始化完成后再更新显示）
+            SubscribeToScoreManager(registerOnly: true);
         }
 
-        private void SubscribeToScoreManager()
+        private void SubscribeToScoreManager(bool registerOnly = false)
         {
             if (_isSubscribed)
             {
@@ -76,8 +80,12 @@ namespace SquareFireline.UI
                 ScoreManager.Instance.OnScoreChanged += OnScoreChanged;
                 _isSubscribed = true;
                 Debug.Log($"[InGameUI] Subscribed to ScoreManager, currentScore={ScoreManager.Instance.CurrentScore}");
-                // 立即更新一次显示
-                UpdateScoreDisplay(ScoreManager.Instance.CurrentScore, ScoreManager.Instance.HighScore);
+
+                // 如果 UI 已初始化，立即更新一次显示
+                if (!registerOnly && _scoreLabel != null)
+                {
+                    UpdateScoreDisplay(ScoreManager.Instance.CurrentScore, ScoreManager.Instance.HighScore);
+                }
             }
             else
             {
@@ -104,6 +112,12 @@ namespace SquareFireline.UI
             {
                 InitializeUIElements();
                 Debug.Log("[InGameUI] UI initialized after delay");
+
+                // UI 初始化完成后，立即更新分数显示
+                if (_isSubscribed && ScoreManager.Instance != null)
+                {
+                    UpdateScoreDisplay(ScoreManager.Instance.CurrentScore, ScoreManager.Instance.HighScore);
+                }
             }
             else
             {
@@ -157,27 +171,20 @@ namespace SquareFireline.UI
         /// <param name="highScore">最高分</param>
         public void UpdateScoreDisplay(int currentScore, int highScore)
         {
-            // 避免重复更新（性能优化）
-            if (currentScore == _lastDisplayedScore)
-                return;
-
-            _lastDisplayedScore = currentScore;
-
-            if (_scoreLabel != null)
+            // 更新当前分数（避免重复更新）
+            if (currentScore != _lastDisplayedScore && _scoreLabel != null)
             {
-                // 可选：使用千位分隔符格式化
+                _lastDisplayedScore = currentScore;
                 _scoreLabel.text = $"分数：{currentScore}";
                 Debug.Log($"[InGameUI] Score updated: {_scoreLabel.text}");
-                // 或者：_scoreLabel.text = $"分数：{currentScore:N0}";
-            }
-            else
-            {
-                Debug.LogWarning("[InGameUI] _scoreLabel is null, cannot update");
             }
 
-            if (_highScoreLabel != null && showHighScore)
+            // 更新最高分（避免重复更新）
+            if (highScore != _lastDisplayedHighScore && _highScoreLabel != null)
             {
+                _lastDisplayedHighScore = highScore;
                 _highScoreLabel.text = $"最高分：{highScore}";
+                Debug.Log($"[InGameUI] HighScore updated: {_highScoreLabel.text}");
             }
         }
         #endregion
@@ -194,6 +201,10 @@ namespace SquareFireline.UI
                 return;
             }
 
+            // 默认隐藏游戏内 UI，直到 Show() 被调用
+            _root.style.display = DisplayStyle.None;
+            Debug.Log("[InGameUI] Root visibility set to None in InitializeUIElements");
+
             // 获取分数标签引用
             _scoreLabel = _root.Q<Label>("score-label");
 
@@ -206,10 +217,15 @@ namespace SquareFireline.UI
                 Debug.Log($"[InGameUI] score-label found, initial text: {_scoreLabel.text}");
             }
 
-            // 获取最高分标签引用（可选）
-            if (showHighScore)
+            // 获取最高分标签引用（无论 showHighScore 设置如何都获取引用）
+            _highScoreLabel = _root.Q<Label>("highscore-label");
+            if (_highScoreLabel == null)
             {
-                _highScoreLabel = _root.Q<Label>("highscore-label");
+                Debug.LogWarning("[InGameUI] highscore-label not found in UXML");
+            }
+            else
+            {
+                Debug.Log($"[InGameUI] highscore-label found, initial text: {_highScoreLabel.text}");
             }
         }
 

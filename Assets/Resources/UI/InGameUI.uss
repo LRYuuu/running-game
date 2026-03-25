@@ -12,7 +12,7 @@
 }
 
 .score-label {
-    font-size: 36px;
+    font-size: 24px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     -unity-shadow-color: rgba(0, 0, 0, 0.8);
@@ -20,8 +20,10 @@
 
 .highscore-container {
     position: absolute;
-    left: 20px;
-    top: 70px;
+    right: 20px;
+    top: 20px;
+    align-items: flex-end;
+    justify-content: flex-end;
 }
 
 .highscore-label {
