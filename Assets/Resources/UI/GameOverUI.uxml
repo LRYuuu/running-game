@@ -1,0 +1,20 @@
+<ui:UIDocument xmlns:ui="http://unity3d.com/ui">
+    <!-- 游戏结束 UI -->
+    <VisualElement name="game-over-container" class="game-over-container">
+        <!-- 标题 -->
+        <Label name="game-over-title" text="游戏结束" class="game-over-title" />
+
+        <!-- 分数显示 -->
+        <Label name="final-score-label" text="分数：0" class="game-over-score" />
+        <Label name="highscore-display-label" text="最高分：0" class="game-over-highscore" />
+
+        <!-- 新纪录标志（默认隐藏） -->
+        <VisualElement name="new-record-badge" class="new-record-badge">
+            <Label name="new-record-badge-label" text="新纪录！" class="new-record-badge-label" />
+        </VisualElement>
+
+        <!-- 按钮 -->
+        <Button name="restart-button" text="重新开始" class="restart-button" />
+        <Button name="main-menu-button" text="返回主菜单" class="main-menu-button" />
+    </VisualElement>
+</ui:UIDocument>

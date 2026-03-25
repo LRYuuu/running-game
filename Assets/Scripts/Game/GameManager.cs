@@ -216,6 +216,41 @@ namespace SquareFireline.Game
         }
 
         /// <summary>
+        /// 从死亡状态重新开始游戏（直接进入 Playing 状态）
+        /// </summary>
+        public void ResumeGameFromDeath()
+        {
+            // 重置玩家起始位置
+            if (_playerDeathController != null)
+            {
+                _playerDeathController.ResetStartPosition();
+            }
+
+            // 清理并重新生成地图
+            if (_mapGenerator != null)
+            {
+                _mapGenerator.Cleanup();
+                _mapGenerator.Initialize();
+            }
+
+            // 重置玩家跳跃状态
+            if (_playerJumpController != null)
+            {
+                _playerJumpController.ResetJumpState();
+            }
+
+            // 重置玩家位置
+            if (_playerDeathController != null)
+            {
+                _playerDeathController.Respawn();
+            }
+
+            // 直接进入游戏状态
+            ChangeState(GameState.Playing);
+            Debug.Log("[GameManager] Game resumed from death");
+        }
+
+        /// <summary>
         /// 设置世界暂停状态（暂停/恢复地图和背景滚动）
         /// </summary>
         /// <param name="paused">true=暂停，false=恢复</param>

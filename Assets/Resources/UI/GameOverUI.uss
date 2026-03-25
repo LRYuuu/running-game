@@ -1,0 +1,81 @@
+/* 游戏结束 UI 样式 */
+
+.game-over-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.game-over-title {
+    font-size: 64px;
+    color: rgb(255, 100, 100);
+    -unity-font-style: bold;
+    -unity-shadow-color: rgba(0, 0, 0, 0.8);
+    -unity-shadow-offset: 4px 4px;
+}
+
+.game-over-score {
+    font-size: 32px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    -unity-shadow-color: rgba(0, 0, 0, 0.8);
+    -unity-shadow-offset: 2px 2px;
+}
+
+.game-over-highscore {
+    font-size: 24px;
+    color: rgb(255, 215, 0);
+    -unity-font-style: bold;
+    -unity-shadow-color: rgba(0, 0, 0, 0.8);
+    -unity-shadow-offset: 2px 2px;
+}
+
+/* 新纪录标志 */
+.new-record-badge {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.new-record-badge-label {
+    font-size: 48px;
+    color: rgb(255, 215, 0);
+    -unity-font-style: bold;
+    -unity-shadow-color: rgba(0, 0, 0, 0.8);
+    -unity-shadow-offset: 4px 4px;
+}
+
+/* 按钮样式 */
+.restart-button, .main-menu-button {
+    min-width: 200px;
+    min-height: 60px;
+    font-size: 24px;
+    -unity-font-style: bold;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.restart-button {
+    background-color: rgb(100, 200, 100);
+    color: rgb(255, 255, 255);
+}
+
+.restart-button:active {
+    background-color: rgb(80, 180, 80);
+}
+
+.main-menu-button {
+    background-color: rgb(100, 100, 200);
+    color: rgb(255, 255, 255);
+}
+
+.main-menu-button:active {
+    background-color: rgb(80, 80, 180);
+}
