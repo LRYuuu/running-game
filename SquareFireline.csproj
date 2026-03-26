@@ -84,8 +84,10 @@
     <Compile Include="Assets\Scripts\Map\TilemapEndlessMapGenerator.cs" />
     <Compile Include="Assets\Scripts\Game\Checkpoint.cs" />
     <Compile Include="Assets\Scripts\Game\GameStarter.cs" />
+    <Compile Include="Assets\Scripts\Game\DifficultyCalculator.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
     <Compile Include="Assets\Scripts\UI\SimpleUITest.cs" />
+    <Compile Include="Assets\Scripts\Game\DifficultyConfig.cs" />
     <Compile Include="Assets\Scripts\ParallaxBackground.cs" />
     <Compile Include="Assets\Scripts\Game\GameConfig.cs" />
     <Compile Include="Assets\Scripts\Game\ScoreManager.cs" />
