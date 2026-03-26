@@ -1,6 +1,6 @@
 ---
 title: 'Game Architecture'
-project: 'Square Fireline'
+project: 'Runner's Journey'
 date: '2026-03-16'
 author: 'liruoyu'
 version: '1.0'
@@ -13,7 +13,7 @@ epics: '_bmad-output/epics.md'
 brief: null
 ---
 
-# Square Fireline - Game Architecture
+# Runner's Journey - Game Architecture
 
 ## Document Status
 
@@ -360,7 +360,7 @@ Logger.Info("MapGenerator", new {
 
 **ScriptableObject 配置示例:**
 ```csharp
-[CreateAssetMenu(fileName = "GameBalanceConfig", menuName = "Square Fireline/Game Balance Config")]
+[CreateAssetMenu(fileName = "GameBalanceConfig", menuName = "Runner's Journey/Game Balance Config")]
 public class GameBalanceConfig : ScriptableObject
 {
     [Header("玩家配置")]
@@ -565,7 +565,7 @@ public class PerformanceMonitor : MonoBehaviour
 ### Root Directory Structure
 
 ```
-Square Fireline/
+Runner's Journey/
 ├── Assets/
 │   ├── Scripts/           # 源代码
 │   ├── Prefabs/           # 预制体
@@ -618,14 +618,14 @@ Assets/Scripts/
 
 | 系统 | 目录 | 命名空间 | 架构模式 |
 |------|------|---------|---------|
-| 核心系统 | Scripts/Core/ | SquareFireline.Core | Singleton + Event Bus |
-| 游戏流程 | Scripts/Game/ | SquareFireline.Game | State Machine |
-| 玩家控制 | Scripts/Player/ | SquareFireline.Player | MonoBehaviour + ECS |
-| 地图生成 | Scripts/Map/ | SquareFireline.Map | ECS/DOTS + Job System |
-| 障碍物 | Scripts/Obstacles/ | SquareFireline.Obstacles | ECS/DOTS |
-| UI 系统 | Scripts/UI/ | SquareFireline.UI | UI Toolkit + Data Binding |
-| 音频系统 | Scripts/Audio/ | SquareFireline.Audio | Singleton |
-| 调试工具 | Scripts/Debug/ | SquareFireline.Debug | Static + Singleton |
+| 核心系统 | Scripts/Core/ | RunnersJourney.Core | Singleton + Event Bus |
+| 游戏流程 | Scripts/Game/ | RunnersJourney.Game | State Machine |
+| 玩家控制 | Scripts/Player/ | RunnersJourney.Player | MonoBehaviour + ECS |
+| 地图生成 | Scripts/Map/ | RunnersJourney.Map | ECS/DOTS + Job System |
+| 障碍物 | Scripts/Obstacles/ | RunnersJourney.Obstacles | ECS/DOTS |
+| UI 系统 | Scripts/UI/ | RunnersJourney.UI | UI Toolkit + Data Binding |
+| 音频系统 | Scripts/Audio/ | RunnersJourney.Audio | Singleton |
+| 调试工具 | Scripts/Debug/ | RunnersJourney.Debug | Static + Singleton |
 
 ### Naming Conventions
 
@@ -634,7 +634,7 @@ Assets/Scripts/
 | **C# Scripts** | `PascalCase.cs` | `PlayerController.cs` |
 | **ScriptableObjects** | `[功能]Config.asset` | `MapConfig.asset` |
 | **Prefabs** | `PascalCase.prefab` | `Player.prefab` |
-| **Namespaces** | `SquareFireline.[系统名]` | `SquareFireline.Map` |
+| **Namespaces** | `RunnersJourney.[系统名]` | `RunnersJourney.Map` |
 | **Private fields** | `_camelCase` | `_playerSpeed` |
 | **Public fields** | `camelCase` | `playerSpeed` |
 | **Methods** | `PascalCase` | `CalculateJumpForce()` |
@@ -682,7 +682,7 @@ Collision Matrix:
 
 ```csharp
 // MonoBehaviour - 输入响应层
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     public class PlayerInput : MonoBehaviour
     {
@@ -711,7 +711,7 @@ namespace SquareFireline.Player
 }
 
 // ECS Component - 数据层
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     [System.Serializable]
     public struct PlayerStateComponent : IComponentData
@@ -747,7 +747,7 @@ namespace SquareFireline.Player
 
 ```csharp
 // ECS Component - Chunk 数据
-namespace SquareFireline.Map
+namespace RunnersJourney.Map
 {
     [System.Serializable]
     public struct ChunkDataComponent : IComponentData
@@ -815,7 +815,7 @@ namespace SquareFireline.Map
 #### Event Bus - 解耦系统通信
 
 ```csharp
-namespace SquareFireline.Core
+namespace RunnersJourney.Core
 {
     /// <summary>
     /// 集中式事件分发器，统一管理游戏内所有事件
@@ -886,9 +886,9 @@ namespace SquareFireline.Core
 #### ScriptableObject 事件通道 - 游戏状态变化
 
 ```csharp
-namespace SquareFireline.Core
+namespace RunnersJourney.Core
 {
-    [CreateAssetMenu(fileName = "GameEvent", menuName = "Square Fireline/Events/Game Event")]
+    [CreateAssetMenu(fileName = "GameEvent", menuName = "Runner's Journey/Events/Game Event")]
     public class GameEvent : ScriptableObject
     {
         private event Action _onRaise;
@@ -908,7 +908,7 @@ namespace SquareFireline.Core
 #### 直接引用 - 紧密耦合场景
 
 ```csharp
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     public class PlayerController : MonoBehaviour
     {
@@ -952,7 +952,7 @@ namespace SquareFireline.Player
 #### Bootstrap Scene 架构
 
 ```csharp
-namespace SquareFireline.Core
+namespace RunnersJourney.Core
 {
     /// <summary>
     /// 游戏启动引导场景
@@ -999,7 +999,7 @@ namespace SquareFireline.Core
 #### 系统启动顺序
 
 ```csharp
-namespace SquareFireline.Core
+namespace RunnersJourney.Core
 {
     public enum SystemInitOrder
     {
@@ -1047,7 +1047,7 @@ namespace SquareFireline.Core
 #### 依赖注入模式
 
 ```csharp
-namespace SquareFireline.Core
+namespace RunnersJourney.Core
 {
     /// <summary>
     /// 简单服务定位器模式
@@ -1095,7 +1095,7 @@ namespace SquareFireline.Core
 #### ECS System Update
 
 ```csharp
-namespace SquareFireline.Map
+namespace RunnersJourney.Map
 {
     /// <summary>
     /// ECS 系统通过 SystemGroup 组织更新顺序
@@ -1128,7 +1128,7 @@ namespace SquareFireline.Map
 #### MonoBehaviour Update 分工
 
 ```csharp
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     public class PlayerController : MonoBehaviour
     {
@@ -1197,7 +1197,7 @@ Frame N (16.67ms @ 60FPS)
 #### 全局异常处理器
 
 ```csharp
-namespace SquareFireline.Core
+namespace RunnersJourney.Core
 {
     /// <summary>
     /// 全局错误处理，不中断游戏流程
@@ -1284,7 +1284,7 @@ namespace SquareFireline.Core
 #### 资源加载错误处理
 
 ```csharp
-namespace SquareFireline.Core
+namespace RunnersJourney.Core
 {
     public class SafeAssetLoader
     {
@@ -1330,7 +1330,7 @@ namespace SquareFireline.Core
 ```csharp
 // Assets/Tests/EditMode/Map/ChunkGenerationTests.cs
 using NUnit.Framework;
-using SquareFireline.Map;
+using RunnersJourney.Map;
 
 namespace Tests.EditMode.Map
 {
@@ -1402,7 +1402,7 @@ namespace Tests.EditMode.Map
 using NUnit.Framework;
 using UnityEngine.TestTools;
 using System.Collections;
-using SquareFireline.Player;
+using RunnersJourney.Player;
 
 namespace Tests.PlayMode.Player
 {
@@ -1506,7 +1506,7 @@ namespace Tests.PlayMode.Player
 #### 命名空间结构
 
 ```
-SquareFireline/
+RunnersJourney/
 ├── Core/                  # 全局通用系统
 │   ├── EventBus
 │   ├── Logger
@@ -1563,7 +1563,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SquareFireline.SystemName
+namespace RunnersJourney.SystemName
 {
     /// <summary>
     /// 类的功能说明

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.Tilemaps;
-using SquareFireline.Map;
+using RunnersJourney.Map;
 
 namespace SquareFireline.Editor
 {

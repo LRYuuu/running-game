@@ -1231,8 +1231,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="SquareFireline.Tests.EditMode.csproj" />
-    <ProjectReference Include="SquareFireline.csproj" />
+    <ProjectReference Include="RunnersJourney.Tests.EditMode.csproj" />
+    <ProjectReference Include="RunnersJourney.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

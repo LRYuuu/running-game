@@ -125,7 +125,7 @@ maxObstacleGap = 8;          // 最大间隔
 ### 5.1 TilemapMapConfig.cs
 
 ```csharp
-[CreateAssetMenu(fileName = "TilemapMapConfig", menuName = "Square Fireline/Tilemap Map Config")]
+[CreateAssetMenu(fileName = "TilemapMapConfig", menuName = "Runner's Journey/Tilemap Map Config")]
 public class TilemapMapConfig : ScriptableObject
 {
     // Chunk 尺寸
@@ -190,7 +190,7 @@ Hierarchy:
 
 ### 6.2 创建 MapConfig 资产
 
-1. 在 Project 窗口右键：`Assets > Create > Square Fireline > Tilemap Map Config`
+1. 在 Project 窗口右键：`Assets > Create > Runner's Journey > Tilemap Map Config`
 2. 命名：`MapConfig`
 3. 配置参数：
    - `chunkWidth`: 20
@@ -277,4 +277,4 @@ Hierarchy:
 
 *文档版本：3.0（单个土壤 Tile 通过翻转创造变化）*
 *最后更新：2026-03-13*
-*项目：Square Fireline*
+*项目：Runner's Journey*

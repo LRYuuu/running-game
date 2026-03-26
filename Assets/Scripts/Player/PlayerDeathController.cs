@@ -1,8 +1,8 @@
 using UnityEngine;
 using System;
-using SquareFireline.Game;
+using RunnersJourney.Game;
 
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     /// <summary>
     /// 玩家死亡控制器 - 处理玩家死亡逻辑和事件

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// 难度配置 - 使用 ScriptableObject 存储难度曲线参数

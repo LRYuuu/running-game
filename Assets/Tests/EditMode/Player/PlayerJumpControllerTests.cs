@@ -4,7 +4,7 @@ using UnityEngine.TestTools;
 using UnityEditor;
 using System.Reflection;
 
-namespace SquareFireline.Player.Tests
+namespace RunnersJourney.Player.Tests
 {
     /// <summary>
     /// PlayerJumpController 单元测试 - EditMode

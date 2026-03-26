@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// 分数配置 - 使用 ScriptableObject 存储分数系统参数

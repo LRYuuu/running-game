@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using SquareFireline.Game;
+using RunnersJourney.Game;
 
-namespace SquareFireline.UI
+namespace RunnersJourney.UI
 {
     /// <summary>
     /// 游戏结束 UI 控制器 - 显示死亡界面和重新开始选项

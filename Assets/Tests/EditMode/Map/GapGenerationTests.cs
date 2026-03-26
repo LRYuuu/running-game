@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Reflection;
 
-namespace SquareFireline.Map.Tests
+namespace RunnersJourney.Map.Tests
 {
     /// <summary>
     /// 空隙生成系统单元测试 - EditMode

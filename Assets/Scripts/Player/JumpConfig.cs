@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     /// <summary>
     /// 跳跃配置 - ScriptableObject 用于快速调优手感

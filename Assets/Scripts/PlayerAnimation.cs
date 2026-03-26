@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     /// <summary>
     /// 玩家动画控制器

@@ -1,9 +1,9 @@
 using NUnit.Framework;
 using UnityEngine;
-using SquareFireline.Game;
+using RunnersJourney.Game;
 using System.Reflection;
 
-namespace SquareFireline.Tests.EditMode.Game
+namespace RunnersJourney.Tests.EditMode.Game
 {
     [TestFixture]
     public class ScoreManagerTests
@@ -119,7 +119,7 @@ namespace SquareFireline.Tests.EditMode.Game
         public void HighScorePersistence_SaveAndLoad_CorrectValue()
         {
             // Arrange
-            const string key = "SquareFireline_HighScore";
+            const string key = "RunnersJourney_HighScore";
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
 

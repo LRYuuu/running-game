@@ -1,18 +1,18 @@
 {
-    "name": "SquareFireline.Tests.EditMode",
-    "rootNamespace": "SquareFireline.Tests",
+    "name": "RunnersJourney.Tests.EditMode",
+    "rootNamespace": "RunnersJourney.Tests",
     "references": [
-        "SquareFireline"
+        "RunnersJourney"
     ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
+    "overrideReferences": true,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "generateReferenceInfo": false,
+    "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
 }

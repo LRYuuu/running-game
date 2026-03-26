@@ -1,4 +1,4 @@
-namespace SquareFireline.UI
+namespace RunnersJourney.UI
 {
     /// <summary>
     /// UI 状态枚举

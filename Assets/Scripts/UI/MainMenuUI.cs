@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using SquareFireline.Game;
+using RunnersJourney.Game;
 
-namespace SquareFireline.UI
+namespace RunnersJourney.UI
 {
     /// <summary>
     /// 主界面 UI 控制器

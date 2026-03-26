@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// 分数管理器 - 管理当前分数和最高分
@@ -44,7 +44,7 @@ namespace SquareFireline.Game
         #region 私有字段
         private float _accumulationTime;
         private bool _isAccumulating;
-        private const string HighScoreKey = "SquareFireline_HighScore";
+        private const string HighScoreKey = "RunnersJourney_HighScore";
 
         // 缓存配置值（从 ScoreConfig 读取）
         private int _scorePerSecond;

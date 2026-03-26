@@ -1,10 +1,10 @@
 using NUnit.Framework;
 using UnityEngine;
-using SquareFireline.Game;
-using SquareFireline.Player;
+using RunnersJourney.Game;
+using RunnersJourney.Player;
 using System.Reflection;
 
-namespace SquareFireline.Tests.EditMode.Game
+namespace RunnersJourney.Tests.EditMode.Game
 {
     /// <summary>
     /// 游戏管理器测试

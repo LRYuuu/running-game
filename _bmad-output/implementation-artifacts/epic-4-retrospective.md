@@ -1,6 +1,6 @@
 # Epic 4 回顾会议 - 游戏流程管理
 
-**项目**: Square Fireline
+**项目**: Runner's Journey
 **Epic**: Epic 4 - 游戏流程管理
 **回顾日期**: 2026-03-20
 **主持人**: Bob (Scrum Master)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     /// <summary>
     /// 地面检测器 - 使用 Physics2D.OverlapBox 检测玩家是否在地面

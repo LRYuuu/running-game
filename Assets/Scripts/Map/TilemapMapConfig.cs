@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace SquareFireline.Map
+namespace RunnersJourney.Map
 {
     /// <summary>
     /// 2D 横板跳跃 Tilemap 地图配置

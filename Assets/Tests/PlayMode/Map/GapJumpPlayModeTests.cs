@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using System.Collections;
 
-namespace SquareFireline.Map.Tests
+namespace RunnersJourney.Map.Tests
 {
     /// <summary>
     /// 空隙跳跃可行性测试 - PlayMode

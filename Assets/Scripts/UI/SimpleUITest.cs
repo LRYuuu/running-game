@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace SquareFireline.UI
+namespace RunnersJourney.UI
 {
     /// <summary>
     /// 简单的 UI 测试组件 - 直接在场景中显示 UI

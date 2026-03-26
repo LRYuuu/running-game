@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// ScoreConfig 创建工具

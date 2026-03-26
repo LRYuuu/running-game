@@ -16,7 +16,7 @@
 3. **添加 UIManager 组件**
    - 选中 `UIManager` GameObject
    - 在 Inspector 窗口点击 `Add Component`
-   - 搜索并添加 `UIManager` (命名空间：SquareFireline.UI)
+   - 搜索并添加 `UIManager` (命名空间：RunnersJourney.UI)
 
 4. **配置 UXML 引用**
    - 在 Inspector 中找到 `Main Menu Uxml` 字段
@@ -33,7 +33,7 @@
 
 1. **打开 UI 设置工具**
    ```
-   菜单栏 → Square Fireline → Setup UI Scene
+   菜单栏 → Runner's Journey → Setup UI Scene
    ```
 
 2. **点击配置按钮**

@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
-using SquareFireline.Game;
+using RunnersJourney.Game;
 
-namespace SquareFireline.Map
+namespace RunnersJourney.Map
 {
     /// <summary>
     /// 基于 Unity Tilemap 的 2D 横板无尽地图生成器

@@ -1,8 +1,8 @@
 using NUnit.Framework;
 using UnityEngine;
-using SquareFireline.Map;
+using RunnersJourney.Map;
 
-namespace SquareFireline.Tests.EditMode.Map
+namespace RunnersJourney.Tests.EditMode.Map
 {
     /// <summary>
     /// 地图可玩性验证器测试

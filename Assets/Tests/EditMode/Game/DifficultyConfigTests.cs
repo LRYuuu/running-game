@@ -1,8 +1,8 @@
 using NUnit.Framework;
 using UnityEngine;
-using SquareFireline.Game;
+using RunnersJourney.Game;
 
-namespace SquareFireline.Tests.EditMode.Game
+namespace RunnersJourney.Tests.EditMode.Game
 {
     /// <summary>
     /// DifficultyConfig 单元测试

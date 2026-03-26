@@ -1,8 +1,8 @@
 {
-    "name": "SquareFireline.Tests.PlayMode",
-    "rootNamespace": "SquareFireline.Tests",
+    "name": "RunnersJourney.Tests.PlayMode",
+    "rootNamespace": "RunnersJourney.Tests",
     "references": [
-        "SquareFireline"
+        "RunnersJourney"
     ],
     "includePlatforms": [],
     "excludePlatforms": [

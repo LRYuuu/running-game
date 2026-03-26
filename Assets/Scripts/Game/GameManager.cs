@@ -1,10 +1,10 @@
 using UnityEngine;
 using System;
 using System.Collections;
-using SquareFireline.Player;
-using SquareFireline.Map;
+using RunnersJourney.Player;
+using RunnersJourney.Map;
 
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// 游戏管理器 - 集中管理游戏状态机

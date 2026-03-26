@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SquareFireline.Map
+namespace RunnersJourney.Map
 {
     /// <summary>
     /// 地图可玩性验证器 - 验证地图配置参数的可玩性

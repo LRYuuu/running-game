@@ -1,10 +1,10 @@
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
-using SquareFireline.UI;
-using SquareFireline.Game;
+using RunnersJourney.UI;
+using RunnersJourney.Game;
 
-namespace SquareFireline.Tests.EditMode.UI
+namespace RunnersJourney.Tests.EditMode.UI
 {
     /// <summary>
     /// InGameUI 编辑器测试

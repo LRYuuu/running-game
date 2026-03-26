@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEditor;
-using SquareFireline.Map;
+using RunnersJourney.Map;
 
 namespace SquareFireline.Editor
 {

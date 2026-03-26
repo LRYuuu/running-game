@@ -1,4 +1,4 @@
-# Square Fireline - 项目开发规范
+# Runner's Journey - 项目开发规范
 
 > **Unity**: 2022.3.62f3c1 | **平台**: Windows | **类型**: 2D 横板跳跃
 
@@ -23,12 +23,12 @@
 ### 命名空间
 | 路径 | 命名空间 |
 |------|----------|
-| Scripts/Map/ | `SquareFireline.Map` |
-| Scripts/Player/ | `SquareFireline.Player` |
-| Scripts/Obstacles/ | `SquareFireline.Obstacles` |
-| Scripts/UI/ | `SquareFireline.UI` |
-| Scripts/Audio/ | `SquareFireline.Audio` |
-| Scripts/Utils/ | `SquareFireline.Utils` |
+| Scripts/Map/ | `RunnersJourney.Map` |
+| Scripts/Player/ | `RunnersJourney.Player` |
+| Scripts/Obstacles/ | `RunnersJourney.Obstacles` |
+| Scripts/UI/ | `RunnersJourney.UI` |
+| Scripts/Audio/ | `RunnersJourney.Audio` |
+| Scripts/Utils/ | `RunnersJourney.Utils` |
 
 ### 命名规则
 - 类/方法：`PascalCase`
@@ -82,7 +82,7 @@
 ```csharp
 using UnityEngine;
 
-namespace SquareFireline.Map
+namespace RunnersJourney.Map
 {
     public class ClassName : MonoBehaviour
     {
@@ -108,9 +108,9 @@ namespace SquareFireline.Map
 ```csharp
 using UnityEngine;
 
-namespace SquareFireline.Map
+namespace RunnersJourney.Map
 {
-    [CreateAssetMenu(fileName = "MapConfig", menuName = "Square Fireline/Map Config")]
+    [CreateAssetMenu(fileName = "MapConfig", menuName = "Runner's Journey/Map Config")]
     public class MapConfig : ScriptableObject
     {
         [Header("配置")]

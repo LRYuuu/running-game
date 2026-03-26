@@ -2,10 +2,10 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Collections;
-using SquareFireline.UI;
-using SquareFireline.Game;
+using RunnersJourney.UI;
+using RunnersJourney.Game;
 
-namespace SquareFireline.Tests.PlayMode.UI
+namespace RunnersJourney.Tests.PlayMode.UI
 {
     [TestFixture]
     public class MainMenuUITests

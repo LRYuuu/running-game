@@ -3,7 +3,7 @@
 # Version: 6.2.0
 # Date: 2026-03-16T02:29:25.890Z
 
-project_name: Square Fireline
+project_name: Runner's Journey
 game_dev_experience: intermediate
 planning_artifacts: "{project-root}/_bmad-output/planning-artifacts"
 implementation_artifacts: "{project-root}/_bmad-output/implementation-artifacts"

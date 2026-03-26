@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace SquareFireline.UI
+namespace RunnersJourney.UI
 {
     /// <summary>
     /// UI 测试工具 - 用于验证 UI 系统是否正常工作

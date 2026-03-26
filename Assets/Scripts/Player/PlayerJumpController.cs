@@ -1,7 +1,7 @@
 using UnityEngine;
-using SquareFireline.Game;
+using RunnersJourney.Game;
 
-namespace SquareFireline.Player
+namespace RunnersJourney.Player
 {
     /// <summary>
     /// 玩家跳跃控制器 - 处理一段跳和地面检测集成

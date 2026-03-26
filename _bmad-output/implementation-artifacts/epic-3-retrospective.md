@@ -1,6 +1,6 @@
 # Epic 3 回顾会议 - 障碍物与碰撞
 
-**项目**: Square Fireline
+**项目**: Runner's Journey
 **Epic**: Epic 3 - 障碍物与碰撞
 **回顾日期**: 2026-03-19
 **主持人**: Max (Scrum Master)

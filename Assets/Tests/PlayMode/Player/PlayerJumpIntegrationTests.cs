@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using System.Collections;
 
-namespace SquareFireline.Player.Tests
+namespace RunnersJourney.Player.Tests
 {
     /// <summary>
     /// PlayerJumpController 集成测试 - PlayMode

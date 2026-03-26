@@ -1,9 +1,9 @@
 using NUnit.Framework;
 using UnityEngine;
-using SquareFireline.Game;
-using SquareFireline.Player;
+using RunnersJourney.Game;
+using RunnersJourney.Player;
 
-namespace SquareFireline.Tests.EditMode.Game
+namespace RunnersJourney.Tests.EditMode.Game
 {
     /// <summary>
     /// 检查点系统测试

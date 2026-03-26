@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// 检查点组件 - 检测玩家通过并保存重生位置

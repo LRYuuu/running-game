@@ -2,7 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace SquareFireline.Player.Tests
+namespace RunnersJourney.Player.Tests
 {
     /// <summary>
     /// 玩家死亡系统单元测试 - EditMode

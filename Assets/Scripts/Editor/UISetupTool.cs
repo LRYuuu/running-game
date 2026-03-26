@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using SquareFireline.UI;
+using RunnersJourney.UI;
 
-namespace SquareFireline.Editor
+namespace RunnersJourney.Editor
 {
     /// <summary>
     /// UI 设置工具 - 帮助配置 UI 场景

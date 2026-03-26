@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// 难度计算器 - 单例模式

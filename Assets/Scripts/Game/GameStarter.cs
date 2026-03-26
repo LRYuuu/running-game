@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// 游戏启动器 - 在场景加载后自动开始游戏

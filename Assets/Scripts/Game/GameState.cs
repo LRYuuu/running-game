@@ -1,4 +1,4 @@
-namespace SquareFireline.Game
+namespace RunnersJourney.Game
 {
     /// <summary>
     /// 游戏状态枚举

@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 using UnityEditor;
 using System.Reflection;
 
-namespace SquareFireline.Map.Tests
+namespace RunnersJourney.Map.Tests
 {
     /// <summary>
     /// 障碍物生成系统单元测试 - EditMode

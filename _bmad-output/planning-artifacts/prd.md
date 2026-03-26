@@ -36,7 +36,7 @@ classification:
   engine: Unity 2022.3.62f3 LTS
 ---
 
-# 产品需求文档 - Square Fireline
+# 产品需求文档 - Runner's Journey
 
 **作者:** liruoyu
 **日期:** 2026-03-16
@@ -45,7 +45,7 @@ classification:
 
 ## 执行摘要
 
-**Square Fireline** 是一款通过程序化生成提供无限重玩价值的 2D 横板跳跃游戏。项目采用 Unity 2022.3 LTS 开发，使用基于 Tilemap 的无尽地图生成系统，结合 Perlin Noise 地形起伏算法，在保证简单易上手的同时提供丰富的游戏体验。
+**Runner's Journey** 是一款通过程序化生成提供无限重玩价值的 2D 横板跳跃游戏。项目采用 Unity 2022.3 LTS 开发，使用基于 Tilemap 的无尽地图生成系统，结合 Perlin Noise 地形起伏算法，在保证简单易上手的同时提供丰富的游戏体验。
 
 **目标用户:** 休闲游戏玩家 - 追求轻松、易上手的游戏体验
 
@@ -196,7 +196,7 @@ classification:
 **玩家画像:** 休闲游戏玩家，喜欢简单易上手的游戏，碎片时间娱乐。
 
 **Opening Scene（开场）:**
-玩家在朋友推荐或应用商店发现 Square Fireline。下载后点击启动，游戏快速加载（<3 秒）。
+玩家在朋友推荐或应用商店发现 Runner's Journey。下载后点击启动，游戏快速加载（<3 秒）。
 
 **Rising Action（上升行动）:**
 1. **启动游戏** → 简洁的主界面，只有"开始游戏"按钮
@@ -462,7 +462,7 @@ classification:
 
 ### 检测到的创新领域
 
-Square Fireline 的核心创新不在于游戏机制本身，而在于**开发方法论的应用**：
+Runner's Journey 的核心创新不在于游戏机制本身，而在于**开发方法论的应用**：
 
 | 创新领域 | 说明 |
 |---------|------|

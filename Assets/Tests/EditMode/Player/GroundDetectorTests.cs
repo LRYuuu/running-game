@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Reflection;
 using UnityEngine.TestTools;
 
-namespace SquareFireline.Player.Tests
+namespace RunnersJourney.Player.Tests
 {
     /// <summary>
     /// GroundDetector 单元测试 - EditMode

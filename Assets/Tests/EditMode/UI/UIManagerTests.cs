@@ -1,9 +1,9 @@
 using NUnit.Framework;
 using UnityEngine;
-using SquareFireline.UI;
-using SquareFireline.Game;
+using RunnersJourney.UI;
+using RunnersJourney.Game;
 
-namespace SquareFireline.Tests.EditMode.UI
+namespace RunnersJourney.Tests.EditMode.UI
 {
     [TestFixture]
     public class UIManagerTests
