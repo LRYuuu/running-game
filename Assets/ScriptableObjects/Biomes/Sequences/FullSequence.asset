@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00321a0cfda5c0e46b9a162ecc4c8a37, type: 3}
+  m_Name: FullSequence
+  m_EditorClassIdentifier: 
+  sequenceName: "完整 progression (Grassland→Desert→Snowland)"
+  biomeStages:
+  - biome: {fileID: 11400000, guid: ea0be6fd0ec99f74998056f017827cdb, type: 2}
+    transitionChunks: 2
+  - biome: {fileID: 11400000, guid: 7b54d1e762e80d34ca20aad7ffe60a2c, type: 2}
+    transitionChunks: 2
+  - biome: {fileID: 11400000, guid: bc4f4ef8d6fb86647aebdba1bf77483b, type: 2}
+    transitionChunks: 9999
+  useSequence: 1

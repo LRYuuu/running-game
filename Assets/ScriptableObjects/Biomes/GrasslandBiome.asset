@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57cfbd0bcf8afaa44840c90b36dbf3f7, type: 3}
+  m_Name: GrasslandBiome
+  m_EditorClassIdentifier: 
+  biomeName: "\u8349\u576A (Grassland)"
+  grassLeft: {fileID: 11400000, guid: 75a8c3a2b3189c046a673bd8cee847a0, type: 2}
+  grassMiddle: {fileID: 11400000, guid: ec20f9761685fe64b9d71dfb9fde2c1d, type: 2}
+  grassRight: {fileID: 11400000, guid: 2523314c3bfbab0408724440a3b49906, type: 2}
+  grassIsolated: {fileID: 11400000, guid: 8a27a5f4df493864f836a9b35078a9cc, type: 2}
+  dirtTile: {fileID: 11400000, guid: b8f9123515ff88b40a88af33e0b447fa, type: 2}
+  dirtLeft: {fileID: 11400000, guid: c0f31c5c922d2a444954da46c58d8dd1, type: 2}
+  dirtRight: {fileID: 11400000, guid: fb0a694a0440c354999ba06a71764005, type: 2}
+  skyColor: {r: 0.53, g: 0.81, b: 0.92, a: 1}
+  backgroundColor: {r: 0.27, g: 0.84, b: 0.31, a: 1}
+  obstaclePrefabs: []

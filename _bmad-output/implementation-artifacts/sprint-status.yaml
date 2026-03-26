@@ -86,8 +86,8 @@ development_status:
   # Epic 6: 地图生成扩展 (6 stories)
   # -------------------------------------------------------------------------
   epic-6: in-progress
-  6-1-作为系统我可以生成不同生物群系的地形提供视觉变化：backlog
-  6-2-作为玩家我希望通过达成目标解锁新群系以便有进度感：backlog
+  6-1-作为系统我可以生成不同生物群系的地形提供视觉变化：done
+  6-2-作为玩家我希望通过主页面能够选择不同的群系以便有更多选择：backlog
   6-3-作为玩家我希望随游戏进行难度逐渐增加以便有挑战性：done
   6-4-作为开发者我希望有群系配置 ScriptableObject 以便扩展内容：backlog
   6-5-作为开发者我希望有难度曲线配置以便平衡体验：backlog
@@ -215,3 +215,6 @@ notes:
   - "Story 5-3 已完成：最高分显示 UI（InGameUI.uxml 移除隐藏样式、InGameUI.uss 调整位置到右上角、InGameUI.cs 添加缓存机制）✅"
   - "Story 5-4 已完成：破纪录提示 UI（ScoreManager.OnNewRecord 事件、InGameUI 显示 2.5 秒金色提示）✅"
   - "Story 6-3 已完成：难度系统（DifficultyConfig/DistanceCalculator、动态障碍/空隙概率、距离追踪、单元测试）✅"
+  - "Story 6-1 文档已创建：生物群系地形生成（BiomeConfig ScriptableObject、BiomeManager 单例、三种群系配置资产）✅"
+  - "Story 6-1 已完成：核心代码实现（BiomeConfig.cs、BiomeSequence.cs、BiomeManager.cs、TilemapEndlessMapGenerator.cs 修改）✅"
+  - "ScriptableObject 资产需在 Unity 编辑器中手动创建：GrasslandBiome.asset、DesertBiome.asset、SnowlandBiome.asset、FullSequence.asset"

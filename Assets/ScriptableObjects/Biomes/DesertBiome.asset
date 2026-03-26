@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57cfbd0bcf8afaa44840c90b36dbf3f7, type: 3}
+  m_Name: DesertBiome
+  m_EditorClassIdentifier: 
+  biomeName: "\u6C99\u6F20 (Desert)"
+  grassLeft: {fileID: 11400000, guid: c3e89e2b403c46b4b857c7bf55237ff8, type: 2}
+  grassMiddle: {fileID: 11400000, guid: b75ba7c04ed99d843af04fa44889dd49, type: 2}
+  grassRight: {fileID: 11400000, guid: 30b10f6fc8add3a47b57e498b59afa33, type: 2}
+  grassIsolated: {fileID: 11400000, guid: 6cda84eb364295a418f1116c235551e2, type: 2}
+  dirtTile: {fileID: 11400000, guid: b8f9123515ff88b40a88af33e0b447fa, type: 2}
+  dirtLeft: {fileID: 11400000, guid: c0f31c5c922d2a444954da46c58d8dd1, type: 2}
+  dirtRight: {fileID: 11400000, guid: fb0a694a0440c354999ba06a71764005, type: 2}
+  skyColor: {r: 1, g: 0.84, b: 0, a: 1}
+  backgroundColor: {r: 1, g: 0.65, b: 0, a: 1}
+  obstaclePrefabs: []

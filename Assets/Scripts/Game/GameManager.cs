@@ -49,6 +49,10 @@ namespace RunnersJourney.Game
         [Header("难度系统")]
         [Tooltip("难度计算器引用")]
         [SerializeField] private DifficultyCalculator _difficultyCalculator;
+
+        [Header("群系系统")]
+        [Tooltip("群系管理器引用（混合模式）")]
+        [SerializeField] private BiomeManager _biomeManager;
         #endregion
 
         #region 私有字段
@@ -58,7 +62,7 @@ namespace RunnersJourney.Game
         private Vector3 _lastSafePosition;
 
         /// <summary>
-        /// 玩家前进距离（用于难度计算）
+        /// 玩家前进距离（用于难度计算和群系切换）- 基于地图滚动距离
         /// </summary>
         private float _playerDistance = 0f;
 
@@ -102,6 +106,21 @@ namespace RunnersJourney.Game
             {
                 _lastSafePosition = _playerDeathController.transform.position;
             }
+
+            // 获取或自动查找 BiomeManager 引用
+            if (_biomeManager == null)
+            {
+                _biomeManager = BiomeManager.Instance;
+            }
+
+            if (_biomeManager != null)
+            {
+                Debug.Log($"[GameManager] BiomeManager 引用已设置：{_biomeManager.name}");
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] BiomeManager 引用为空，请确保场景中有 BiomeManager GameObject");
+            }
         }
 
         private void OnDestroy()
@@ -140,10 +159,20 @@ namespace RunnersJourney.Game
 
         private void Update()
         {
-            if (CurrentState == GameState.Playing && _playerDeathController != null)
+            if (CurrentState == GameState.Playing)
             {
-                // 更新玩家前进距离（基于玩家位置的 X 轴绝对值）
-                float newDistance = Mathf.Max(0f, _playerDeathController.transform.position.x);
+                // 使用地图滚动距离作为玩家前进距离
+                float newDistance = 0f;
+                if (_mapGenerator != null)
+                {
+                    newDistance = _mapGenerator.GetScrollDistance();
+                }
+                else if (_playerDeathController != null)
+                {
+                    // 回退：使用玩家位置（如果地图生成器不可用）
+                    newDistance = Mathf.Max(0f, _playerDeathController.transform.position.x);
+                }
+
                 if (newDistance > _playerDistance)
                 {
                     _playerDistance = newDistance;
@@ -246,6 +275,12 @@ namespace RunnersJourney.Game
                 _difficultyCalculator.ResetProgress();
             }
 
+            // 重置群系进度（混合模式）
+            if (_biomeManager != null)
+            {
+                _biomeManager.ResetProgress();
+            }
+
             // 重置玩家距离
             _playerDistance = 0f;
 
@@ -263,6 +298,12 @@ namespace RunnersJourney.Game
             if (_difficultyCalculator != null)
             {
                 _difficultyCalculator.ResetProgress();
+            }
+
+            // 重置群系进度（混合模式）
+            if (_biomeManager != null)
+            {
+                _biomeManager.ResetProgress();
             }
 
             // 重置玩家距离

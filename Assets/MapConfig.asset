@@ -41,9 +41,14 @@ MonoBehaviour:
   seed: 12345
   flatChunkCount: 2
   minGapWidth: 1
-  maxGapWidth: 3
+  maxGapWidth: 1
   gapSpawnChance: 0.1
   minGapStartChunk: 0
   minGapInterval: 3
   gapTopTile: {fileID: 11400000, guid: 2d6d5ccaddba6684ea765ee8c8376e93, type: 2}
   gapCenterTile: {fileID: 11400000, guid: b236266b69c18794c83281668a7e374a, type: 2}
+  maxGapWidthPlayable: 8
+  minPlayableObstacleGap: 3
+  maxHeightDifference: 1
+  safeStartChunkCount: 3
+  enablePlayabilityValidation: 1

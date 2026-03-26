@@ -45,6 +45,20 @@ namespace RunnersJourney.Map
         [Tooltip("难度计算器引用（用于动态难度）")]
         public DifficultyCalculator difficultyCalculator;
 
+        [Header("生物群系")]
+        [Tooltip("生物群系管理器引用")]
+        private BiomeManager _biomeManager;
+
+        [Header("默认 Tile（回退用）")]
+        [Tooltip("默认地表 Tile（当群系未配置时使用）")]
+        public TileBase defaultGroundTile;
+
+        [Tooltip("默认土壤 Tile（当群系未配置时使用）")]
+        public TileBase defaultDirtTile;
+
+        [Tooltip("默认障碍物 Tile（当群系未配置时使用）")]
+        public TileBase[] defaultObstacleTiles;
+
         // 地图整体偏移（累计滚动距离）
         private float _mapOffset = 0f;
 
@@ -85,6 +99,13 @@ namespace RunnersJourney.Map
                 // 验证配置可玩性
                 MapPlayabilityValidator.ValidateConfig(config);
             }
+
+            // 获取 BiomeManager 引用
+            _biomeManager = BiomeManager.Instance;
+            if (_biomeManager != null)
+            {
+                _biomeManager.OnBiomeChanged.AddListener(OnBiomeChanged);
+            }
         }
 
         private void Start()
@@ -108,6 +129,23 @@ namespace RunnersJourney.Map
 
             // 应用地图偏移
             ApplyMapOffset();
+        }
+
+        /// <summary>
+        /// 获取地图滚动距离（用于群系切换等）
+        /// </summary>
+        public float GetScrollDistance()
+        {
+            // 初始偏移是负值（向左），滚动距离是相对于初始位置的绝对值
+            return Mathf.Max(0f, initialMapOffset - _mapOffset);
+        }
+
+        /// <summary>
+        /// 获取已生成的 Chunk 总数（用于群系切换）
+        /// </summary>
+        public int GetGeneratedChunkCount()
+        {
+            return maxGeneratedChunk;
         }
 
         /// <summary>
@@ -147,6 +185,12 @@ namespace RunnersJourney.Map
         /// </summary>
         private void GenerateChunkAtEnd()
         {
+            // 在生成 Chunk 之前，先更新群系（基于即将生成的 Chunk 索引）
+            if (_biomeManager != null)
+            {
+                _biomeManager.UpdateBiomeByChunkCount(maxGeneratedChunk);
+            }
+
             // 计算起始 X 位置：基于 minGeneratedChunk 的起始位置 + 偏移
             int startX = minGeneratedChunk * config.chunkWidth + (maxGeneratedChunk - minGeneratedChunk) * config.chunkWidth;
 
@@ -471,62 +515,14 @@ namespace RunnersJourney.Map
                 }
             }
 
-            // 6. 选择草坪 Tile
-            TileBase grassTile;
-            if (leftExposed && rightExposed)
-            {
-                // 两侧都暴露：使用 grassIsolated（两侧都有黑边，用于普通单格凸起地块）
-                grassTile = config.grassIsolated != null ? config.grassIsolated : config.grassRight;
-            }
-            else if (leftExposed)
-            {
-                // 仅左侧暴露：使用 grassLeft
-                grassTile = config.grassLeft;
-            }
-            else if (rightExposed)
-            {
-                // 仅右侧暴露：使用 grassRight
-                grassTile = config.grassRight;
-            }
-            else
-            {
-                // 无暴露（包括空隙旁边）：使用 grassMiddle（无缝衔接）
-                grassTile = config.grassMiddle;
-            }
+            // 6. 选择草坪 Tile（从群系配置获取，根据边界状态）
+            TileBase grassTile = GetGroundTile(worldX, leftExposed, rightExposed);
 
-            // 6.5 选择土壤 Tile（根据暴露状态选择）
-            // 注意：土壤层只在真正的边界（左/右暴露 且 不是凸出地块）才使用带黑边的 Tile
-            // 内部地块（两侧都不暴露）和凸出地块（两侧都暴露）都使用普通 dirtTile
-            TileBase dirtTileToUse = null;
+            // 6.5 选择土壤 Tile
+            // 注意：土壤层始终使用普通 Tile，不显示黑边
+            // 黑边只在草坪层的边界显示
+            TileBase dirtTileToUse = GetDirtTile(worldX, false, false);
             int dirtFlipMode = 0; // 0=无翻转，1=水平翻转，2=垂直翻转，3=水平 + 垂直翻转
-
-            if (dirtLeftExposed && dirtRightExposed)
-            {
-                // 两侧都暴露（凸出地块）：土壤层使用普通 dirtTile + 随机翻转
-                // 草坪层会使用 grassIsolated 显示两侧黑边，但土壤层不需要
-                dirtTileToUse = config.dirtTile;
-                dirtFlipMode = GetDirtFlipMode(worldX, 0);
-            }
-            else if (dirtLeftExposed)
-            {
-                // 仅左侧暴露：使用 dirtTile + 随机翻转（不使用 dirtLeft，因为那是给边界列用的）
-                // 凸出地块的土壤层不需要黑边，黑边只在草坪层显示
-                dirtTileToUse = config.dirtTile;
-                dirtFlipMode = GetDirtFlipMode(worldX, 0);
-            }
-            else if (dirtRightExposed)
-            {
-                // 仅右侧暴露：使用 dirtTile + 随机翻转（不使用 dirtRight，因为那是给边界列用的）
-                // 凸出地块的土壤层不需要黑边，黑边只在草坪层显示
-                dirtTileToUse = config.dirtTile;
-                dirtFlipMode = GetDirtFlipMode(worldX, 0);
-            }
-            else
-            {
-                // 无暴露（内部地块）：使用 dirtTile，随机翻转
-                dirtTileToUse = config.dirtTile;
-                dirtFlipMode = GetDirtFlipMode(worldX, 0);
-            }
 
             // 6. 设置草坪层（y = columnHeight - 1）
             Vector3Int grassPos = new Vector3Int(worldX, columnHeight - 1, 0);
@@ -893,6 +889,87 @@ namespace RunnersJourney.Map
             {
                 Debug.Log($"[TilemapMapGenerator] 滚动已{(paused ? "暂停" : "恢复")}");
             }
+        }
+
+        /// <summary>
+        /// 群系切换时的回调
+        /// </summary>
+        private void OnBiomeChanged(BiomeConfig newBiome)
+        {
+            Debug.Log($"[TilemapMapGenerator] 群系已切换为 {newBiome.biomeName}，后续生成的 Chunk 将使用新配置");
+            // 不需要重新生成地图，新 Chunk 会自动使用新群系
+        }
+
+        /// <summary>
+        /// 获取当前群系配置
+        /// </summary>
+        private BiomeConfig GetCurrentBiome()
+        {
+            if (_biomeManager != null && _biomeManager.CurrentBiome != null)
+            {
+                return _biomeManager.CurrentBiome;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取地表 Tile（根据群系和边界状态）
+        /// </summary>
+        private TileBase GetGroundTile(int worldX, bool leftExposed, bool rightExposed)
+        {
+            var biome = GetCurrentBiome();
+            if (biome != null)
+            {
+                return biome.GetGrassTile(leftExposed, rightExposed);
+            }
+            // 回退到默认配置或原配置
+            if (defaultGroundTile != null)
+            {
+                return defaultGroundTile;
+            }
+
+            // 根据暴露状态返回对应的 config Tile
+            if (leftExposed && rightExposed)
+            {
+                return config.grassIsolated;
+            }
+            else if (leftExposed)
+            {
+                return config.grassLeft;
+            }
+            else if (rightExposed)
+            {
+                return config.grassRight;
+            }
+            return config.grassMiddle;
+        }
+
+        /// <summary>
+        /// 获取土壤 Tile（根据群系和边界状态）
+        /// </summary>
+        private TileBase GetDirtTile(int worldX, bool leftExposed, bool rightExposed)
+        {
+            var biome = GetCurrentBiome();
+            if (biome != null)
+            {
+                return biome.GetDirtTile(leftExposed, rightExposed);
+            }
+            // 回退到默认配置或原配置
+            if (defaultDirtTile != null)
+            {
+                return defaultDirtTile;
+            }
+
+            // 根据暴露状态返回对应的 config Tile
+            if (leftExposed && !rightExposed)
+            {
+                return config.dirtLeft;
+            }
+            else if (!leftExposed && rightExposed)
+            {
+                return config.dirtRight;
+            }
+            return config.dirtTile;
         }
 
 #if UNITY_EDITOR

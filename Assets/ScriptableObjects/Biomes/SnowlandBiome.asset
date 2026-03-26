@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57cfbd0bcf8afaa44840c90b36dbf3f7, type: 3}
+  m_Name: SnowlandBiome
+  m_EditorClassIdentifier: 
+  biomeName: "\u96EA\u5730 (Snowland)"
+  grassLeft: {fileID: 11400000, guid: 975084c3d4ce5b245b0d618d41a156e1, type: 2}
+  grassMiddle: {fileID: 11400000, guid: afc6ad8b4d4bf9a4b9cdb2e11976c43f, type: 2}
+  grassRight: {fileID: 11400000, guid: 5fbad0da46dd6594ebfc66befa152ade, type: 2}
+  grassIsolated: {fileID: 11400000, guid: 0f1d11c1de9407549af19ec28600e2a0, type: 2}
+  dirtTile: {fileID: 11400000, guid: b8f9123515ff88b40a88af33e0b447fa, type: 2}
+  dirtLeft: {fileID: 11400000, guid: c0f31c5c922d2a444954da46c58d8dd1, type: 2}
+  dirtRight: {fileID: 11400000, guid: fb0a694a0440c354999ba06a71764005, type: 2}
+  skyColor: {r: 0.94, g: 0.97, b: 1, a: 1}
+  backgroundColor: {r: 0.25, g: 0.41, b: 0.88, a: 1}
+  obstaclePrefabs: []

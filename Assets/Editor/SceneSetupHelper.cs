@@ -108,5 +108,56 @@ namespace SquareFireline.Editor
             Debug.Log($"[SceneSetupHelper] - Obstacles Tilemap: {obstacleTilemap.name}");
             Debug.Log($"[SceneSetupHelper] - MapConfig: {config.name}");
         }
+
+        [MenuItem("Tools/Square Fireline/Setup BiomeManager")]
+        public static void SetupBiomeManager()
+        {
+            // 查找或创建 BiomeManager
+            GameObject biomeManagerObj = GameObject.Find("BiomeManager");
+            if (biomeManagerObj == null)
+            {
+                biomeManagerObj = new GameObject("BiomeManager");
+            }
+
+            // 获取或添加 BiomeManager 组件
+            var biomeManager = biomeManagerObj.GetComponent<BiomeManager>();
+            if (biomeManager == null)
+            {
+                biomeManager = biomeManagerObj.AddComponent<BiomeManager>();
+            }
+
+            // 加载 FullSequence 配置
+            var sequence = AssetDatabase.LoadAssetAtPath<BiomeSequence>("Assets/ScriptableObjects/Biomes/Sequences/FullSequence.asset");
+            if (sequence == null)
+            {
+                Debug.LogError("[SceneSetupHelper] 未找到 FullSequence 资产！");
+                return;
+            }
+
+            // 设置引用
+            biomeManager.biomeSequence = sequence;
+
+            // 查找 GameManager 并设置引用
+            GameObject gameManagerObj = GameObject.Find("GameManager");
+            if (gameManagerObj != null)
+            {
+                // 使用 SerializedObject 设置私有字段（不需要直接引用 GameManager 类型）
+                var serializedManager = new SerializedObject(gameManagerObj);
+                var biomeField = serializedManager.FindProperty("_biomeManager");
+                if (biomeField != null)
+                {
+                    biomeField.objectReferenceValue = biomeManager;
+                    serializedManager.ApplyModifiedProperties();
+                    Debug.Log("[SceneSetupHelper] 已设置 GameManager._biomeManager 引用");
+                }
+            }
+
+            EditorUtility.SetDirty(biomeManager);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log("[SceneSetupHelper] BiomeManager 设置完成！");
+            Debug.Log($"[SceneSetupHelper] - BiomeManager: {biomeManagerObj.name}");
+            Debug.Log($"[SceneSetupHelper] - BiomeSequence: {sequence.name}");
+        }
     }
 }
