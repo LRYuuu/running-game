@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00321a0cfda5c0e46b9a162ecc4c8a37, type: 3}
   m_Name: FullSequence
   m_EditorClassIdentifier: 
-  sequenceName: "完整 progression (Grassland→Desert→Snowland)"
+  sequenceName: FullProgression
   biomeStages:
-  - biome: {fileID: 11400000, guid: ea0be6fd0ec99f74998056f017827cdb, type: 2}
-    transitionChunks: 2
-  - biome: {fileID: 11400000, guid: 7b54d1e762e80d34ca20aad7ffe60a2c, type: 2}
-    transitionChunks: 2
-  - biome: {fileID: 11400000, guid: bc4f4ef8d6fb86647aebdba1bf77483b, type: 2}
-    transitionChunks: 9999
+  - biome: {fileID: 11400000, guid: e4d469b431e5e1a47af535a769e05150, type: 2}
+    transitionChunks: 10
+  - biome: {fileID: 11400000, guid: dad7cf2db697c154dbe6af008933d6b7, type: 2}
+    transitionChunks: 10
+  - biome: {fileID: 11400000, guid: 7cd179281d4dc21438ee47ae3887c2e4, type: 2}
+    transitionChunks: 10
   useSequence: 1
