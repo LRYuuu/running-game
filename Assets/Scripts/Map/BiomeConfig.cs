@@ -45,8 +45,8 @@ namespace RunnersJourney.Map
         public Color backgroundColor = Color.green;
 
         [Header("障碍物")]
-        [Tooltip("该群系特有的障碍物预制体")]
-        public GameObject[] obstaclePrefabs;
+        [Tooltip("该群系特有的障碍物 Tile（群系专属障碍物池）")]
+        public TileBase[] obstacleTiles;
 
         #region 辅助方法
 

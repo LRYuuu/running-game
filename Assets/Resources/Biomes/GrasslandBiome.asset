@@ -22,4 +22,7 @@ MonoBehaviour:
   dirtRight: {fileID: 11400000, guid: fb0a694a0440c354999ba06a71764005, type: 2}
   skyColor: {r: 0.53, g: 0.81, b: 0.92, a: 1}
   backgroundColor: {r: 0.27, g: 0.84, b: 0.31, a: 1}
-  obstaclePrefabs: []
+  obstacleTiles:
+  - {fileID: 11400000, guid: 31e28ed86a5cd6e4c9214f745703f855, type: 2}
+  - {fileID: 11400000, guid: b18440db9ac36c640a133ecffccc4323, type: 2}
+  - {fileID: 11400000, guid: 5c1aeb9d3f21f434588b0d1e6c6e3bd9, type: 2}

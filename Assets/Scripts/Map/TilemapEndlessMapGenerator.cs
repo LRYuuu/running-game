@@ -342,6 +342,10 @@ namespace RunnersJourney.Map
             minGeneratedChunk = 0;
             maxGeneratedChunk = 0;
 
+            // 重置障碍物状态
+            lastObstacleWorldX = -999;
+            currentObstacleGap = Random.Range(config.minObstacleGap, config.maxObstacleGap + 1);
+
             // 清空缓存
             _heightCache.Clear();
 
@@ -726,6 +730,60 @@ namespace RunnersJourney.Map
         /// </summary>
         private void SpawnObstacle(int worldX)
         {
+            Debug.Log($"[SpawnObstacle] 开始生成障碍物 @ X={worldX}, CurrentBiome={(_biomeManager != null && _biomeManager.CurrentBiome != null ? _biomeManager.CurrentBiome.biomeName : "NULL")}");
+
+            // 获取当前列高度，障碍物生成在草坪层上方
+            int columnHeight = GetColumnHeight(worldX);
+
+            // 优先使用群系障碍物 Tile
+            TileBase biomeObstacleTile = GetBiomeObstacleTile();
+            if (biomeObstacleTile != null)
+            {
+                Vector3Int obsPos = new Vector3Int(worldX, columnHeight, 0);
+                obstacleTilemap.SetTile(obsPos, biomeObstacleTile);
+                lastObstacleWorldX = worldX;
+
+                if (enableDebugLog)
+                {
+                    Debug.Log($"[TilemapMapGenerator] 生成障碍物 @ X={worldX}, Y={columnHeight}, Tile={biomeObstacleTile.name}");
+                }
+                return;
+            }
+
+            // 回退到使用 MapConfig 中的默认障碍物 Tile
+            SpawnObstacleTile(worldX, columnHeight);
+        }
+
+        /// <summary>
+        /// 获取当前群系的障碍物 Tile
+        /// </summary>
+        /// <returns>障碍物 Tile，如果没有配置则返回 null</returns>
+        private TileBase GetBiomeObstacleTile()
+        {
+            Debug.Log($"[GetBiomeObstacleTile] _biomeManager={(_biomeManager != null)}");
+            if (_biomeManager != null)
+            {
+                Debug.Log($"[GetBiomeObstacleTile] CurrentBiome={(_biomeManager.CurrentBiome != null ? _biomeManager.CurrentBiome.biomeName : "NULL")}");
+                if (_biomeManager.CurrentBiome != null)
+                {
+                    Debug.Log($"[GetBiomeObstacleTile] obstacleTiles={(_biomeManager.CurrentBiome.obstacleTiles != null ? _biomeManager.CurrentBiome.obstacleTiles.Length.ToString() : "NULL")}");
+                    if (_biomeManager.CurrentBiome.obstacleTiles != null && _biomeManager.CurrentBiome.obstacleTiles.Length > 0)
+                    {
+                        int randomIndex = Random.Range(0, _biomeManager.CurrentBiome.obstacleTiles.Length);
+                        var selected = _biomeManager.CurrentBiome.obstacleTiles[randomIndex];
+                        Debug.Log($"[GetBiomeObstacleTile] 选择障碍物：{selected.name}");
+                        return selected;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 生成障碍物（Tile 方式 - 向后兼容）
+        /// </summary>
+        private void SpawnObstacleTile(int worldX, int columnHeight)
+        {
             if (obstacleTilemap == null)
             {
                 if (enableDebugLog)
@@ -744,8 +802,6 @@ namespace RunnersJourney.Map
                 return;
             }
 
-            // 获取当前列高度，障碍物生成在草坪层上方
-            int columnHeight = GetColumnHeight(worldX);
             Vector3Int obsPos = new Vector3Int(worldX, columnHeight, 0);
 
             // 从障碍物池中随机选择一个 Tile
@@ -896,8 +952,18 @@ namespace RunnersJourney.Map
         /// </summary>
         private void OnBiomeChanged(BiomeConfig newBiome)
         {
-            Debug.Log($"[TilemapMapGenerator] 群系已切换为 {newBiome.biomeName}，后续生成的 Chunk 将使用新配置");
-            // 不需要重新生成地图，新 Chunk 会自动使用新群系
+            Debug.Log($"[TilemapMapGenerator] 群系已切换为 {newBiome.biomeName}，清除已生成的障碍物并使用新配置");
+
+            // 清除已生成的障碍物，让后续生成的障碍物使用新群系配置
+            if (obstacleTilemap != null)
+            {
+                obstacleTilemap.ClearAllTiles();
+                Debug.Log("[TilemapMapGenerator] 障碍物 Tilemap 已清空");
+            }
+
+            // 重置障碍物状态，让新障碍物立即开始生成
+            lastObstacleWorldX = -999;
+            currentObstacleGap = Random.Range(config.minObstacleGap, config.maxObstacleGap + 1);
         }
 
         /// <summary>
