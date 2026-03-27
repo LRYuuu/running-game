@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using RunnersJourney.Player;
 using RunnersJourney.Map;
+using RunnersJourney.Audio;
 
 namespace RunnersJourney.Game
 {
@@ -53,6 +54,10 @@ namespace RunnersJourney.Game
         [Header("群系系统")]
         [Tooltip("群系管理器引用（混合模式）")]
         [SerializeField] private BiomeManager _biomeManager;
+
+        [Header("音频系统")]
+        [Tooltip("游戏背景音乐")]
+        [SerializeField] private AudioClip _gameBGM;
         #endregion
 
         #region 私有字段
@@ -240,6 +245,16 @@ namespace RunnersJourney.Game
                     Debug.Log("[GameManager] 初始化地图...");
                 }
                 _mapGenerator.Initialize();
+            }
+
+            // 播放背景音乐（Story 7-1）
+            if (AudioManager.Instance != null && _gameBGM != null)
+            {
+                AudioManager.Instance.PlayBGM(_gameBGM);
+            }
+            else if (_gameBGM == null)
+            {
+                Debug.LogWarning("[GameManager] _gameBGM 未设置，请在 Inspector 中指定背景音乐剪辑");
             }
 
             ChangeState(GameState.Playing);

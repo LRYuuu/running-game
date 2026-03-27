@@ -98,7 +98,7 @@ development_status:
   # Epic 7: 音频系统 (5 stories)
   # -------------------------------------------------------------------------
   epic-7: in-progress
-  7-1-作为系统我可以播放背景音乐以便营造氛围：ready-for-dev
+  7-1-作为系统我可以播放背景音乐以便营造氛围：done
   7-2-作为系统我可以播放跳跃音效以便提供反馈：backlog
   7-3-作为系统我可以播放碰撞音效以便明确死亡：backlog
   7-4-作为系统我可以播放 UI 音效以便点击有反馈：backlog
@@ -221,4 +221,5 @@ notes:
   - "Story 6-4 已完成：群系配置 ScriptableObject 扩展性验证（FullSequence.asset 已创建：草地→沙漠→雪地序列）✅"
   - "Story 6-5 已完成：难度曲线配置（DifficultyConfig.cs 添加 OnValidate 验证、DifficultyConfig.asset 默认配置创建）✅"
   - "Story 6-6 已完成：群系特殊障碍物（BiomeConfig.obstacleTiles、TilemapEndlessMapGenerator 支持群系障碍物 Tile）✅"
+  - "Story 7-1 已完成：音频系统基础（AudioConfig.cs/ AudioManager.cs、BGM 播放/循环/音量控制、GameManager 集成、EditMode 测试）✅"
   - "Epic 6 已完成：6/6 完成，地图生成扩展功能完整 ✅"

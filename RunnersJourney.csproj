@@ -91,6 +91,8 @@
     <Compile Include="Assets\Scripts\Game\GameStarter.cs" />
     <Compile Include="Assets\Scripts\Game\DifficultyCalculator.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />
+    <Compile Include="Assets\Scripts\Audio\AudioConfig.cs" />
+    <Compile Include="Assets\Scripts\Audio\AudioManager.cs" />
     <Compile Include="Assets\Scripts\UI\SimpleUITest.cs" />
     <Compile Include="Assets\Scripts\Game\DifficultyConfig.cs" />
     <Compile Include="Assets\Scripts\ParallaxBackground.cs" />
