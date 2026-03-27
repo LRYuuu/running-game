@@ -16,54 +16,156 @@ namespace RunnersJourney.UI
 
         [Tooltip("开始游戏按钮")]
         [SerializeField] private string startButtonName = "start-button";
+
+        [Tooltip("选择群系按钮")]
+        [SerializeField] private string biomeSelectionButtonName = "biome-selection-button";
+
+        [Header("引用")]
+        [Tooltip("群系选择面板组件")]
+        [SerializeField] private BiomeSelectionPanel biomeSelectionPanel;
         #endregion
 
         #region 私有字段
         private Button _startButton;
+        private Button _biomeSelectionButton;
         private Label _titleLabel;
         #endregion
 
         #region Unity 生命周期
-        private void OnEnable()
+        private void Awake()
         {
             if (uiDocument == null)
             {
                 uiDocument = GetComponent<UIDocument>();
             }
+        }
 
-            if (uiDocument != null && uiDocument.rootVisualElement != null)
+        private void OnEnable()
+        {
+            // 延迟注册按钮事件（等待 UI 重建完成）
+            if (uiDocument != null)
             {
-                // 获取 UI 元素
-                _startButton = uiDocument.rootVisualElement.Q<Button>(startButtonName);
-                _titleLabel = uiDocument.rootVisualElement.Q<Label>("title-label");
+                StartCoroutine(RegisterButtonsAfterDelay());
+            }
 
-                // 注册按钮事件
-                if (_startButton != null)
-                {
-                    _startButton.clicked += OnStartButtonClicked;
-                    Debug.Log("[MainMenuUI] Start button registered");
-                }
-                else
-                {
-                    Debug.LogWarning("[MainMenuUI] Start button not found");
-                }
-
-                // 添加按钮悬停效果
-                SetupButtonEffects();
+            // 查找群系选择面板（每次 OnEnable 都重新查找，确保引用有效）
+            var allPanels = FindObjectsByType<BiomeSelectionPanel>(FindObjectsSortMode.None);
+            if (allPanels.Length > 0)
+            {
+                biomeSelectionPanel = allPanels[0];
+                Debug.Log($"[MainMenuUI] BiomeSelectionPanel found: {biomeSelectionPanel.gameObject.name}");
+            }
+            else
+            {
+                Debug.LogWarning("[MainMenuUI] BiomeSelectionPanel not found in scene");
             }
         }
 
         private void OnDisable()
         {
             // 注销按钮事件
+            UnregisterButtons();
+        }
+        #endregion
+
+        #region 公共方法
+
+        /// <summary>
+        /// 重新注册按钮事件（在 UIDocument 重新启用后调用）
+        /// </summary>
+        public void RegisterButtons()
+        {
+            StartCoroutine(RegisterButtonsAfterDelay());
+        }
+
+        #endregion
+
+        #region 私有方法
+
+        /// <summary>
+        /// 延迟注册按钮事件（等待 UI 重建完成）
+        /// </summary>
+        private System.Collections.IEnumerator RegisterButtonsAfterDelay()
+        {
+            yield return new WaitForSeconds(0.1f);
+
+            if (uiDocument == null || uiDocument.rootVisualElement == null)
+            {
+                Debug.LogWarning("[MainMenuUI] Cannot register buttons: rootVisualElement is null");
+                yield break;
+            }
+
+            // 先注销旧的事件（如果有）
+            UnregisterButtons();
+
+            // 获取 UI 元素
+            _startButton = uiDocument.rootVisualElement.Q<Button>(startButtonName);
+            _titleLabel = uiDocument.rootVisualElement.Q<Label>("title-label");
+            _biomeSelectionButton = uiDocument.rootVisualElement.Q<Button>(biomeSelectionButtonName);
+
+            // 注册开始游戏按钮事件
+            if (_startButton != null)
+            {
+                _startButton.clicked += OnStartButtonClicked;
+                Debug.Log("[MainMenuUI] Start button registered");
+            }
+            else
+            {
+                Debug.LogWarning("[MainMenuUI] Start button not found");
+            }
+
+            // 注册选择群系按钮事件
+            if (_biomeSelectionButton != null)
+            {
+                _biomeSelectionButton.clicked += OnBiomeSelectionButtonClicked;
+                Debug.Log("[MainMenuUI] Biome selection button registered");
+            }
+            else
+            {
+                Debug.LogWarning("[MainMenuUI] Biome selection button not found");
+            }
+
+            // 添加按钮悬停效果
+            SetupButtonEffects();
+        }
+
+        /// <summary>
+        /// 注销按钮事件
+        /// </summary>
+        private void UnregisterButtons()
+        {
             if (_startButton != null)
             {
                 _startButton.clicked -= OnStartButtonClicked;
             }
-        }
-        #endregion
 
-        #region 私有方法
+            if (_biomeSelectionButton != null)
+            {
+                _biomeSelectionButton.clicked -= OnBiomeSelectionButtonClicked;
+            }
+        }
+
+        /// <summary>
+        /// 选择群系按钮点击回调
+        /// </summary>
+        private void OnBiomeSelectionButtonClicked()
+        {
+            // 每次点击时动态查找 BiomeSelectionPanel，确保引用有效
+            // 使用 FindObjectOfType 查找场景中的组件（包括禁用的 GameObject）
+            BiomeSelectionPanel panel = FindObjectOfType<BiomeSelectionPanel>(includeInactive: true);
+
+            Debug.Log($"[MainMenuUI] Biome selection button clicked - panel={(panel != null ? "not null" : "null")}");
+            if (panel != null)
+            {
+                Debug.Log("[MainMenuUI] Calling BiomeSelectionPanel.Show()");
+                panel.Show();
+            }
+            else
+            {
+                Debug.LogError("[MainMenuUI] BiomeSelectionPanel is null!");
+            }
+        }
+
         /// <summary>
         /// 设置按钮视觉效果
         /// </summary>
@@ -126,6 +228,7 @@ namespace RunnersJourney.UI
                 Debug.LogWarning("[MainMenuUI] GameManager instance not found");
             }
         }
+
         #endregion
     }
 }

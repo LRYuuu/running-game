@@ -121,8 +121,18 @@ namespace RunnersJourney.UI
                 _mainMenuDocument.enabled = true;
                 Debug.Log("[UIManager] Main menu enabled");
 
-                // 重新注册按钮事件（UIDocument 禁用后重新启用时需要重新注册）
-                RegisterStartButton();
+                // 通知 MainMenuUI 重新注册按钮事件
+                var mainMenuUI = FindObjectOfType<MainMenuUI>();
+                if (mainMenuUI != null)
+                {
+                    mainMenuUI.RegisterButtons();
+                    Debug.Log("[UIManager] Called MainMenuUI.RegisterButtons()");
+                }
+                else
+                {
+                    Debug.LogWarning("[UIManager] MainMenuUI not found, falling back to RegisterStartButton()");
+                    RegisterStartButton();
+                }
             }
             else
             {
