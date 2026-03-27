@@ -730,12 +730,15 @@ namespace RunnersJourney.Map
         /// </summary>
         private void SpawnObstacle(int worldX)
         {
-            Debug.Log($"[SpawnObstacle] 开始生成障碍物 @ X={worldX}, CurrentBiome={(_biomeManager != null && _biomeManager.CurrentBiome != null ? _biomeManager.CurrentBiome.biomeName : "NULL")}");
+            if (enableDebugLog)
+            {
+                Debug.Log($"[SpawnObstacle] 开始生成障碍物 @ X={worldX}, CurrentBiome={(_biomeManager != null && _biomeManager.CurrentBiome != null ? _biomeManager.CurrentBiome.biomeName : "NULL")}");
+            }
 
             // 获取当前列高度，障碍物生成在草坪层上方
             int columnHeight = GetColumnHeight(worldX);
 
-            // 优先使用群系障碍物 Tile
+            // 使用群系障碍物 Tile（群系系统专属，不再回退到 MapConfig）
             TileBase biomeObstacleTile = GetBiomeObstacleTile();
             if (biomeObstacleTile != null)
             {
@@ -747,11 +750,15 @@ namespace RunnersJourney.Map
                 {
                     Debug.Log($"[TilemapMapGenerator] 生成障碍物 @ X={worldX}, Y={columnHeight}, Tile={biomeObstacleTile.name}");
                 }
-                return;
             }
-
-            // 回退到使用 MapConfig 中的默认障碍物 Tile
-            SpawnObstacleTile(worldX, columnHeight);
+            else
+            {
+                // 群系未设置或没有配置障碍物时，不生成障碍物
+                if (enableDebugLog)
+                {
+                    Debug.LogWarning($"[TilemapMapGenerator] 群系障碍物未配置，跳过障碍物生成 @ X={worldX}");
+                }
+            }
         }
 
         /// <summary>
@@ -760,60 +767,20 @@ namespace RunnersJourney.Map
         /// <returns>障碍物 Tile，如果没有配置则返回 null</returns>
         private TileBase GetBiomeObstacleTile()
         {
-            Debug.Log($"[GetBiomeObstacleTile] _biomeManager={(_biomeManager != null)}");
-            if (_biomeManager != null)
+            if (_biomeManager != null && _biomeManager.CurrentBiome != null)
             {
-                Debug.Log($"[GetBiomeObstacleTile] CurrentBiome={(_biomeManager.CurrentBiome != null ? _biomeManager.CurrentBiome.biomeName : "NULL")}");
-                if (_biomeManager.CurrentBiome != null)
+                if (_biomeManager.CurrentBiome.obstacleTiles != null && _biomeManager.CurrentBiome.obstacleTiles.Length > 0)
                 {
-                    Debug.Log($"[GetBiomeObstacleTile] obstacleTiles={(_biomeManager.CurrentBiome.obstacleTiles != null ? _biomeManager.CurrentBiome.obstacleTiles.Length.ToString() : "NULL")}");
-                    if (_biomeManager.CurrentBiome.obstacleTiles != null && _biomeManager.CurrentBiome.obstacleTiles.Length > 0)
+                    int randomIndex = Random.Range(0, _biomeManager.CurrentBiome.obstacleTiles.Length);
+                    var selected = _biomeManager.CurrentBiome.obstacleTiles[randomIndex];
+                    if (enableDebugLog)
                     {
-                        int randomIndex = Random.Range(0, _biomeManager.CurrentBiome.obstacleTiles.Length);
-                        var selected = _biomeManager.CurrentBiome.obstacleTiles[randomIndex];
-                        Debug.Log($"[GetBiomeObstacleTile] 选择障碍物：{selected.name}");
-                        return selected;
+                        Debug.Log($"[TilemapMapGenerator] 选择障碍物：{selected.name}");
                     }
+                    return selected;
                 }
             }
             return null;
-        }
-
-        /// <summary>
-        /// 生成障碍物（Tile 方式 - 向后兼容）
-        /// </summary>
-        private void SpawnObstacleTile(int worldX, int columnHeight)
-        {
-            if (obstacleTilemap == null)
-            {
-                if (enableDebugLog)
-                {
-                    Debug.LogWarning("[TilemapMapGenerator] 障碍物 Tilemap 未设置，跳过障碍物生成");
-                }
-                return;
-            }
-
-            if (config.obstacleTiles == null || config.obstacleTiles.Length == 0)
-            {
-                if (enableDebugLog)
-                {
-                    Debug.LogWarning("[TilemapMapGenerator] 障碍物 Tile 池为空，请在 MapConfig 中配置障碍物 Tile");
-                }
-                return;
-            }
-
-            Vector3Int obsPos = new Vector3Int(worldX, columnHeight, 0);
-
-            // 从障碍物池中随机选择一个 Tile
-            TileBase obstacleTile = config.obstacleTiles[Random.Range(0, config.obstacleTiles.Length)];
-
-            obstacleTilemap.SetTile(obsPos, obstacleTile);
-            lastObstacleWorldX = worldX;
-
-            if (enableDebugLog)
-            {
-                Debug.Log($"[TilemapMapGenerator] 生成障碍物 @ X={worldX}, Y={columnHeight}, Tile={obstacleTile.name}");
-            }
         }
 
         /// <summary>
