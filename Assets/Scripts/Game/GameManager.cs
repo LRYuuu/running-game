@@ -229,6 +229,9 @@ namespace RunnersJourney.Game
                 _playerDeathController.ResetStartPosition();
             }
 
+            // 应用群系选择（故事 6-2）
+            ApplyBiomeSelection();
+
             // 初始化地图（确保地图已生成）
             if (_mapGenerator != null)
             {
@@ -383,6 +386,145 @@ namespace RunnersJourney.Game
         #endregion
 
         #region 私有方法
+
+        /// <summary>
+        /// 应用群系选择（故事 6-2）
+        /// 根据玩家选择的群系模式设置 BiomeManager
+        /// </summary>
+        private void ApplyBiomeSelection()
+        {
+            Debug.Log("[GameManager] ApplyBiomeSelection() started");
+
+            // 检查玩家是否选择了群系模式
+            if (BiomeSelectionData.HasSelectedBefore())
+            {
+                string selectedMode = BiomeSelectionData.LoadSelection();
+                Debug.Log($"[GameManager] ApplyBiomeSelection: HasSelectedBefore=true, selectedMode={selectedMode}");
+
+                if (!string.IsNullOrEmpty(selectedMode))
+                {
+                    // 判断是否为混合模式
+                    if (BiomeSelectionData.IsSequenceMode(selectedMode))
+                    {
+                        // 混合模式：使用群系序列
+                        var sequence = GetBiomeSequence();
+                        if (sequence != null && _biomeManager != null)
+                        {
+                            _biomeManager.SetBiomeSequence(sequence);
+                            Debug.Log("[GameManager] 使用混合群系模式");
+                        }
+                        else if (_biomeManager == null)
+                        {
+                            Debug.LogWarning("[GameManager] BiomeManager 为空，无法设置混合模式");
+                        }
+                        else
+                        {
+                            Debug.LogWarning("[GameManager] 群系序列配置为 null");
+                        }
+                    }
+                    else
+                    {
+                        // 固定模式：使用选定群系
+                        var biomeConfig = FindBiomeConfigByMode(selectedMode);
+                        Debug.Log($"[GameManager] FindBiomeConfigByMode({selectedMode}) result: {(biomeConfig != null ? "found" : "null")}");
+
+                        if (biomeConfig != null && _biomeManager != null)
+                        {
+                            _biomeManager.SetBiome(biomeConfig);
+                            Debug.Log($"[GameManager] 使用固定群系：{selectedMode}");
+                        }
+                        else if (_biomeManager == null)
+                        {
+                            Debug.LogWarning("[GameManager] BiomeManager 为空，无法设置群系");
+                        }
+                        else if (biomeConfig == null)
+                        {
+                            Debug.LogWarning($"[GameManager] 未找到群系配置：{selectedMode}");
+                        }
+                    }
+                    return;
+                }
+            }
+            else
+            {
+                Debug.Log("[GameManager] ApplyBiomeSelection: HasSelectedBefore=false");
+            }
+
+            // 如果玩家未选择，使用 BiomeManager 的默认配置
+            Debug.Log("[GameManager] 使用默认群系配置");
+        }
+
+        /// <summary>
+        /// 获取群系序列配置
+        /// </summary>
+        private BiomeSequence GetBiomeSequence()
+        {
+            var sequences = Resources.LoadAll<BiomeSequence>("Biomes/Sequences");
+            if (sequences.Length > 0)
+            {
+                return sequences[0];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 根据模式键值查找群系配置
+        /// </summary>
+        private BiomeConfig FindBiomeConfigByMode(string modeKey)
+        {
+            var allBiomes = Resources.LoadAll<BiomeConfig>("Biomes");
+            Debug.Log($"[GameManager] FindBiomeConfigByMode: found {allBiomes.Length} biomes");
+
+            foreach (var biome in allBiomes)
+            {
+                Debug.Log($"[GameManager] Checking biome: {biome.biomeName}");
+
+                // 检查 biomeName 是否包含对应的英文单词
+                string biomeNameLower = biome.biomeName.ToLower();
+                bool isMatch = false;
+
+                if (modeKey == BiomeSelectionData.ModeGrassland && biomeNameLower.Contains("grassland"))
+                {
+                    isMatch = true;
+                }
+                else if (modeKey == BiomeSelectionData.ModeDesert && biomeNameLower.Contains("desert"))
+                {
+                    isMatch = true;
+                }
+                else if (modeKey == BiomeSelectionData.ModeSnowland && biomeNameLower.Contains("snowland"))
+                {
+                    isMatch = true;
+                }
+                else if (modeKey == BiomeSelectionData.ModeSequence && biomeNameLower.Contains("sequence"))
+                {
+                    isMatch = true;
+                }
+
+                if (isMatch)
+                {
+                    Debug.Log($"[GameManager] Found matching biome: {biome.biomeName} for mode: {modeKey}");
+                    return biome;
+                }
+            }
+
+            Debug.LogWarning($"[GameManager] No matching biome found for mode: {modeKey}");
+            return null;
+        }
+
+        /// <summary>
+        /// 根据群系名称获取模式键值
+        /// </summary>
+        private string GetModeKeyForBiome(string biomeName)
+        {
+            switch (biomeName.ToLower())
+            {
+                case "grassland": return BiomeSelectionData.ModeGrassland;
+                case "desert": return BiomeSelectionData.ModeDesert;
+                case "snowland": return BiomeSelectionData.ModeSnowland;
+                default: return biomeName.ToLower();
+            }
+        }
+
         /// <summary>
         /// 玩家死亡回调
         /// </summary>

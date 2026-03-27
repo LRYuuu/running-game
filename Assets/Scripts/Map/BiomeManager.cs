@@ -83,16 +83,9 @@ namespace RunnersJourney.Map
 
         private void Start()
         {
-            // 优先使用序列配置（混合模式）
-            if (biomeSequence != null && biomeSequence.useSequence)
-            {
-                SetBiomeSequence(biomeSequence, 0);
-            }
-            // 否则使用固定模式
-            else if (defaultBiome != null)
-            {
-                SetBiome(defaultBiome);
-            }
+            // 不在 Start() 中自动设置群系，由 GameManager.ApplyBiomeSelection() 根据玩家选择设置
+            // 这样可以确保玩家选择的群系模式被正确应用
+            Debug.Log("[BiomeManager] Start() called - waiting for GameManager to apply biome selection");
         }
 
         #endregion

@@ -86,6 +86,8 @@
     <Compile Include="Assets\Scripts\ParallaxBackgroundTilemap.cs" />
     <Compile Include="Assets\Scripts\Map\TilemapEndlessMapGenerator.cs" />
     <Compile Include="Assets\Scripts\Game\Checkpoint.cs" />
+    <Compile Include="Assets\Scripts\UI\BiomeSelectionPanel.cs" />
+    <Compile Include="Assets\Scripts\Game\BiomeSelectionData.cs" />
     <Compile Include="Assets\Scripts\Game\GameStarter.cs" />
     <Compile Include="Assets\Scripts\Game\DifficultyCalculator.cs" />
     <Compile Include="Assets\Scripts\UI\UIManager.cs" />

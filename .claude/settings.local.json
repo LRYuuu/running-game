@@ -61,7 +61,8 @@
       "mcp__UnityMCP__manage_ui",
       "Bash(rm -rf Assets/Screenshots/)",
       "Bash(rm -f Assets/Screenshots.meta)",
-      "Bash(xargs sed:*)"
+      "Bash(xargs sed:*)",
+      "mcp__UnityMCP__manage_tools"
     ]
   }
 }

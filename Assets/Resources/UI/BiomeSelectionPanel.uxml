@@ -1,0 +1,43 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UI/Schema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/UI/BiomeSelectionPanel.uss?fileID=7433441132597879392&amp;guid=c9f42dd98632ed146969a1b146157283&amp;type=3#BiomeSelectionPanel" />
+    <ui:VisualElement name="root-container" class="root-container" style="width: 1920px; height: 1080px;">
+        <ui:VisualElement name="overlay" class="overlay" style="width: 1920px; height: 1080px;" />
+        <ui:VisualElement name="panel-container" class="panel-container" style="width: 1920px; height: 1080px;">
+            <ui:Label name="title-label" text="选择生物群系" class="title" />
+            <ui:VisualElement name="biome-list" class="biome-list">
+                <ui:Button name="biome-button-grassland" class="biome-option">
+                    <ui:VisualElement class="biome-option-content">
+                        <ui:Label text="草原" class="biome-name" />
+                        <ui:Label text="翠绿的草原，适合新手" class="biome-desc" />
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="biome-button-desert" class="biome-option">
+                    <ui:VisualElement class="biome-option-content">
+                        <ui:Label text="沙漠" class="biome-name" />
+                        <ui:Label text="金色的挑战" class="biome-desc" />
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="biome-button-snowland" class="biome-option">
+                    <ui:VisualElement class="biome-option-content">
+                        <ui:Label text="雪地" class="biome-name" />
+                        <ui:Label text="冰雪考验" class="biome-desc" />
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="biome-button-sequence" class="biome-option">
+                    <ui:VisualElement class="biome-option-content">
+                        <ui:Label text="混合群系" class="biome-name" />
+                        <ui:Label text="随距离自动切换：草原→沙漠→雪地" class="biome-desc" />
+                    </ui:VisualElement>
+                </ui:Button>
+            </ui:VisualElement>
+            <ui:VisualElement name="preview-container" class="preview-container">
+                <ui:Image name="preview-image" class="preview-image" />
+                <ui:Label name="description-label" class="preview-description" />
+            </ui:VisualElement>
+            <ui:VisualElement name="action-buttons" class="action-buttons" style="align-self: center;">
+                <ui:Button name="confirm-button" text="确认" class="confirm-button" />
+                <ui:Button name="cancel-button" text="取消" class="cancel-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

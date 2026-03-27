@@ -188,6 +188,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enableDebugLog: 1
   _autoStartGame: 0
+--- !u!1 &104237490
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 104237493}
+  - component: {fileID: 104237492}
+  - component: {fileID: 104237491}
+  m_Layer: 0
+  m_Name: BiomeSelectionPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &104237491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104237490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75737228e09d13c44aeb23588b2ca695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier:
+  uiDocument: {fileID: 104237492}
+  biomeButtonPrefix: biome-button-
+  confirmButtonName: confirm-button
+  cancelButtonName: cancel-button
+  previewImageName: preview-image
+  descriptionLabelName: description-label
+--- !u!114 &104237492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104237490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 68839fc83efb134499ac847f96d8b0a3, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 900c30ab5c9388a4d9e7c8809369b7eb, type: 3}
+  m_SortingOrder: 10
+--- !u!4 &104237493
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104237490}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &204846482
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,6 +380,7 @@ GameObject:
   m_Component:
   - component: {fileID: 346814351}
   - component: {fileID: 346814350}
+  - component: {fileID: 346814352}
   m_Layer: 0
   m_Name: MainMenuUIDocument
   m_TagString: Untagged
@@ -355,6 +423,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &346814352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346814349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fcfadde555b4f648a6f0f1af70aa138, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiDocument: {fileID: 346814350}
+  startButtonName: start-button
+  biomeSelectionButtonName: biome-selection-button
 --- !u!1 &367545319
 GameObject:
   m_ObjectHideFlags: 0
@@ -4577,3 +4660,4 @@ SceneRoots:
   - {fileID: 888888001}
   - {fileID: 2012256846}
   - {fileID: 367545321}
+  - {fileID: 104237493}
