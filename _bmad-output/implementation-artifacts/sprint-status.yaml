@@ -90,7 +90,7 @@ development_status:
   6-2-作为玩家我希望通过游戏内页面中能够选择不同的群系以便有更多选择：done
   6-3-作为玩家我希望随游戏进行难度逐渐增加以便有挑战性：done
   6-4-作为开发者我希望有群系配置 ScriptableObject 以便扩展内容：done
-  6-5-作为开发者我希望有难度曲线配置以便平衡体验：backlog
+  6-5-作为开发者我希望有难度曲线配置以便平衡体验：done
   6-6-作为玩家我希望不同群系有特殊元素以便有新鲜感：backlog
   epic-6-retrospective: optional
 
@@ -219,3 +219,4 @@ notes:
   - "Story 6-1 已完成：核心代码实现（BiomeConfig.cs、BiomeSequence.cs、BiomeManager.cs、TilemapEndlessMapGenerator.cs 修改）✅"
   - "ScriptableObject 资产需在 Unity 编辑器中手动创建：GrasslandBiome.asset、DesertBiome.asset、SnowlandBiome.asset、FullSequence.asset"
   - "Story 6-4 已完成：群系配置 ScriptableObject 扩展性验证（FullSequence.asset 已创建：草地→沙漠→雪地序列）✅"
+  - "Story 6-5 已完成：难度曲线配置（DifficultyConfig.cs 添加 OnValidate 验证、DifficultyConfig.asset 默认配置创建）✅"

@@ -6,7 +6,7 @@ namespace RunnersJourney.Game
     /// 难度配置 - 使用 ScriptableObject 存储难度曲线参数
     /// 可在 Unity Editor 中调整，无需修改代码
     /// </summary>
-    [CreateAssetMenu(fileName = "DifficultyConfig", menuName = "Square Fireline/Difficulty Config")]
+    [CreateAssetMenu(fileName = "DifficultyConfig", menuName = "Runner's Journey/Difficulty Config")]
     public class DifficultyConfig : ScriptableObject
     {
         #region 难度起点配置
@@ -161,6 +161,73 @@ namespace RunnersJourney.Game
             CurrentDifficulty = 0f;
             CurrentObstacleChance = baseObstacleChance;
             CurrentGapChance = baseGapChance;
+        }
+
+        /// <summary>
+        /// 验证配置参数（Editor 中手动调用）
+        /// </summary>
+        public void ValidateConfiguration()
+        {
+            bool hasWarning = false;
+
+            if (startDistance >= maxDistance)
+            {
+                Debug.LogWarning($"[DifficultyConfig] startDistance ({startDistance}) 应该小于 maxDistance ({maxDistance})");
+                hasWarning = true;
+            }
+
+            if (baseObstacleChance > maxObstacleChance)
+            {
+                Debug.LogWarning($"[DifficultyConfig] baseObstacleChance ({baseObstacleChance}) 不应该大于 maxObstacleChance ({maxObstacleChance})");
+                hasWarning = true;
+            }
+
+            if (baseGapChance > maxGapChance)
+            {
+                Debug.LogWarning($"[DifficultyConfig] baseGapChance ({baseGapChance}) 不应该大于 maxGapChance ({maxGapChance})");
+                hasWarning = true;
+            }
+
+            if (!hasWarning)
+            {
+                Debug.Log("[DifficultyConfig] 配置验证通过 ✓");
+            }
+        }
+        #endregion
+
+        #region Editor 验证
+        /// <summary>
+        /// 在 Inspector 中数值改变时自动验证
+        /// </summary>
+        private void OnValidate()
+        {
+            // 限制 startDistance 必须小于 maxDistance
+            if (startDistance < 0f)
+            {
+                startDistance = 0f;
+            }
+
+            if (maxDistance <= startDistance)
+            {
+                maxDistance = Mathf.Max(startDistance + 1f, 500f);
+            }
+
+            // 限制概率在 0-1 之间
+            baseObstacleChance = Mathf.Clamp01(baseObstacleChance);
+            maxObstacleChance = Mathf.Clamp01(maxObstacleChance);
+            baseGapChance = Mathf.Clamp01(baseGapChance);
+            maxGapChance = Mathf.Clamp01(maxGapChance);
+
+            // 确保 base <= max
+            if (baseObstacleChance > maxObstacleChance)
+            {
+                baseObstacleChance = maxObstacleChance;
+            }
+
+            if (baseGapChance > maxGapChance)
+            {
+                baseGapChance = maxGapChance;
+            }
         }
         #endregion
     }
