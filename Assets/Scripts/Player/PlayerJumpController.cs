@@ -1,5 +1,6 @@
 using UnityEngine;
 using RunnersJourney.Game;
+using RunnersJourney.Audio;
 
 namespace RunnersJourney.Player
 {
@@ -16,6 +17,10 @@ namespace RunnersJourney.Player
 
         [Tooltip("地面检测器组件")]
         [SerializeField] private GroundDetector _groundDetector;
+
+        [Header("音频")]
+        [Tooltip("跳跃音效剪辑")]
+        [SerializeField] private AudioClip _jumpSFX;
 
         [Header("调试选项")]
         [Tooltip("是否启用详细日志")]
@@ -249,6 +254,20 @@ namespace RunnersJourney.Player
 
             // 应用向上力
             _rigidbody2D.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+
+            // 播放跳跃音效
+            if (_jumpSFX != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(_jumpSFX);
+                if (_enableDebugLog)
+                {
+                    Debug.Log($"[PlayerJumpController] 播放跳跃音效：{_jumpSFX.name}");
+                }
+            }
+            else if (_jumpSFX == null)
+            {
+                Debug.LogWarning("[PlayerJumpController] 跳跃音效未配置，请在 Inspector 中分配 Jump SFX 字段");
+            }
 
             // 日志输出
             if (_enableDebugLog)

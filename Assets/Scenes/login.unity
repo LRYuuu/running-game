@@ -173,6 +173,7 @@ MonoBehaviour:
   _gameConfig: {fileID: 0}
   _difficultyCalculator: {fileID: 0}
   _biomeManager: {fileID: 367545320}
+  _gameBGM: {fileID: 8300000, guid: 75a94cf789f8a904bbce57eb01fb752e, type: 3}
   _enableDebugLog: 1
 --- !u!114 &2000003
 MonoBehaviour:
@@ -217,7 +218,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75737228e09d13c44aeb23588b2ca695, type: 3}
   m_Name: 
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   uiDocument: {fileID: 104237492}
   biomeButtonPrefix: biome-button-
   confirmButtonName: confirm-button
@@ -438,6 +439,7 @@ MonoBehaviour:
   uiDocument: {fileID: 346814350}
   startButtonName: start-button
   biomeSelectionButtonName: biome-selection-button
+  biomeSelectionPanel: {fileID: 0}
 --- !u!1 &367545319
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,7 +470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultBiome: {fileID: 0}
-  biomeSequence: {fileID: 11400000, guid: 3c4a88bd64b8eda4b928032ab60e0314, type: 2}
+  biomeSequence: {fileID: 11400000, guid: c86b88cd13cc69e4d905b7e080c50b16, type: 2}
   OnBiomeChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4347,6 +4349,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _jumpConfig: {fileID: 11400000, guid: 6c877c136860efc4cb0afb458c45517b, type: 2}
   _groundDetector: {fileID: 1165569041}
+  _jumpSFX: {fileID: 8300000, guid: 7dce93fba821c8248bf13aaf6ebd284d, type: 3}
   _enableDebugLog: 0
 --- !u!114 &1165569041
 MonoBehaviour:
