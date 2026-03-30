@@ -467,6 +467,42 @@ namespace RunnersJourney.Game
 
             // 如果玩家未选择，使用 BiomeManager 的默认配置
             Debug.Log("[GameManager] 使用默认群系配置");
+            if (_biomeManager != null)
+            {
+                // 优先使用 Inspector 中配置的 defaultBiome
+                BiomeConfig defaultBiome = _biomeManager.defaultBiome;
+
+                // 如果 Inspector 中未配置，尝试从 Resources 加载草地群系
+                if (defaultBiome == null)
+                {
+                    var allBiomes = Resources.LoadAll<BiomeConfig>("Biomes");
+                    foreach (var biome in allBiomes)
+                    {
+                        if (biome.biomeName.ToLower().Contains("grassland") ||
+                            biome.biomeName.ToLower().Contains("草地") ||
+                            biome.biomeName.ToLower().Contains("grass"))
+                        {
+                            defaultBiome = biome;
+                            Debug.Log($"[GameManager] 从 Resources 加载默认群系：{biome.biomeName}");
+                            break;
+                        }
+                    }
+                }
+
+                if (defaultBiome != null)
+                {
+                    _biomeManager.SetBiome(defaultBiome);
+                    Debug.Log($"[GameManager] 默认群系已设置：{defaultBiome.biomeName}");
+                }
+                else
+                {
+                    Debug.LogError("[GameManager] 无法找到默认群系配置，请确保 Resources/Biomes 目录下有 GrasslandBiome 资产");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[GameManager] BiomeManager 为空，无法设置默认群系");
+            }
         }
 
         /// <summary>
