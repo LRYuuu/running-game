@@ -101,9 +101,9 @@ development_status:
   7-1-作为系统我可以播放背景音乐以便营造氛围：done
   7-2-作为系统我可以播放跳跃音效以便提供反馈：done
   7-3-作为系统我可以播放碰撞音效以便明确死亡：done
-  7-4-作为系统我可以播放 UI 音效以便点击有反馈：ready-for-dev
+  7-4-作为系统我可以播放 UI 音效以便点击有反馈：done
   7-5-作为玩家我希望可以调整音量以便适配偏好：done
-  epic-7-retrospective: optional
+  epic-7-retrospective: done
 
   # -------------------------------------------------------------------------
   # Epic 8: Polish 与优化 (6 stories)
