@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="UnityEngine.UIElements" noNamespaceSchemaLocation="..\..\UIElementsSchema.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/UI/SettingsPanel.uss?fileID=7433441132597879392&amp;guid=9b970208ced81cc459732a2083da073a&amp;type=3#SettingsPanel" />
+    <ui:VisualElement name="root-container" class="root-container" style="width: 1920px; height: 1080px; position: absolute;">
+        <ui:VisualElement name="settings-container" class="settings-container" style="width: 600px; height: 400px; left: 683px; top: 325px; position: absolute; right: auto; bottom: auto; justify-content: flex-start;">
+            <ui:Label text="设置" class="title" />
+            <ui:VisualElement class="slider-group">
+                <ui:Label text="背景音乐" class="slider-label" />
+                <ui:Slider name="bgm-volume-slider" low-value="0" high-value="1" value="0.8" direction="Horizontal" class="volume-slider" />
+                <ui:Label name="bgm-volume-value" text="80%" class="volume-value" />
+            </ui:VisualElement>
+            <ui:VisualElement class="slider-group">
+                <ui:Label text="音效" class="slider-label" />
+                <ui:Slider name="sfx-volume-slider" low-value="0" high-value="1" value="0.6" direction="Horizontal" class="volume-slider" />
+                <ui:Label name="sfx-volume-value" text="60%" class="volume-value" />
+            </ui:VisualElement>
+            <ui:Button name="close-button" text="关闭" class="close-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

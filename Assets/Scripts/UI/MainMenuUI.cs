@@ -20,14 +20,21 @@ namespace RunnersJourney.UI
         [Tooltip("选择群系按钮")]
         [SerializeField] private string biomeSelectionButtonName = "biome-selection-button";
 
+        [Tooltip("设置按钮")]
+        [SerializeField] private string settingsButtonName = "settings-button";
+
         [Header("引用")]
         [Tooltip("群系选择面板组件")]
         [SerializeField] private BiomeSelectionPanel biomeSelectionPanel;
+
+        [Tooltip("设置面板组件")]
+        [SerializeField] private SettingsPanel settingsPanel;
         #endregion
 
         #region 私有字段
         private Button _startButton;
         private Button _biomeSelectionButton;
+        private Button _settingsButton;
         private Label _titleLabel;
         #endregion
 
@@ -102,6 +109,7 @@ namespace RunnersJourney.UI
             _startButton = uiDocument.rootVisualElement.Q<Button>(startButtonName);
             _titleLabel = uiDocument.rootVisualElement.Q<Label>("title-label");
             _biomeSelectionButton = uiDocument.rootVisualElement.Q<Button>(biomeSelectionButtonName);
+            _settingsButton = uiDocument.rootVisualElement.Q<Button>(settingsButtonName);
 
             // 注册开始游戏按钮事件
             if (_startButton != null)
@@ -125,6 +133,17 @@ namespace RunnersJourney.UI
                 Debug.LogWarning("[MainMenuUI] Biome selection button not found");
             }
 
+            // 注册设置按钮事件
+            if (_settingsButton != null)
+            {
+                _settingsButton.clicked += OnSettingsButtonClicked;
+                Debug.Log("[MainMenuUI] Settings button registered");
+            }
+            else
+            {
+                Debug.LogWarning("[MainMenuUI] Settings button not found");
+            }
+
             // 添加按钮悬停效果
             SetupButtonEffects();
         }
@@ -142,6 +161,11 @@ namespace RunnersJourney.UI
             if (_biomeSelectionButton != null)
             {
                 _biomeSelectionButton.clicked -= OnBiomeSelectionButtonClicked;
+            }
+
+            if (_settingsButton != null)
+            {
+                _settingsButton.clicked -= OnSettingsButtonClicked;
             }
         }
 
@@ -163,6 +187,30 @@ namespace RunnersJourney.UI
             else
             {
                 Debug.LogError("[MainMenuUI] BiomeSelectionPanel is null!");
+            }
+        }
+
+        /// <summary>
+        /// 设置按钮点击回调
+        /// </summary>
+        private void OnSettingsButtonClicked()
+        {
+            // 优先使用 Inspector 分配的引用，如果为空则动态查找
+            SettingsPanel panel = settingsPanel;
+            if (panel == null)
+            {
+                panel = FindObjectOfType<SettingsPanel>(includeInactive: true);
+            }
+
+            Debug.Log($"[MainMenuUI] Settings button clicked - panel={(panel != null ? "not null" : "null")}");
+            if (panel != null)
+            {
+                Debug.Log("[MainMenuUI] Calling SettingsPanel.Show()");
+                panel.Show();
+            }
+            else
+            {
+                Debug.LogError("[MainMenuUI] SettingsPanel is null!");
             }
         }
 

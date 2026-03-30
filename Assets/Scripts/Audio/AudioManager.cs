@@ -69,11 +69,14 @@ namespace RunnersJourney.Audio
 
         private void Start()
         {
-            if (audioConfig != null)
-            {
-                SetBGMVolume(audioConfig.bgmVolume);
-                SetSFXVolume(audioConfig.sfxVolume);
-            }
+            // 加载保存的音量设置（PlayerPrefs 优先于 AudioConfig）
+            float savedBGMVolume = PlayerPrefs.GetFloat("BGMVolume", audioConfig != null ? audioConfig.bgmVolume : 0.8f);
+            float savedSFXVolume = PlayerPrefs.GetFloat("SFXVolume", audioConfig != null ? audioConfig.sfxVolume : 0.6f);
+
+            SetBGMVolume(savedBGMVolume);
+            SetSFXVolume(savedSFXVolume);
+
+            Debug.Log($"[AudioManager] 加载音量设置 - BGM: {savedBGMVolume}, SFX: {savedSFXVolume}");
 
             // 如果有默认 BGM，自动播放
             if (defaultBGM != null)
