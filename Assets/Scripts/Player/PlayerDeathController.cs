@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using RunnersJourney.Game;
+using RunnersJourney.Audio;
 
 namespace RunnersJourney.Player
 {
@@ -21,6 +22,10 @@ namespace RunnersJourney.Player
         [Header("碰撞设置")]
         [Tooltip("障碍物所在的 Layer")]
         [SerializeField] private LayerMask _obstacleLayer = 0;
+
+        [Header("音频")]
+        [Tooltip("碰撞音效剪辑（玩家死亡时播放）")]
+        [SerializeField] private AudioClip _collisionSFX;
         #endregion
 
         #region 事件
@@ -213,6 +218,20 @@ namespace RunnersJourney.Player
             if (_isDead) return;
 
             _isDead = true;
+
+            // 播放碰撞音效（Story 7-3）- 音量设为 40%
+            if (_collisionSFX != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(_collisionSFX, 0.4f);
+                if (_enableDebugLog)
+                {
+                    Debug.Log($"[PlayerDeathController] 播放碰撞音效：{_collisionSFX.name}");
+                }
+            }
+            else if (_collisionSFX == null)
+            {
+                Debug.LogWarning("[PlayerDeathController] 碰撞音效未配置，请在 Inspector 中分配 Collision SFX 字段");
+            }
 
             Debug.Log($"[PlayerDeathController] 玩家死亡，将在 {_respawnDelay} 秒后重生...");
 

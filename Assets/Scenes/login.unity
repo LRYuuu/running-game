@@ -174,7 +174,7 @@ MonoBehaviour:
   _difficultyCalculator: {fileID: 0}
   _biomeManager: {fileID: 367545320}
   _gameBGM: {fileID: 8300000, guid: 75a94cf789f8a904bbce57eb01fb752e, type: 3}
-  _enableDebugLog: 1
+  _enableDebugLog: 0
 --- !u!114 &2000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4384,6 +4384,7 @@ MonoBehaviour:
   _obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
+  _collisionSFX: {fileID: 8300000, guid: 8c0177fd38310ac4590007a9f2480593, type: 3}
 --- !u!1 &1228793007
 GameObject:
   m_ObjectHideFlags: 0
