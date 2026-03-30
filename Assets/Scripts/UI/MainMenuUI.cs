@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using RunnersJourney.Game;
+using RunnersJourney.Audio;
 
 namespace RunnersJourney.UI
 {
@@ -22,6 +23,10 @@ namespace RunnersJourney.UI
 
         [Tooltip("设置按钮")]
         [SerializeField] private string settingsButtonName = "settings-button";
+
+        [Header("音频")]
+        [Tooltip("按钮点击音效剪辑")]
+        [SerializeField] private AudioClip _buttonClickSFX;
 
         [Header("引用")]
         [Tooltip("群系选择面板组件")]
@@ -170,10 +175,27 @@ namespace RunnersJourney.UI
         }
 
         /// <summary>
+        /// 播放按钮点击音效
+        /// </summary>
+        private void PlayButtonClickSFX()
+        {
+            if (_buttonClickSFX != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(_buttonClickSFX);
+                Debug.Log($"[MainMenuUI] 播放按钮点击音效：{_buttonClickSFX.name}");
+            }
+            else if (_buttonClickSFX == null)
+            {
+                Debug.LogWarning("[MainMenuUI] 按钮点击音效未配置，请在 Inspector 中分配 Button Click SFX 字段");
+            }
+        }
+
+        /// <summary>
         /// 选择群系按钮点击回调
         /// </summary>
         private void OnBiomeSelectionButtonClicked()
         {
+            PlayButtonClickSFX();
             // 每次点击时动态查找 BiomeSelectionPanel，确保引用有效
             // 使用 FindObjectOfType 查找场景中的组件（包括禁用的 GameObject）
             BiomeSelectionPanel panel = FindObjectOfType<BiomeSelectionPanel>(includeInactive: true);
@@ -195,6 +217,7 @@ namespace RunnersJourney.UI
         /// </summary>
         private void OnSettingsButtonClicked()
         {
+            PlayButtonClickSFX();
             // 优先使用 Inspector 分配的引用，如果为空则动态查找
             SettingsPanel panel = settingsPanel;
             if (panel == null)
@@ -256,6 +279,7 @@ namespace RunnersJourney.UI
         /// </summary>
         private void OnStartButtonClicked()
         {
+            PlayButtonClickSFX();
             Debug.Log("[MainMenuUI] Start button clicked - starting game");
             StartGame();
         }

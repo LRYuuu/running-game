@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 using System.Collections.Generic;
 using RunnersJourney.Map;
 using RunnersJourney.Game;
+using RunnersJourney.Audio;
 
 namespace RunnersJourney.UI
 {
@@ -33,6 +34,10 @@ namespace RunnersJourney.UI
 
         [Tooltip("描述文本标签名称")]
         [SerializeField] private string descriptionLabelName = "description-label";
+
+        [Header("音频")]
+        [Tooltip("按钮点击音效剪辑")]
+        [SerializeField] private AudioClip _buttonClickSFX;
 
         #endregion
 
@@ -194,7 +199,11 @@ namespace RunnersJourney.UI
             if (seqButton != null)
             {
                 _modeButtons[BiomeSelectionData.ModeSequence] = seqButton;
-                seqButton.clicked += () => OnModeSelected(BiomeSelectionData.ModeSequence, null);
+                seqButton.clicked += () =>
+                {
+                    PlayButtonClickSFX();
+                    OnModeSelected(BiomeSelectionData.ModeSequence, null);
+                };
                 Debug.Log($"[BiomeSelectionPanel] 注册混合模式按钮：{seqButtonName}");
             }
             else
@@ -209,7 +218,11 @@ namespace RunnersJourney.UI
             Debug.Log($"[BiomeSelectionPanel] confirmButton result: {(confirmButton != null ? "found" : "null")}");
             if (confirmButton != null)
             {
-                confirmButton.clicked += OnConfirmClicked;
+                confirmButton.clicked += () =>
+                {
+                    PlayButtonClickSFX();
+                    OnConfirmClicked();
+                };
                 Debug.Log($"[BiomeSelectionPanel] 确认按钮已注册：{confirmButtonName}");
             }
             else
@@ -221,7 +234,11 @@ namespace RunnersJourney.UI
             Debug.Log($"[BiomeSelectionPanel] cancelButton result: {(cancelButton != null ? "found" : "null")}");
             if (cancelButton != null)
             {
-                cancelButton.clicked += OnCancelClicked;
+                cancelButton.clicked += () =>
+                {
+                    PlayButtonClickSFX();
+                    OnCancelClicked();
+                };
                 Debug.Log($"[BiomeSelectionPanel] 取消按钮已注册：{cancelButtonName}");
             }
             else
@@ -236,6 +253,17 @@ namespace RunnersJourney.UI
         }
 
         /// <summary>
+        /// 播放按钮点击音效
+        /// </summary>
+        private void PlayButtonClickSFX()
+        {
+            if (_buttonClickSFX != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(_buttonClickSFX);
+            }
+        }
+
+        /// <summary>
         /// 注册群系按钮
         /// </summary>
         private void RegisterBiomeButton(string modeKey, string displayName)
@@ -245,7 +273,11 @@ namespace RunnersJourney.UI
             if (button != null)
             {
                 _modeButtons[modeKey] = button;
-                button.clicked += () => OnModeSelected(modeKey, null);
+                button.clicked += () =>
+                {
+                    PlayButtonClickSFX();
+                    OnModeSelected(modeKey, null);
+                };
                 Debug.Log($"[BiomeSelectionPanel] 注册群系按钮：{buttonName}");
             }
             else

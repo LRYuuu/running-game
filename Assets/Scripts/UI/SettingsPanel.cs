@@ -13,6 +13,10 @@ namespace RunnersJourney.UI
         [Header("UI 组件")]
         [Tooltip("UIDocument 组件")]
         [SerializeField] private UIDocument uiDocument;
+
+        [Header("音频")]
+        [Tooltip("按钮点击音效剪辑")]
+        [SerializeField] private AudioClip _buttonClickSFX;
         #endregion
 
         #region 私有字段
@@ -199,10 +203,22 @@ namespace RunnersJourney.UI
         }
 
         /// <summary>
+        /// 播放按钮点击音效
+        /// </summary>
+        private void PlayButtonClickSFX()
+        {
+            if (_buttonClickSFX != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(_buttonClickSFX);
+            }
+        }
+
+        /// <summary>
         /// 关闭按钮点击回调
         /// </summary>
         private void OnCloseClicked()
         {
+            PlayButtonClickSFX();
             Hide();
         }
         #endregion

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using RunnersJourney.Game;
+using RunnersJourney.Audio;
 
 namespace RunnersJourney.UI
 {
@@ -14,6 +15,10 @@ namespace RunnersJourney.UI
         [Header("UI 文档引用")]
         [Tooltip("游戏结束 UI UXML 文件")]
         [SerializeField] private UIDocument uiDocument;
+
+        [Header("音频")]
+        [Tooltip("按钮点击音效剪辑")]
+        [SerializeField] private AudioClip _buttonClickSFX;
         #endregion
 
         #region 私有字段
@@ -333,10 +338,22 @@ namespace RunnersJourney.UI
         }
 
         /// <summary>
+        /// 播放按钮点击音效
+        /// </summary>
+        private void PlayButtonClickSFX()
+        {
+            if (_buttonClickSFX != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX(_buttonClickSFX);
+            }
+        }
+
+        /// <summary>
         /// 重新开始按钮点击回调
         /// </summary>
         private void OnRestartButtonClicked()
         {
+            PlayButtonClickSFX();
             Debug.Log("[GameOverUI] OnRestartButtonClicked called - button was clicked!");
             Hide();
             HideNewRecordBadge();
@@ -353,6 +370,7 @@ namespace RunnersJourney.UI
         /// </summary>
         private void OnMainMenuButtonClicked()
         {
+            PlayButtonClickSFX();
             Debug.Log("[GameOverUI] OnMainMenuButtonClicked called - button was clicked!");
             Hide();
             HideNewRecordBadge();
