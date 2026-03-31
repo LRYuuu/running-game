@@ -4371,8 +4371,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d1122af854e5b740a44a9b3a7c58710, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _groundCheckOffset: {x: 0, y: -2.5}
-  _groundCheckSize: {x: 0.8, y: 0.1}
+  _groundCheckOffset: {x: 0, y: -0.55}
+  _groundCheckSize: {x: 0.5, y: 0.1}
 --- !u!114 &1165569042
 MonoBehaviour:
   m_ObjectHideFlags: 0
