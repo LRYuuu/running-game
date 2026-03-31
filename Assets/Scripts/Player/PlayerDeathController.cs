@@ -26,6 +26,10 @@ namespace RunnersJourney.Player
         [Header("音频")]
         [Tooltip("碰撞音效剪辑（玩家死亡时播放）")]
         [SerializeField] private AudioClip _collisionSFX;
+
+        [Header("动画")]
+        [Tooltip("动画控制器组件")]
+        [SerializeField] private PlayerAnimationController _animationController;
         #endregion
 
         #region 事件
@@ -231,6 +235,12 @@ namespace RunnersJourney.Player
             else if (_collisionSFX == null)
             {
                 Debug.LogWarning("[PlayerDeathController] 碰撞音效未配置，请在 Inspector 中分配 Collision SFX 字段");
+            }
+
+            // 触发死亡动画
+            if (_animationController != null)
+            {
+                _animationController.TriggerDeath();
             }
 
             Debug.Log($"[PlayerDeathController] 玩家死亡，将在 {_respawnDelay} 秒后重生...");

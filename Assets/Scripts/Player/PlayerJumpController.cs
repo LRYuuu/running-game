@@ -22,6 +22,10 @@ namespace RunnersJourney.Player
         [Tooltip("跳跃音效剪辑")]
         [SerializeField] private AudioClip _jumpSFX;
 
+        [Header("动画")]
+        [Tooltip("动画控制器组件")]
+        [SerializeField] private PlayerAnimationController _animationController;
+
         [Header("调试选项")]
         [Tooltip("是否启用详细日志")]
         [SerializeField] private bool _enableDebugLog = false;
@@ -34,6 +38,8 @@ namespace RunnersJourney.Player
         private int _jumpCount;
         private bool _isGroundedLastFrame;
         private bool _isInputEnabled = true;
+        private bool _wasAirborneLastFrame = false;
+        private bool _isJumping; // 标记跳跃状态
         #endregion
 
         #region Unity 生命周期
@@ -140,6 +146,29 @@ namespace RunnersJourney.Player
                 _coyoteTimeTimer = _jumpConfig.coyoteTime;
             }
 
+            // 检测落地瞬间
+            if (_isGroundedLastFrame && _wasAirborneLastFrame)
+            {
+                _isJumping = false;
+                if (_animationController != null)
+                {
+                    _animationController.TriggerLand();
+                }
+            }
+            _wasAirborneLastFrame = !_isGroundedLastFrame;
+
+            // 更新动画速度参数（用于 Idle/Run 切换）
+            if (_animationController != null)
+            {
+                float speed = Mathf.Abs(_rigidbody2D != null ? _rigidbody2D.velocity.x : 0f);
+                _animationController.SetSpeed(speed);
+
+                // 跳跃状态下强制设置为 false，直到落地
+                bool groundedValue = _isJumping ? false : _isGroundedLastFrame;
+                _animationController.SetGrounded(groundedValue);
+                Debug.Log($"[PlayerJumpController] Update - _isGroundedLastFrame={_isGroundedLastFrame}, _isJumping={_isJumping}, setting IsGrounded={groundedValue}");
+            }
+
             // 处理跳跃输入（Legacy Input - 待迁移到 New Input System）
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.K))
             {
@@ -198,6 +227,7 @@ namespace RunnersJourney.Player
             }
 
             bool grounded = IsGrounded();
+            Debug.Log($"[PlayerJumpController] TryJump: grounded={grounded}, _jumpCount={_jumpCount}, coyoteTime={_coyoteTimeTimer}");
 
             // 一段跳条件：在地面上
             if (grounded)
@@ -205,6 +235,7 @@ namespace RunnersJourney.Player
                 ExecuteJump(_jumpConfig.jumpForce);
                 _jumpBufferTimer = 0f;
                 _jumpCount = 1;
+                Debug.Log($"[PlayerJumpController] 执行一段跳，_jumpCount={_jumpCount}");
                 return;
             }
 
@@ -215,6 +246,7 @@ namespace RunnersJourney.Player
                 _jumpBufferTimer = 0f;
                 _coyoteTimeTimer = 0f;
                 _jumpCount = 1;
+                Debug.Log($"[PlayerJumpController] 执行土狼跳，_jumpCount={_jumpCount}");
                 return;
             }
 
@@ -224,8 +256,11 @@ namespace RunnersJourney.Player
                 ExecuteJump(_jumpConfig.doubleJumpForce);
                 _jumpBufferTimer = 0f;
                 _jumpCount = 2;
+                Debug.Log($"[PlayerJumpController] 执行二段跳，_jumpCount={_jumpCount}");
                 return;
             }
+
+            Debug.Log($"[PlayerJumpController] 跳跃条件不满足：grounded={grounded}, _jumpCount={_jumpCount}, coyoteTime={_coyoteTimeTimer}");
         }
 
         /// <summary>
@@ -267,6 +302,14 @@ namespace RunnersJourney.Player
             else if (_jumpSFX == null)
             {
                 Debug.LogWarning("[PlayerJumpController] 跳跃音效未配置，请在 Inspector 中分配 Jump SFX 字段");
+            }
+
+            // 触发跳跃动画（通过 SetGrounded(false) 触发状态机转换到 Jump 状态）
+            if (_animationController != null)
+            {
+                _isJumping = true;
+                _animationController.SetGrounded(false);
+                Debug.Log($"[PlayerJumpController] Jump executed - _isJumping={_isJumping}, IsGrounded=false");
             }
 
             // 日志输出

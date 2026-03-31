@@ -225,6 +225,7 @@ MonoBehaviour:
   cancelButtonName: cancel-button
   previewImageName: preview-image
   descriptionLabelName: description-label
+  _buttonClickSFX: {fileID: 8300000, guid: 1571f99f0e6b7424aa4f3bd40879b735, type: 3}
 --- !u!114 &104237492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,6 +441,7 @@ MonoBehaviour:
   startButtonName: start-button
   biomeSelectionButtonName: biome-selection-button
   settingsButtonName: settings-button
+  _buttonClickSFX: {fileID: 8300000, guid: 1571f99f0e6b7424aa4f3bd40879b735, type: 3}
   biomeSelectionPanel: {fileID: 0}
   settingsPanel: {fileID: 0}
 --- !u!1 &367545319
@@ -4131,6 +4133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiDocument: {fileID: 888888002}
+  _buttonClickSFX: {fileID: 8300000, guid: 1571f99f0e6b7424aa4f3bd40879b735, type: 3}
 --- !u!1 &1039316682
 GameObject:
   m_ObjectHideFlags: 0
@@ -4191,6 +4194,8 @@ GameObject:
   - component: {fileID: 1165569041}
   - component: {fileID: 1165569040}
   - component: {fileID: 1165569042}
+  - component: {fileID: 1165569044}
+  - component: {fileID: 1165569043}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4234,7 +4239,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.3333334, y: 1.3333334}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -4311,7 +4316,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 13
-  m_Sprite: {fileID: 395334215, guid: 183d994ecfed5b843b0789a204d92601, type: 3}
+  m_Sprite: {fileID: 1927165633, guid: 6ea3e30b3cbf4d440885d95ee5884f85, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4330,13 +4335,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1165569034}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6, y: 1, z: 0}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -6, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &1165569040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4352,6 +4357,7 @@ MonoBehaviour:
   _jumpConfig: {fileID: 11400000, guid: 6c877c136860efc4cb0afb458c45517b, type: 2}
   _groundDetector: {fileID: 1165569041}
   _jumpSFX: {fileID: 8300000, guid: 7dce93fba821c8248bf13aaf6ebd284d, type: 3}
+  _animationController: {fileID: 1165569043}
   _enableDebugLog: 0
 --- !u!114 &1165569041
 MonoBehaviour:
@@ -4365,7 +4371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d1122af854e5b740a44a9b3a7c58710, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _groundCheckOffset: {x: 0, y: -0.5}
+  _groundCheckOffset: {x: 0, y: -2.5}
   _groundCheckSize: {x: 0.8, y: 0.1}
 --- !u!114 &1165569042
 MonoBehaviour:
@@ -4385,6 +4391,45 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _collisionSFX: {fileID: 8300000, guid: 8c0177fd38310ac4590007a9f2480593, type: 3}
+  _animationController: {fileID: 1165569043}
+--- !u!114 &1165569043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165569034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fc2fa5d1a4585a4dae93f6abc909dad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1165569044}
+  _speedParamHash: Speed
+  _isGroundedParamHash: IsGrounded
+  _landTriggerHash: Land
+  _deathTriggerHash: Death
+--- !u!95 &1165569044
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165569034}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1228793007
 GameObject:
   m_ObjectHideFlags: 0
@@ -4696,6 +4741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiDocument: {fileID: 2130255835}
+  _buttonClickSFX: {fileID: 8300000, guid: 1571f99f0e6b7424aa4f3bd40879b735, type: 3}
 --- !u!4 &2130255837
 Transform:
   m_ObjectHideFlags: 0
