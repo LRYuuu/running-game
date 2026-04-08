@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerDeathController.cs" />
     <Compile Include="Assets\Scripts\InfiniteBackgroundTiler.cs" />
     <Compile Include="Assets\Scripts\UI\UITestHelper.cs" />
+    <Compile Include="Assets\Scripts\Utils\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\Game\ScoreConfig.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerJumpController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerAnimationController.cs" />
