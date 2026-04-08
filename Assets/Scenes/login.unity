@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enableDebugLog: 1
+  _enableDebugLog: 0
   _autoStartGame: 0
 --- !u!1 &104237490
 GameObject:
@@ -667,7 +667,7 @@ MonoBehaviour:
   scrollSpeed: -2
   playerChunkIndex: 1
   initialMapOffset: -12
-  enableDebugLog: 1
+  enableDebugLog: 0
   difficultyCalculator: {fileID: 0}
   defaultGroundTile: {fileID: 0}
   defaultDirtTile: {fileID: 0}
