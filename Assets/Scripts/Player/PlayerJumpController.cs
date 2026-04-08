@@ -166,7 +166,7 @@ namespace RunnersJourney.Player
                 // 跳跃状态下强制设置为 false，直到落地
                 bool groundedValue = _isJumping ? false : _isGroundedLastFrame;
                 _animationController.SetGrounded(groundedValue);
-                Debug.Log($"[PlayerJumpController] Update - _isGroundedLastFrame={_isGroundedLastFrame}, _isJumping={_isJumping}, setting IsGrounded={groundedValue}");
+                // 性能优化：移除每帧 Debug.Log
             }
 
             // 处理跳跃输入（Legacy Input - 待迁移到 New Input System）
@@ -227,7 +227,10 @@ namespace RunnersJourney.Player
             }
 
             bool grounded = IsGrounded();
-            Debug.Log($"[PlayerJumpController] TryJump: grounded={grounded}, _jumpCount={_jumpCount}, coyoteTime={_coyoteTimeTimer}");
+            if (_enableDebugLog)
+            {
+                Debug.Log($"[PlayerJumpController] TryJump: grounded={grounded}, _jumpCount={_jumpCount}, coyoteTime={_coyoteTimeTimer}");
+            }
 
             // 一段跳条件：在地面上
             if (grounded)
@@ -309,7 +312,10 @@ namespace RunnersJourney.Player
             {
                 _isJumping = true;
                 _animationController.SetGrounded(false);
-                Debug.Log($"[PlayerJumpController] Jump executed - _isJumping={_isJumping}, IsGrounded=false");
+                if (_enableDebugLog)
+                {
+                    Debug.Log($"[PlayerJumpController] Jump executed - _isJumping={_isJumping}, IsGrounded=false");
+                }
             }
 
             // 日志输出

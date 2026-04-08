@@ -70,7 +70,7 @@ namespace RunnersJourney.Player
             if (_animator != null)
             {
                 _animator.SetBool(_isGroundedHash, isGrounded);
-                Debug.Log($"[PlayerAnimationController] SetGrounded({isGrounded}), currentValue={_animator.GetBool(_isGroundedHash)}");
+                // 性能优化：移除频繁的 Debug.Log
             }
             else
             {

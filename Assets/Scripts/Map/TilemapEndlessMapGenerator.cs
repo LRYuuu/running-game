@@ -575,17 +575,16 @@ namespace RunnersJourney.Map
 
         /// <summary>
         /// 设置 Tile 并应用翻转效果
+        /// 注意：使用 TileData.transform 直接设置矩阵，避免创建新的 ScriptableObject
         /// </summary>
         private void SetTileWithFlip(Vector3Int position, TileBase tile, int flipMode, int worldX, int y)
         {
-            if (tile is Tile tileData)
-            {
-                // 创建一个新的 Tile 实例用于设置
-                var newTile = ScriptableObject.CreateInstance<Tile>();
-                newTile.sprite = tileData.sprite;
-                newTile.colliderType = tileData.colliderType;
+            // 直接设置 Tile，使用 Tilemap 的内置 transform 矩阵功能
+            groundTilemap.SetTile(position, tile);
 
-                // 根据 flipMode 设置 Transform 矩阵
+            // 只有需要翻转时才设置矩阵
+            if (flipMode != 0)
+            {
                 Matrix4x4 transform = Matrix4x4.identity;
 
                 if (flipMode == 1) // 水平翻转
@@ -601,15 +600,8 @@ namespace RunnersJourney.Map
                     transform = Matrix4x4.Scale(new Vector3(-1, -1, 1));
                 }
 
-                // 应用变换
-                newTile.transform = transform;
-
-                groundTilemap.SetTile(position, newTile);
-            }
-            else
-            {
-                // 如果不是 Tile 类型，直接设置
-                groundTilemap.SetTile(position, tile);
+                // 使用 Tilemap.SetTransformMatrix 而不是创建新 Tile
+                groundTilemap.SetTransformMatrix(position, transform);
             }
         }
 

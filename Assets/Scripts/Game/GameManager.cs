@@ -71,6 +71,16 @@ namespace RunnersJourney.Game
         /// </summary>
         private float _playerDistance = 0f;
 
+        /// <summary>
+        /// 上一次更新的距离值（避免重复调用）
+        /// </summary>
+        private float _lastUpdateDistance = 0f;
+
+        /// <summary>
+        /// 距离更新阈值（超过此值才更新难度）
+        /// </summary>
+        private float _distanceUpdateThreshold = 1f;
+
         [Header("调试选项")]
         [Tooltip("是否启用详细日志")]
         [SerializeField] private bool _enableDebugLog = false;
@@ -182,10 +192,16 @@ namespace RunnersJourney.Game
                 {
                     _playerDistance = newDistance;
 
-                    // 更新难度计算器
-                    if (_difficultyCalculator != null)
+                    // 性能优化：只有当距离变化超过阈值时才更新难度
+                    // 避免每帧都调用 DifficultyCalculator
+                    if (_playerDistance - _lastUpdateDistance >= _distanceUpdateThreshold)
                     {
-                        _difficultyCalculator.SetPlayerDistance(_playerDistance);
+                        _lastUpdateDistance = _playerDistance;
+
+                        if (_difficultyCalculator != null)
+                        {
+                            _difficultyCalculator.SetPlayerDistance(_playerDistance);
+                        }
                     }
                 }
             }

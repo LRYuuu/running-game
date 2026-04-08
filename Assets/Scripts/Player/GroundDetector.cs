@@ -83,20 +83,15 @@ namespace RunnersJourney.Player
         /// <summary>
         /// Debug 可视化地面检测
         /// </summary>
-        /// <param name="isGrounded">是否在地面上</param>
         private void OnDrawGizmos()
         {
+            // 性能优化：只在编辑器非运行时绘制，避免运行时额外的 Physics2D 查询
+            if (Application.isPlaying) return;
+
             // 绘制检测盒子
             Gizmos.color = new Color(1, 0, 0, 0.5f);
             var gizmoPos = (Vector2)transform.position + _groundCheckOffset;
             Gizmos.DrawCube(gizmoPos, _groundCheckSize);
-
-            // 如果在地面上，绘制绿色
-            if (IsGrounded())
-            {
-                Gizmos.color = new Color(0, 1, 0, 0.5f);
-                Gizmos.DrawCube(gizmoPos, _groundCheckSize);
-            }
         }
 
         /// <summary>
