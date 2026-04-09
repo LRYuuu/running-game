@@ -1,14 +1,14 @@
 # Square Fireline - Sprint Status Tracking
 # Generated: 2026-03-16
-last_updated: "2026-04-08"
-# Total Epics: 8 | Total Stories: 46
+last_updated: "2026-04-09"
+# Total Epics: 9 | Total Stories: 49
 
 metadata:
   project_name: "Square Fireline"
   generated_date: "2026-03-16"
-  last_updated: "2026-04-08"
-  total_epics: 8
-  total_stories: 46
+  last_updated: "2026-04-09"
+  total_epics: 9
+  total_stories: 49
   communication_language: "中文"
 
 # =============================================================================
@@ -116,6 +116,15 @@ development_status:
   8-5-作为系统我希望内存占用合理以便不崩溃：done
   8-6-作为开发者我希望修复所有已知 Bug 以便发布质量：done
   epic-8-retrospective: optional
+
+  # -------------------------------------------------------------------------
+  # Epic 9: Bug 修复追踪 (3 stories)
+  # -------------------------------------------------------------------------
+  epic-9: in-progress
+  9-1-作为玩家我希望碰到空隙时触发死亡以便有正确反馈：done
+  9-2-作为玩家我希望空隙边缘没有黑边以便视觉正常：backlog
+  9-3-作为玩家我希望跳跃时切换动画以便有正确视觉反馈：backlog
+  epic-9-retrospective: optional
 
 # =============================================================================
 # 当前冲刺 (Current Sprint)
@@ -231,3 +240,5 @@ notes:
   - "Story 8-5 内存优化：已完成 ✅（验证 _heightCache 清理机制、PerformanceMonitor 监控、测试通过）"
   - "Story 8-4 性能优化：已完成 ✅（Code Review 通过，修复 Debug.meta 遗留问题）"
   - "Story 8-6 Bug 修复：已完成 ✅（验证通过，无待修复 Bug）"
+  - "Epic 9 Bug 修复追踪：新增 3 个 Bug 待修复（空隙死亡检测、空隙黑边、跳跃动画切换）"
+  - "Story 9-1 空隙死亡检测：已完成 ✅（空隙 Tile 放到 obstacleTilemap，复用障碍物检测）"

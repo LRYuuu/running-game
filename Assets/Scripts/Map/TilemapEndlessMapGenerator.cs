@@ -622,19 +622,19 @@ namespace RunnersJourney.Map
                 return;
             }
 
-            // 在空隙位置生成填充 Tile
+            // 空隙 Tile 放到障碍物 Tilemap 上，以便触发死亡检测（与障碍物相同的方式）
             // 顶部水流 Tile（地面高度位置）
             if (groundHeight > 0)
             {
                 Vector3Int gapTopPos = new Vector3Int(worldX, groundHeight - 1, 0);
-                groundTilemap.SetTile(gapTopPos, config.gapTopTile);
+                obstacleTilemap.SetTile(gapTopPos, config.gapTopTile);
             }
 
             // 中间水流 Tile（从 y=0 到 y=groundHeight-2）
             for (int y = 0; y < groundHeight - 1; y++)
             {
                 Vector3Int gapCenterPos = new Vector3Int(worldX, y, 0);
-                groundTilemap.SetTile(gapCenterPos, config.gapCenterTile);
+                obstacleTilemap.SetTile(gapCenterPos, config.gapCenterTile);
             }
         }
 
@@ -653,11 +653,19 @@ namespace RunnersJourney.Map
                 groundTilemap.SetTile(pos, null);
             }
 
-            // 清除障碍物（在草坪层上方）
+            // 清除障碍物 Tilemap 上的所有 Tile（包括障碍物和空隙）
             if (obstacleTilemap != null)
             {
+                // 清除障碍物（在草坪层上方）
                 Vector3Int obsPos = new Vector3Int(x, columnHeight, 0);
                 obstacleTilemap.SetTile(obsPos, null);
+
+                // 清除空隙 Tile（可能占据从 y=0 到 y=columnHeight-1）
+                for (int y = 0; y < columnHeight; y++)
+                {
+                    Vector3Int gapPos = new Vector3Int(x, y, 0);
+                    obstacleTilemap.SetTile(gapPos, null);
+                }
             }
 
             // 清除高度缓存
